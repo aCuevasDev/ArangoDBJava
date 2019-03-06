@@ -6,30 +6,31 @@ import java.util.Map;
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDBException;
-import com.arangodb.util.MapBuilder;
 import com.arangodb.entity.BaseDocument;
+import com.arangodb.util.MapBuilder;
 
 import model.Empleado;
 import model.Evento;
 import model.Incidencia;
 import model.RankingTO;
 
-public class DAOImpl implements DAOInterface{
+public class DAOImpl implements DAOInterface {
 
 	ArangoDB arangoDB = new ArangoDB.Builder().build();
 	String dbName = "mydb";
-	
+
 	@Override
 	public void insertEmpleado(Empleado e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public boolean loginEmpleado(String user, String pass) {
+		System.out.println("ppp");
 		try {
-			String query = "FOR t IN empleado FILTER t.nombre == @nombre && t.contrasenya == @contrasenya RETURN t";
-			Map<String, Object> bindVars = new MapBuilder().put("nombre", user).put("contrasenya", pass).get();
+			String query = "FOR doc IN empleado FILTER doc.empleado.nombre == @nombre && doc.empleado.contrasenya == @pass RETURN doc";
+			Map<String, Object> bindVars = new MapBuilder().put("nombre", user).put("pass", pass).get();
 			ArangoCursor<BaseDocument> cursor = arangoDB.db(dbName).query(query, bindVars, null, BaseDocument.class);
 			cursor.forEachRemaining(aDocument -> {
 				System.out.println("Key: " + aDocument.getKey());
@@ -40,19 +41,20 @@ public class DAOImpl implements DAOInterface{
 		} catch (ArangoDBException e) {
 			System.err.println("Failed to execute query. " + e.getMessage());
 		}
+		System.out.println("end");
 		return false;
 	}
 
 	@Override
 	public void updateEmpleado(Empleado e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void removeEmpleado(Empleado e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -70,7 +72,7 @@ public class DAOImpl implements DAOInterface{
 	@Override
 	public void insertIncidencia(Incidencia i) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -88,7 +90,7 @@ public class DAOImpl implements DAOInterface{
 	@Override
 	public void insertarEvento(Evento e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

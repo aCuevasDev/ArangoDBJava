@@ -8,12 +8,12 @@ public class Controller {
 
 	public static void main(String[] args) {
 
-		DAOImpl daoImpl = new DAOImpl();
-
-		daoImpl.loginEmpleado("pol", "aa");
-		ArangoDB arangoDB = new ArangoDB.Builder().build();
-
-		String dbName = "mydb";
+//		DAOImpl daoImpl = new DAOImpl();
+//
+//		daoImpl.loginEmpleado("pol", "aa");
+//		ArangoDB arangoDB = new ArangoDB.Builder().host("172.16.2.50", 8529).password("stucom").build();
+//
+//		String dbName = "mydb";
 //		try {
 //			arangoDB.createDatabase(dbName);
 //			System.out.println("Database created: " + dbName);
@@ -21,7 +21,7 @@ public class Controller {
 //			System.err.println("Failed to create database: " + dbName + "; " + e.getMessage());
 //		}
 //
-		String collectionName = "empleado";
+//		String collectionName = "empleado";
 //		try {
 //			CollectionEntity myArangoCollection = arangoDB.db(dbName).createCollection(collectionName);
 //			System.out.println("Collection created: " + myArangoCollection.getName());

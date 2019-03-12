@@ -8,7 +8,7 @@ import model.*;
  *
  * @author mfontana
  */
-public interface DAOInterface {
+public interface DAO {
 
     // Método para insertar un nuevo empleado.
     public void insertEmpleado(Empleado e);

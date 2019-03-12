@@ -6,6 +6,7 @@ import java.util.Map;
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDBException;
+import com.arangodb.ArangoDatabase;
 import com.arangodb.entity.BaseDocument;
 import com.arangodb.util.MapBuilder;
 
@@ -13,11 +14,23 @@ import model.Empleado;
 import model.Evento;
 import model.Incidencia;
 import model.RankingTO;
+import utils.ArangoUtils;
 
-public class DAOImpl implements DAOInterface {
+public class DAOImpl extends ArangoUtils implements DAO {
 
-	ArangoDB arangoDB = new ArangoDB.Builder().build();
-	String dbName = "mydb";
+	private static DAOImpl instance;
+
+	private ArangoDatabase db;
+
+	public static DAOImpl getInstance() {
+		if (instance == null)
+			instance = new DAOImpl();
+		return instance;
+	}
+
+	private DAOImpl() {
+		db = new ArangoDB.Builder().host("172.16.2.50", 8529).password("stucom").build().db("GuacamoleDB");
+	}
 
 	@Override
 	public void insertEmpleado(Empleado e) {
@@ -27,23 +40,16 @@ public class DAOImpl implements DAOInterface {
 
 	@Override
 	public boolean loginEmpleado(String user, String pass) {
-		System.out.println("ppp");
-		try {
-			String query = "FOR doc IN empleado FILTER doc.empleado.nombre == @nombre && doc.empleado.contrasenya == @pass RETURN doc";
-			Map<String, Object> bindVars = new MapBuilder().put("nombre", user).put("pass", pass).get();
-			ArangoCursor<BaseDocument> cursor = arangoDB.db(dbName).query(query, bindVars, null, BaseDocument.class);
-			cursor.forEachRemaining(aDocument -> {
-				System.out.println("Key: " + aDocument.getKey());
-				BaseDocument myDocument = arangoDB.db(dbName).collection("empleado").getDocument(aDocument.getKey(),
-						BaseDocument.class);
-				System.out.println(myDocument.getAttribute("nombre"));
-			});
-		} catch (ArangoDBException e) {
-			System.err.println("Failed to execute query. " + e.getMessage());
-		}
-		System.out.println("end");
+		String query = "FOR doc IN empleado FILTER doc.empleado.nombre == @nombre && doc.empleado.contrasenya == @pass RETURN doc";
+		Map<String, Object> bindVars = new MapBuilder().put("nombre", user).put("pass", pass).get();
+		ArangoCursor<BaseDocument> cursor = db.query(query, bindVars, null, BaseDocument.class);
+		cursor.forEachRemaining(aDocument -> {
+			BaseDocument myDocument = db.collection("empleado").getDocument(aDocument.getKey(), BaseDocument.class);
+		});
 		return false;
 	}
+	
+	//private ArangoCursor<BaseDocument> 
 
 	@Override
 	public void updateEmpleado(Empleado e) {

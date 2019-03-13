@@ -10,7 +10,7 @@ import com.arangodb.ArangoDatabase;
 public class ArangoUtils {
 	
 	
-	private ArangoDatabase db;
+	protected ArangoDatabase db;
 
 	protected ArangoUtils() {
 		db = new ArangoDB.Builder().host("172.16.2.50", 8529).password("stucom").build().db("GuacamoleDB");
@@ -31,5 +31,7 @@ public class ArangoUtils {
 		ArangoCursor<T> cursor = db.query(query, filters, null, tClass);
 		return cursor.asListRemaining();
 	}
+	
+	
 
 }

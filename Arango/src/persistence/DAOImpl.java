@@ -40,13 +40,17 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public boolean loginEmpleado(String user, String pass) {
-		String query = "FOR doc IN empleado FILTER doc.empleado.nombre == @nombre && doc.empleado.contrasenya == @pass RETURN doc";
-		Map<String, Object> bindVars = new MapBuilder().put("nombre", user).put("pass", pass).get();
-		ArangoCursor<BaseDocument> cursor = db.query(query, bindVars, null, BaseDocument.class);
-		cursor.forEachRemaining(aDocument -> {
-			BaseDocument myDocument = db.collection("empleado").getDocument(aDocument.getKey(), BaseDocument.class);
-		});
-		return false;
+		Map<String,Object> filters = new MapBuilder().put("nombre", user).put("pass", pass).get();
+		
+		return !get(Empleado.class,filters).isEmpty();
+		
+//		String query = "FOR doc IN empleado FILTER doc.empleado.nombre == @nombre && doc.empleado.contrasenya == @pass RETURN doc";
+//		Map<String, Object> bindVars = new MapBuilder().put("nombre", user).put("pass", pass).get();
+//		ArangoCursor<BaseDocument> cursor = db.query(query, bindVars, null, BaseDocument.class);
+//		cursor.forEachRemaining(aDocument -> {
+//			BaseDocument myDocument = db.collection("empleado").getDocument(aDocument.getKey(), BaseDocument.class);
+//		});
+//		return false;
 	}
 	
 	//private ArangoCursor<BaseDocument> 

@@ -8,6 +8,8 @@ public class Controller {
 
 	public static void main(String[] args) {
 
+		
+		System.out.println(DAOImpl.getInstance().loginEmpleado("", "") ? "BUENO" : "MALO");
 //		DAOImpl daoImpl = new DAOImpl();
 //
 //		daoImpl.loginEmpleado("pol", "aa");

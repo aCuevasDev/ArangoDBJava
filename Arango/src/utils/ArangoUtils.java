@@ -6,6 +6,9 @@ import java.util.Map;
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDatabase;
+import com.arangodb.entity.BaseDocument;
+
+import model.Codificable;
 
 public class ArangoUtils {
 	
@@ -17,13 +20,20 @@ public class ArangoUtils {
 	}
 	
 	protected <T> List<T> get(Class<T> tClass) {
-		String query = "FOR doc IN " + tClass.getName().toLowerCase() + " RETURN doc";
+		String query = "FOR doc IN " + tClass.getSimpleName().toLowerCase() + " RETURN doc";
 		ArangoCursor<T> cursor = db.query(query, null, null, tClass);
 		return cursor.asListRemaining();
 	}
 	
+	protected void put(Codificable codificable) {
+		BaseDocument document = new BaseDocument();
+		document.setKey(codificable.getCodigo());
+		document.addAttribute(codificable.getClass().getSimpleName().toLowerCase(), codificable);
+		db.collection(codificable.getClass().getSimpleName().toLowerCase()).insertDocument(document);
+	}
+	
 	protected <T> List<T> get(Class<T> tClass, Map<String, Object> filters) {
-		String collection = tClass.getName().toLowerCase();
+		String collection = tClass.getSimpleName().toLowerCase();
 		String query = "FOR doc IN " + collection + " FILTER";
 		for (String key: filters.keySet())
 			query += " doc." + collection + "." + key + " == @" + key + " &&";

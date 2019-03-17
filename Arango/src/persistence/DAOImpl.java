@@ -3,13 +3,9 @@ package persistence;
 import java.util.List;
 import java.util.Map;
 
-import com.arangodb.ArangoCursor;
-import com.arangodb.ArangoDB;
-import com.arangodb.ArangoDBException;
-import com.arangodb.ArangoDatabase;
-import com.arangodb.entity.BaseDocument;
 import com.arangodb.util.MapBuilder;
 
+import model.Departamento;
 import model.Empleado;
 import model.Evento;
 import model.Incidencia;
@@ -104,10 +100,35 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		Map<String,Object> filters = new MapBuilder().put("username", username).get();
 		return !find(Empleado.class,filters).isEmpty();
 	}
+	
+	@Override
+	public boolean existsDepartamento(String nombre) {
+		Map<String,Object> filters = new MapBuilder().put("nombre", nombre).get();
+		return !find(Departamento.class,filters).isEmpty();
+	}
 
 	@Override
 	public void close() {
 		super.close();
+	}
+
+	@Override
+	public void insertDepartamento(Departamento d) {
+		if(!existsDepartamento(d.getNombre()))
+			store(d);
+		// TODO THROW EXCEPTION
+			
+	}
+
+	@Override
+	public void updateDepartamento(Departamento d) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<Empleado> selectAllEmpleados() {
+		return find(Empleado.class);
 	}
 
 }

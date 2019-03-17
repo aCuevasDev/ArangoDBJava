@@ -1,6 +1,6 @@
 package persistence;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +35,11 @@ public abstract class ArangoUtils {
 //		BaseDocument document = new BaseDocument();
 //		document.setKey(codificable.getCodigo());
 //		document.addAttribute(codificable.getClass().getSimpleName().toLowerCase(), codificable);
-		db.collection(codificable.getClass().getSimpleName().toLowerCase()).insertDocument(codificable);
+		String collection = codificable.getClass().getSimpleName().toLowerCase();
+		if(!db.getCollections().contains(collection)) {
+			db.createCollection(collection);
+		}
+		db.collection(collection).insertDocument(codificable);
 	}
 	
 	protected void update(Codificable codificable) {
@@ -47,6 +51,9 @@ public abstract class ArangoUtils {
 	
 	protected <T> List<T> find(Class<T> tClass, Map<String, Object> filters) {
 		String collection = tClass.getSimpleName().toLowerCase();
+		if(!db.getCollections().contains(collection)) {
+			return new ArrayList<>();
+		}
 		String query = "FOR doc IN " + collection + " FILTER";
 		for (String key: filters.keySet())
 			query += " doc." + collection + "." + key + " == @" + key + " &&";

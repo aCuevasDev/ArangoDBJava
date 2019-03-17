@@ -6,6 +6,7 @@ public class Empleado extends Codificable {
 	private String apellidos;
 	private String username;
 	private String contrasenya;
+	private boolean jefe;
 	private Departamento departamento;
 	
 	public Empleado(String nombre, String apellidos, String username, String contrasenya, Departamento departamento) {
@@ -15,6 +16,17 @@ public class Empleado extends Codificable {
 		this.username = username;
 		this.contrasenya = contrasenya;
 		this.departamento = departamento;
+		this.jefe = false;
+	}
+	
+	public Empleado(String nombre, String apellidos, String username, String contrasenya) {
+		super();
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.username = username;
+		this.contrasenya = contrasenya;
+		this.departamento = null;
+		this.jefe = false;
 	}
 	
 	public Empleado() {
@@ -50,6 +62,12 @@ public class Empleado extends Codificable {
 	}
 	public void setDepartamento(Departamento departamento) {
 		this.departamento = departamento;
+	}
+	public boolean isJefe() {
+		return jefe;
+	}
+	public void setJefe(boolean jefe) {
+		this.jefe = jefe;
 	}
 
 }

@@ -12,6 +12,12 @@ public interface DAO {
 
     // Método para insertar un nuevo empleado.
     public void insertEmpleado(Empleado e);
+    
+    // Método para insertar un nuevo departamento.
+    public void insertDepartamento(Departamento d);
+    
+    // Método para modificar el perfil de un departamento.
+    public void updateDepartamento(Departamento d);
 
     // Método para validar el login de un empleado.
     public boolean loginEmpleado(String user, String pass);
@@ -27,6 +33,9 @@ public interface DAO {
 
     // Obtener una lista de todas las incidencias
     public List<Incidencia> selectAllIncidencias();
+    
+    // Obtener una lista de todos los empleados
+    public List<Empleado> selectAllEmpleados();
 
     // Insertar una incidencia a partir de un objeto incidencia
     public void insertIncidencia(Incidencia i);
@@ -57,6 +66,8 @@ public interface DAO {
     public List<RankingTO> getRankingEmpleados();
     
     public boolean existsUsername(String username);
+    
+    public boolean existsDepartamento(String nombre);
     
     public void close();
     

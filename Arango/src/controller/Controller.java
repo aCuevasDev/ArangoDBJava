@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.List;
+
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDBException;
 
@@ -9,21 +11,56 @@ import persistence.DAO;
 import persistence.DAOImpl;
 
 public class Controller {
+	private static Controller instance = null;
+	
+	private Empleado usuarioLogeado;
+	private DAOImpl daoImpl;
+	
+    /**
+     * Metodo que gestiona la unica instancia de la calse cuando se llama por
+     * primera vez se crea la instgancia y si ya existe un la devuelve
+     *
+     * @return
+     */
+    public static Controller getInstance() {
+        if (instance == null) {
+            instance = new Controller();
+        }
+        return instance;
+    }
+    
+    private Controller() {
+        this.usuarioLogeado = null;
+        this.daoImpl = DAOImpl.getInstance();
+    }
 
-	public static void main(String[] args) {
+    public boolean login(String username, String contrasenya) {
+    	return daoImpl.loginEmpleado(username, contrasenya);
+    }
+    
+    public String crearDepartamento(Departamento departamento) {
+    	daoImpl.insertDepartamento(departamento);
+    	return "Departamento guardado correctamente";
+    }
+    
+    public List<Empleado> getAllUsers(){
+    	return daoImpl.selectAllEmpleados();
+    }
+    
+	//public static void main(String[] args) {
 //		try {
 //			init();
 //		} catch (ArangoDBException e) {
 //			
 //		}
-		DAO dao = DAOImpl.getInstance();
-		Empleado empleado = new Empleado("pol", "aa", "bb", "bb", new Departamento());
-		DAOImpl.getInstance().insertEmpleado(empleado);
+//		DAO dao = DAOImpl.getInstance();
+//		Empleado empleado = new Empleado("pol", "aa", "bb", "bb", new Departamento());
+//		DAOImpl.getInstance().insertEmpleado(empleado);
 		//DAOImpl.getInstance().removeEmpleado(empleado);
 		//empleado.setApellidos("dsadsadasdasdasd");
 		//dao.updateEmpleado(empleado);
 		//System.out.println(DAOImpl.getInstance().loginEmpleado(empleado.getUsername(), empleado.getContrasenya()) ? "BUENO" : "MALO");
-		dao.close();
+//		dao.close();
 		
 //		DAOImpl daoImpl = new DAOImpl();
 //
@@ -65,7 +102,7 @@ public class Controller {
 //		} catch (ArangoDBException e) {
 //			System.err.println("Failed to get document: myKey; " + e.getMessage());
 //		}
-
-	}
+//
+//	}
 
 }

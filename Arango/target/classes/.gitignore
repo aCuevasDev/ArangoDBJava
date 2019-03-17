@@ -1,8 +1,10 @@
+/META-INF/
 <<<<<<< Updated upstream
+/model/
+=======
 /controller/
+>>>>>>> Stashed changes
 /persistence/
 /utils/
-=======
->>>>>>> Stashed changes
-/META-INF/
-/model/
+/arngo/
+/arango/

@@ -14,13 +14,10 @@ import model.Empleado;
 import model.Evento;
 import model.Incidencia;
 import model.RankingTO;
-import utils.ArangoUtils;
 
 public class DAOImpl extends ArangoUtils implements DAO {
 
 	private static DAOImpl instance;
-
-	private ArangoDatabase db;
 
 	public static DAOImpl getInstance() {
 		if (instance == null)
@@ -28,43 +25,30 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		return instance;
 	}
 
-	private DAOImpl() {
-		db = new ArangoDB.Builder().host("172.16.2.50", 8529).password("stucom").build().db("GuacamoleDB");
-	}
+	private DAOImpl() {}
 
 	@Override
 	public void insertEmpleado(Empleado e) {
-		// TODO Auto-generated method stub
-
+		if(!existsUsername(e.getUsername()))
+			store(e);
+		// TODO THROW EXCEPTION
+			
 	}
 
 	@Override
-	public boolean loginEmpleado(String user, String pass) {
-		Map<String,Object> filters = new MapBuilder().put("nombre", user).put("pass", pass).get();
-		
-		return !get(Empleado.class,filters).isEmpty();
-		
-//		String query = "FOR doc IN empleado FILTER doc.empleado.nombre == @nombre && doc.empleado.contrasenya == @pass RETURN doc";
-//		Map<String, Object> bindVars = new MapBuilder().put("nombre", user).put("pass", pass).get();
-//		ArangoCursor<BaseDocument> cursor = db.query(query, bindVars, null, BaseDocument.class);
-//		cursor.forEachRemaining(aDocument -> {
-//			BaseDocument myDocument = db.collection("empleado").getDocument(aDocument.getKey(), BaseDocument.class);
-//		});
-//		return false;
+	public boolean loginEmpleado(String username, String pass) {
+		Map<String,Object> filters = new MapBuilder().put("username", username).put("contrasenya", pass).get();
+		return !find(Empleado.class,filters).isEmpty();
 	}
-	
-	//private ArangoCursor<BaseDocument> 
 
 	@Override
 	public void updateEmpleado(Empleado e) {
-		// TODO Auto-generated method stub
-
+		update(e);
 	}
 
 	@Override
 	public void removeEmpleado(Empleado e) {
-		// TODO Auto-generated method stub
-
+		delete(e);
 	}
 
 	@Override
@@ -113,6 +97,17 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	public List<RankingTO> getRankingEmpleados() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean existsUsername(String username) {
+		Map<String,Object> filters = new MapBuilder().put("username", username).get();
+		return !find(Empleado.class,filters).isEmpty();
+	}
+
+	@Override
+	public void close() {
+		super.close();
 	}
 
 }

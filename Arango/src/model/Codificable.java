@@ -1,12 +1,21 @@
 package model;
 
+import com.arangodb.entity.BaseDocument;
+import com.arangodb.entity.DocumentField;
+import com.arangodb.entity.DocumentField.Type;
+
 public class Codificable {
 	
+	@DocumentField(Type.KEY)
 	private String codigo;
 	private static long index;
 	
 	public Codificable() {
 		codigo = getClass().getSimpleName().substring(0,3) + index++;
+	}
+	
+	public String getKey() {
+		return codigo;
 	}
 	
 	public String getCodigo() {

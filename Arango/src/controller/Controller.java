@@ -1,15 +1,30 @@
 package controller;
 
 import com.arangodb.ArangoDB;
+import com.arangodb.ArangoDBException;
 
+import model.Departamento;
+import model.Empleado;
+import persistence.DAO;
 import persistence.DAOImpl;
 
 public class Controller {
 
 	public static void main(String[] args) {
-
+//		try {
+//			init();
+//		} catch (ArangoDBException e) {
+//			
+//		}
+		DAO dao = DAOImpl.getInstance();
+		Empleado empleado = new Empleado("pol", "aa", "bb", "bb", new Departamento());
+		DAOImpl.getInstance().insertEmpleado(empleado);
+		//DAOImpl.getInstance().removeEmpleado(empleado);
+		//empleado.setApellidos("dsadsadasdasdasd");
+		//dao.updateEmpleado(empleado);
+		//System.out.println(DAOImpl.getInstance().loginEmpleado(empleado.getUsername(), empleado.getContrasenya()) ? "BUENO" : "MALO");
+		dao.close();
 		
-		System.out.println(DAOImpl.getInstance().loginEmpleado("", "") ? "BUENO" : "MALO");
 //		DAOImpl daoImpl = new DAOImpl();
 //
 //		daoImpl.loginEmpleado("pol", "aa");

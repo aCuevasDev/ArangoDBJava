@@ -2,8 +2,12 @@ package model;
 
 import java.util.Set;
 
-public class Departamento extends Codificable {
+import com.arangodb.entity.DocumentField;
+import com.arangodb.entity.DocumentField.Type;
+
+public class Departamento implements IKeyable {
 	
+	@DocumentField(Type.KEY)
 	private String nombre;
 	private Empleado jefe;
 	private Set<Empleado> empleados;
@@ -39,6 +43,11 @@ public class Departamento extends Codificable {
 	}
 	public boolean remove(Empleado empleado) {
 		return this.empleados.remove(empleado);
+	}
+
+	@Override
+	public String getKey() {
+		return nombre;
 	}
 
 }

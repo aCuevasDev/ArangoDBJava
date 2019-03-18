@@ -4,12 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDatabase;
-import com.arangodb.entity.BaseDocument;
-
-import model.Codificable;
+import model.IKeyable;
 
 public abstract class ArangoUtils {	
 	
@@ -31,40 +30,43 @@ public abstract class ArangoUtils {
 		return cursor.asListRemaining();
 	}
 	
-	protected void store(Codificable codificable) {
-//		BaseDocument document = new BaseDocument();
-//		document.setKey(codificable.getCodigo());
-//		document.addAttribute(codificable.getClass().getSimpleName().toLowerCase(), codificable);
-		String collection = codificable.getClass().getSimpleName().toLowerCase();
-		if(!db.getCollections().contains(collection)) {
-			db.createCollection(collection);
-		}
-		db.collection(collection).insertDocument(codificable);
+	protected boolean exists(IKeyable object) {
+		return db.collection("empleado").documentExists(object.getKey());
 	}
 	
-	protected void update(Codificable codificable) {
-		BaseDocument document = new BaseDocument();
-		document.setKey(codificable.getCodigo());
-		document.addAttribute(codificable.getClass().getSimpleName().toLowerCase(), codificable);
-		db.collection(codificable.getClass().getSimpleName().toLowerCase()).updateDocument(codificable.getCodigo(), document);
+	protected void store(IKeyable object) {
+		String collectionName = object.getClass().getSimpleName().toLowerCase();
+		ArangoCollection collection = db.collection(collectionName);
+		if(!collection.exists()) 
+			db.createCollection(collectionName);
+		if (!exists(object))
+			db.collection(collectionName).insertDocument(object);
+		else
+			update(object);
+	}
+	
+	private void update(IKeyable object) {
+		db.collection(object.getClass().getSimpleName().toLowerCase()).updateDocument(object.getKey(), object);
 	}
 	
 	protected <T> List<T> find(Class<T> tClass, Map<String, Object> filters) {
-		String collection = tClass.getSimpleName().toLowerCase();
-		if(!db.getCollections().contains(collection)) {
+		String collectionName = tClass.getSimpleName().toLowerCase();
+		ArangoCollection collection = db.collection(collectionName);
+		
+		if(!collection.exists()) {
 			return new ArrayList<>();
 		}
-		String query = "FOR doc IN " + collection + " FILTER";
+		String query = "FOR doc IN " + collectionName + " FILTER";
 		for (String key: filters.keySet())
-			query += " doc." + collection + "." + key + " == @" + key + " &&";
+			query += " doc." + collectionName + "." + key + " == @" + key + " &&";
 		query = query.substring(0, query.length() -2) + "RETURN doc";
 		ArangoCursor<T> cursor = db.query(query, filters, null, tClass);
 		return cursor.asListRemaining();
 	}
 	
-	protected void delete(Codificable codificable) {
-		String nameClass = codificable.getClass().getSimpleName().toLowerCase();
-		db.collection(nameClass).deleteDocument(codificable.getCodigo());
+	protected void delete(IKeyable object) {
+		String nameClass = object.getClass().getSimpleName().toLowerCase();
+		db.collection(nameClass).deleteDocument(object.getKey());
 	}
 	
 

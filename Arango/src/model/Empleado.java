@@ -1,9 +1,13 @@
 package model;
 
-public class Empleado extends Codificable {
+import com.arangodb.entity.DocumentField;
+import com.arangodb.entity.DocumentField.Type;
+
+public class Empleado implements IKeyable{
 	
 	private String nombre;
 	private String apellidos;
+	@DocumentField(Type.KEY)
 	private String username;
 	private String contrasenya;
 	private boolean jefe;
@@ -68,6 +72,16 @@ public class Empleado extends Codificable {
 	}
 	public void setJefe(boolean jefe) {
 		this.jefe = jefe;
+	}
+
+	@Override
+	public String toString() {
+		return username + " " + contrasenya;
+	}
+	
+	@Override
+	public String getKey() {
+		return username;
 	}
 
 }

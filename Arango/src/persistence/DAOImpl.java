@@ -25,7 +25,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public void insertEmpleado(Empleado e) {
-		if(!existsUsername(e.getUsername()))
+		if(!exists(e))
 			store(e);
 		// TODO THROW EXCEPTION
 			
@@ -39,7 +39,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public void updateEmpleado(Empleado e) {
-		update(e);
+		store(e);
 	}
 
 	@Override
@@ -94,19 +94,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public boolean existsUsername(String username) {
-		Map<String,Object> filters = new MapBuilder().put("username", username).get();
-		return !find(Empleado.class,filters).isEmpty();
-	}
 	
-	@Override
-	public boolean existsDepartamento(String nombre) {
-		Map<String,Object> filters = new MapBuilder().put("nombre", nombre).get();
-		return !find(Departamento.class,filters).isEmpty();
-	}
-
 	@Override
 	public void close() {
 		super.close();
@@ -114,7 +102,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public void insertDepartamento(Departamento d) {
-		if(!existsDepartamento(d.getNombre()))
+		if(!exists(d))
 			store(d);
 		// TODO THROW EXCEPTION
 			

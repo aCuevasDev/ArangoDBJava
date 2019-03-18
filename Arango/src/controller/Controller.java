@@ -43,6 +43,11 @@ public class Controller {
     	return "Departamento guardado correctamente";
     }
     
+    public String crearEmpleado(Empleado empleado) {
+    	daoImpl.insertEmpleado(empleado);
+    	return "Empleado guardado correctamente";
+    }
+    
     public List<Empleado> getAllUsers(){
     	return daoImpl.selectAllEmpleados();
     }

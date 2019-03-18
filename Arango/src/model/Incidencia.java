@@ -2,8 +2,13 @@ package model;
 
 import java.util.Date;
 
-public class Incidencia extends Codificable {
+import com.arangodb.entity.DocumentField;
+import com.arangodb.entity.DocumentField.Type;
 
+public class Incidencia implements IKeyable{
+
+	@DocumentField(Type.KEY)
+	private int id;
 	private Empleado origen;
 	private Empleado destino;
 	private String titulo;
@@ -71,7 +76,10 @@ public class Incidencia extends Codificable {
 	}
 	
 	
-	
+	@Override
+	public String getKey() {
+		return String.valueOf(id);
+	}
 	
 	
 }

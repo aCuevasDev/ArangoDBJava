@@ -10,9 +10,14 @@ import model.Empleado;
 public class ArangoMain {
 
 	public static void main(String[] args) {
+		insertarEmpleado();
 		crearDepartamento();
 	}
 	
+	private static void insertarEmpleado() {
+		System.out.println(Controller.getInstance().crearEmpleado(new Empleado("zzz", "zzz", "zz", "zzz", new Departamento())));
+	}
+
 	public static void login() {
 		String username = InputAsker.askString("Introduce tu username");
 		String contrasenya = InputAsker.askString("Introduce tu contrasenya");

@@ -65,10 +65,6 @@ public interface DAO {
     // urgentes creadas (más incidencias urgentes primero).
     public List<RankingTO> getRankingEmpleados();
     
-    public boolean existsUsername(String username);
-    
-    public boolean existsDepartamento(String nombre);
-    
     public void close();
     
     

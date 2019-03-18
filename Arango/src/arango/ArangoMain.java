@@ -13,7 +13,7 @@ public class ArangoMain {
 
 	/**
 	 * <pre>
-	 *  TODO Cuevas: No me gusta nada tener estos métodos aquí, yo los pondría en el Controller. Pero como queráis vosotros que es pijada mía.
+	 *  TODO Cuevas: No me gusta nada tener estos métodos aquí, yo los pondría en el Controller. Pero como queráis vosotros que es pijada mía. También cambiaría el nombre del paquete :*
 	 * </pre>
 	 */
 

@@ -10,6 +10,12 @@ import persistence.DAOImpl;
 public class Controller {
 	private static Controller instance = null;
 
+	/**
+	 * <pre>
+	 * TODO CUEVAS: A mi esto de que los métodos devuelvan un literal con si ha ido bien o mal no me gusta mucho. Pero lo mismo que lo del main lo hablamos a ver.
+	 * </pre>
+	 */
+
 	private Empleado usuarioLogeado;
 	private DAO dao;
 

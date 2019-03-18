@@ -21,20 +21,21 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		return instance;
 	}
 
-	private DAOImpl() {}
+	private DAOImpl() {
+	}
 
 	@Override
 	public void insertEmpleado(Empleado e) {
-		if(!exists(e))
+		if (!exists(e))
 			store(e);
 		// TODO THROW EXCEPTION
-			
+
 	}
 
 	@Override
 	public boolean loginEmpleado(String username, String pass) {
-		Map<String,Object> filters = new MapBuilder().put("username", username).put("contrasenya", pass).get();
-		return !find(Empleado.class,filters).isEmpty();
+		Map<String, Object> filters = new MapBuilder().put("username", username).put("contrasenya", pass).get();
+		return !find(Empleado.class, filters).isEmpty();
 	}
 
 	@Override
@@ -49,32 +50,39 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public Incidencia getIncidenciaById(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> filters = new MapBuilder().put("id", id).get();
+		return find(Incidencia.class, filters).stream().findFirst().get();
+		// Cuevas: uso el findFirst porque si hacemos .get(0) directamente podría dar
+		// null pointer si la id no existe, luego el get del final es porque el stream
+		// devuelve un Optional
 	}
 
 	@Override
 	public List<Incidencia> selectAllIncidencias() {
-		// TODO Auto-generated method stub
-		return null;
+		return find(Incidencia.class);
 	}
 
 	@Override
 	public void insertIncidencia(Incidencia i) {
-		// TODO Auto-generated method stub
+		if (!exists(i))
+			store(i);
+		// else
+		// TODO THROW ALREADY_EXISTS EXCEPTION
 
 	}
 
 	@Override
 	public List<Incidencia> getIncidenciaByDestino(Empleado e) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> filters = new MapBuilder().put("destino", e).get();
+		return find(Incidencia.class, filters);
+		// TODO Cuevas: "destino" no serviría si usamos un Set en la incidencia
 	}
 
 	@Override
 	public List<Incidencia> getIncidenciaByOrigen(Empleado e) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> filters = new MapBuilder().put("origen", e).get();
+		return find(Incidencia.class, filters);
+		// TODO Cuevas: "origen" no serviría si usamos un Set en la incidencia
 	}
 
 	@Override
@@ -94,7 +102,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public void close() {
 		super.close();
@@ -102,16 +110,16 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public void insertDepartamento(Departamento d) {
-		if(!exists(d))
+		if (!exists(d))
 			store(d);
 		// TODO THROW EXCEPTION
-			
+
 	}
 
 	@Override
 	public void updateDepartamento(Departamento d) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

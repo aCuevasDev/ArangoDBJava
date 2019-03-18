@@ -2,9 +2,6 @@ package controller;
 
 import java.util.List;
 
-import com.arangodb.ArangoDB;
-import com.arangodb.ArangoDBException;
-
 import model.Departamento;
 import model.Empleado;
 import persistence.DAO;
@@ -12,47 +9,51 @@ import persistence.DAOImpl;
 
 public class Controller {
 	private static Controller instance = null;
-	
-	private Empleado usuarioLogeado;
-	private DAOImpl daoImpl;
-	
-    /**
-     * Metodo que gestiona la unica instancia de la calse cuando se llama por
-     * primera vez se crea la instgancia y si ya existe un la devuelve
-     *
-     * @return
-     */
-    public static Controller getInstance() {
-        if (instance == null) {
-            instance = new Controller();
-        }
-        return instance;
-    }
-    
-    private Controller() {
-        this.usuarioLogeado = null;
-        this.daoImpl = DAOImpl.getInstance();
-    }
 
-    public boolean login(String username, String contrasenya) {
-    	return daoImpl.loginEmpleado(username, contrasenya);
-    }
-    
-    public String crearDepartamento(Departamento departamento) {
-    	daoImpl.insertDepartamento(departamento);
-    	return "Departamento guardado correctamente";
-    }
-    
-    public String crearEmpleado(Empleado empleado) {
-    	daoImpl.insertEmpleado(empleado);
-    	return "Empleado guardado correctamente";
-    }
-    
-    public List<Empleado> getAllUsers(){
-    	return daoImpl.selectAllEmpleados();
-    }
-    
-	//public static void main(String[] args) {
+	private Empleado usuarioLogeado;
+	private DAO dao;
+
+	/**
+	 * Metodo que gestiona la unica instancia de la calse cuando se llama por
+	 * primera vez se crea la instgancia y si ya existe un la devuelve
+	 *
+	 * @return
+	 */
+	public static Controller getInstance() {
+		if (instance == null) {
+			instance = new Controller();
+		}
+		return instance;
+	}
+
+	private Controller() {
+		this.usuarioLogeado = null;
+		this.dao = DAOImpl.getInstance();
+	}
+
+	public boolean login(String username, String contrasenya) {
+		return dao.loginEmpleado(username, contrasenya);
+	}
+
+	public String crearDepartamento(Departamento departamento) {
+		dao.insertDepartamento(departamento);
+		return "Departamento guardado correctamente";
+	}
+
+	public String crearEmpleado(Empleado empleado) {
+		dao.insertEmpleado(empleado);
+		return "Empleado guardado correctamente";
+	}
+
+	public List<Empleado> getAllUsers() {
+		return dao.selectAllEmpleados();
+	}
+
+	public void closeConexion() {
+		dao.close();
+	}
+
+	// public static void main(String[] args) {
 //		try {
 //			init();
 //		} catch (ArangoDBException e) {
@@ -61,12 +62,13 @@ public class Controller {
 //		DAO dao = DAOImpl.getInstance();
 //		Empleado empleado = new Empleado("pol", "aa", "bb", "bb", new Departamento());
 //		DAOImpl.getInstance().insertEmpleado(empleado);
-		//DAOImpl.getInstance().removeEmpleado(empleado);
-		//empleado.setApellidos("dsadsadasdasdasd");
-		//dao.updateEmpleado(empleado);
-		//System.out.println(DAOImpl.getInstance().loginEmpleado(empleado.getUsername(), empleado.getContrasenya()) ? "BUENO" : "MALO");
+	// DAOImpl.getInstance().removeEmpleado(empleado);
+	// empleado.setApellidos("dsadsadasdasdasd");
+	// dao.updateEmpleado(empleado);
+	// System.out.println(DAOImpl.getInstance().loginEmpleado(empleado.getUsername(),
+	// empleado.getContrasenya()) ? "BUENO" : "MALO");
 //		dao.close();
-		
+
 //		DAOImpl daoImpl = new DAOImpl();
 //
 //		daoImpl.loginEmpleado("pol", "aa");

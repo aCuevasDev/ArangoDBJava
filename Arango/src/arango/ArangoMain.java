@@ -10,11 +10,12 @@ import model.Empleado;
 public class ArangoMain {
 
 	// Cuevas: No me gusta nada tener estos métodos aquí, yo los pondría en el
-	// Controller.
+	// Controller. Pero como queráis vosotros que es pijada mía.
 
 	public static void main(String[] args) {
 		insertarEmpleado();
 		crearDepartamento();
+		Controller.getInstance().closeConexion();
 	}
 
 	private static void insertarEmpleado() {

@@ -9,7 +9,10 @@ import model.Departamento;
 import model.Empleado;
 import model.Evento;
 import model.Incidencia;
-import model.RankingTO;
+import model.dto.DepartamentoDTO;
+import model.dto.EmpleadoDTO;
+import model.dto.IncidenciaDTO;
+import model.dto.RankingDTO;
 
 public class DAOImpl extends ArangoUtils implements DAO {
 
@@ -25,7 +28,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public void insertEmpleado(Empleado e) {
+	public void insertEmpleado(EmpleadoDTO e) {
 		if (!exists(e))
 			store(e);
 		// TODO THROW EXCEPTION
@@ -52,7 +55,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	public Incidencia getIncidenciaById(int id) {
 		Map<String, Object> filters = new MapBuilder().put("id", id).get();
 		return find(Incidencia.class, filters).stream().findFirst().get();
-		// Cuevas: uso el findFirst porque si hacemos .get(0) directamente podría dar
+		// Cuevas: uso el findFirst porque si hacemos .get(0) directamente podrï¿½a dar
 		// null pointer si la id no existe, luego el get del final es porque el stream
 		// devuelve un Optional
 	}
@@ -63,7 +66,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public void insertIncidencia(Incidencia i) {
+	public void insertIncidencia(IncidenciaDTO i) {
 		if (!exists(i))
 			store(i);
 		// else
@@ -75,14 +78,14 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	public List<Incidencia> getIncidenciaByDestino(Empleado e) {
 		Map<String, Object> filters = new MapBuilder().put("destino", e).get();
 		return find(Incidencia.class, filters);
-		// TODO Cuevas: "destino" no serviría si usamos un Set en la incidencia
+		// TODO Cuevas: "destino" no servirï¿½a si usamos un Set en la incidencia
 	}
 
 	@Override
 	public List<Incidencia> getIncidenciaByOrigen(Empleado e) {
 		Map<String, Object> filters = new MapBuilder().put("origen", e).get();
 		return find(Incidencia.class, filters);
-		// TODO Cuevas: "origen" no serviría si usamos un Set en la incidencia
+		// TODO Cuevas: "origen" no servirï¿½a si usamos un Set en la incidencia
 	}
 
 	@Override
@@ -98,7 +101,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public List<RankingTO> getRankingEmpleados() {
+	public List<RankingDTO> getRankingEmpleados() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -109,7 +112,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public void insertDepartamento(Departamento d) {
+	public void insertDepartamento(DepartamentoDTO d) {
 		if (!exists(d))
 			store(d);
 		// TODO THROW EXCEPTION
@@ -123,8 +126,8 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public List<Empleado> selectAllEmpleados() {
-		return find(Empleado.class);
+	public List<EmpleadoDTO> selectAllEmpleados() {
+		return find(EmpleadoDTO.class);
 	}
 
 }

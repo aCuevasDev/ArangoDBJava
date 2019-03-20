@@ -1,23 +1,32 @@
-package model;
+package model.dto;
 
 import com.arangodb.entity.DocumentField;
 import com.arangodb.entity.DocumentField.Type;
 
-import model.dto.DepartamentoDTO;
+import model.Empleado;
+import model.IKeyable;
 
-public class Empleado implements IKeyable {
+public class EmpleadoDTO implements IKeyable {
 
 	private String nombre;
 	private String apellidos;
+	
 	@DocumentField(Type.KEY)
 	private String username;
 	private String contrasenya;
 	private boolean jefe;
-	private DepartamentoDTO departamento;
+	private String departamento;
+	
+	public EmpleadoDTO(Empleado empleado) {
+		this.nombre = empleado.getNombre();
+		this.apellidos = empleado.getApellidos();
+		this.username = empleado.getUsername();
+		this.contrasenya = empleado.getContrasenya();
+		this.departamento = empleado.getDepartamento().getNombre();
+		this.jefe = empleado.isJefe();
+	}
 
-	public Empleado(String nombre, String apellidos, String username, String contrasenya,
-			DepartamentoDTO departamento) {
-		super();
+	public EmpleadoDTO(String nombre, String apellidos, String username, String contrasenya, String departamento) {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.username = username;
@@ -26,8 +35,7 @@ public class Empleado implements IKeyable {
 		this.jefe = false;
 	}
 
-	public Empleado(String nombre, String apellidos, String username, String contrasenya) {
-		super();
+	public EmpleadoDTO(String nombre, String apellidos, String username, String contrasenya) {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.username = username;
@@ -36,9 +44,7 @@ public class Empleado implements IKeyable {
 		this.jefe = false;
 	}
 
-	public Empleado() {
-		super();
-	}
+	public EmpleadoDTO() {}
 
 	public String getNombre() {
 		return nombre;
@@ -72,11 +78,11 @@ public class Empleado implements IKeyable {
 		this.username = username;
 	}
 
-	public DepartamentoDTO getDepartamento() {
+	public String getDepartamento() {
 		return departamento;
 	}
 
-	public void setDepartamento(DepartamentoDTO departamento) {
+	public void setDepartamento(String departamento) {
 		this.departamento = departamento;
 	}
 

@@ -3,6 +3,10 @@ package persistence;
 import java.util.List;
 
 import model.*;
+import model.dto.DepartamentoDTO;
+import model.dto.EmpleadoDTO;
+import model.dto.IncidenciaDTO;
+import model.dto.RankingDTO;
 
 /**
  *
@@ -11,10 +15,10 @@ import model.*;
 public interface DAO {
 
     // Método para insertar un nuevo empleado.
-    public void insertEmpleado(Empleado e);
+    public void insertEmpleado(EmpleadoDTO e);
     
     // Método para insertar un nuevo departamento.
-    public void insertDepartamento(Departamento d);
+    public void insertDepartamento(DepartamentoDTO d);
     
     // Método para modificar el perfil de un departamento.
     public void updateDepartamento(Departamento d);
@@ -35,10 +39,10 @@ public interface DAO {
     public List<Incidencia> selectAllIncidencias();
     
     // Obtener una lista de todos los empleados
-    public List<Empleado> selectAllEmpleados();
+    public List<EmpleadoDTO> selectAllEmpleados();
 
     // Insertar una incidencia a partir de un objeto incidencia
-    public void insertIncidencia(Incidencia i);
+    public void insertIncidencia(IncidenciaDTO i);
 
     // Obtener la lista de incidencias con destino un determinado
     // empleado, a partir de un objeto empleado.
@@ -63,7 +67,7 @@ public interface DAO {
 
     // Obtener el ranking de los empleados por cantidad de incidencias
     // urgentes creadas (más incidencias urgentes primero).
-    public List<RankingTO> getRankingEmpleados();
+    public List<RankingDTO> getRankingEmpleados();
     
     public void close();
     

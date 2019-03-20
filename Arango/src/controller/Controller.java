@@ -4,6 +4,8 @@ import java.util.List;
 
 import model.Departamento;
 import model.Empleado;
+import model.dto.DepartamentoDTO;
+import model.dto.EmpleadoDTO;
 import persistence.DAO;
 import persistence.DAOImpl;
 
@@ -12,7 +14,7 @@ public class Controller {
 
 	/**
 	 * <pre>
-	 * TODO CUEVAS: A mi esto de que los métodos devuelvan un literal con si ha ido bien o mal no me gusta mucho. Pero lo mismo que lo del main lo hablamos a ver.
+	 * TODO CUEVAS: A mi esto de que los mï¿½todos devuelvan un literal con si ha ido bien o mal no me gusta mucho. Pero lo mismo que lo del main lo hablamos a ver.
 	 * </pre>
 	 */
 
@@ -41,17 +43,17 @@ public class Controller {
 		return dao.loginEmpleado(username, contrasenya);
 	}
 
-	public String crearDepartamento(Departamento departamento) {
+	public String crearDepartamento(DepartamentoDTO departamento) {
 		dao.insertDepartamento(departamento);
 		return "Departamento guardado correctamente";
 	}
 
-	public String crearEmpleado(Empleado empleado) {
+	public String crearEmpleado(EmpleadoDTO empleado) {
 		dao.insertEmpleado(empleado);
 		return "Empleado guardado correctamente";
 	}
 
-	public List<Empleado> getAllUsers() {
+	public List<EmpleadoDTO> getAllUsers() {
 		return dao.selectAllEmpleados();
 	}
 

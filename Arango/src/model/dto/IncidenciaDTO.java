@@ -1,30 +1,26 @@
-package model;
+package model.dto;
 
 import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import com.arangodb.entity.DocumentField;
 import com.arangodb.entity.DocumentField.Type;
 
-import model.dto.EmpleadoDTO;
+import model.IKeyable;
 
-public class Incidencia implements IKeyable {
+public class IncidenciaDTO implements IKeyable {
 
 	@DocumentField(Type.KEY)
 	private Integer id;
-	private EmpleadoDTO origen;
-	private EmpleadoDTO destino;
+	private String origen;
+	private String destino;
 	private String titulo;
 	private String descripcion;
 	private Date fechaInicio;
 	private Date fechaFin;
 
-	public Incidencia() {
-	}
+	public IncidenciaDTO() {}
 
-	public Incidencia(EmpleadoDTO origen, EmpleadoDTO destino, String titulo, String descripcion) {
-		super();
+	public IncidenciaDTO(String origen, String destino, String titulo, String descripcion) {
 		this.origen = origen;
 		this.destino = destino;
 		this.titulo = titulo;
@@ -71,19 +67,19 @@ public class Incidencia implements IKeyable {
 		// illegal document key
 	}
 
-	public EmpleadoDTO getOrigen() {
+	public String getOrigen() {
 		return origen;
 	}
 
-	public void setOrigen(EmpleadoDTO origen) {
+	public void setOrigen(String origen) {
 		this.origen = origen;
 	}
 
-	public EmpleadoDTO getDestino() {
+	public String getDestino() {
 		return destino;
 	}
 
-	public void setDestino(EmpleadoDTO destino) {
+	public void setDestino(String destino) {
 		this.destino = destino;
 	}
 

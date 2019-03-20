@@ -25,13 +25,17 @@ public abstract class ArangoUtils {
 	}
 	
 	protected <T> List<T> find(Class<T> tClass) {
+		String collectionName = tClass.getSimpleName().toLowerCase();
+		ArangoCollection collection = db.collection(collectionName);
+		if(!collection.exists()) 
+			return new ArrayList<T>();
 		String query = "FOR doc IN " + tClass.getSimpleName().toLowerCase() + " RETURN doc";
 		ArangoCursor<T> cursor = db.query(query, null, null, tClass);
 		return cursor.asListRemaining();
 	}
 	
 	protected boolean exists(IKeyable object) {
-		return db.collection("empleado").documentExists(object.getKey());
+		return db.collection(object.getClass().getSimpleName().toLowerCase()).documentExists(object.getKey());
 	}
 	
 	protected void store(IKeyable object) {

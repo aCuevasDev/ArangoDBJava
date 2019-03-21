@@ -13,12 +13,6 @@ import model.dto.EmpleadoDTO;
 public class ArangoMain {
 
 	private static Controller controller;
-	
-	/**
-	 * <pre>
-	 *  TODO Cuevas: No me gusta nada tener estos m�todos aqu�, yo los pondr�a en el Controller. Pero como quer�is vosotros que es pijada m�a. Tambi�n cambiar�a el nombre del paquete :*
-	 * </pre>
-	 */
 
 	public static void main(String[] args) {
 		try {
@@ -109,7 +103,7 @@ public class ArangoMain {
 		mainMenu();
 	}
 
-	private static DepartamentoDTO crearDepartamento() {
+	private static DepartamentoDTO crearDepartamento() throws InvalidException {
 		DepartamentoDTO newDepartamento = new DepartamentoDTO();
 		newDepartamento.setNombre(InputAsker.askString("Introduce el nombre del departamento: "));
 		List<EmpleadoDTO> empleados = Controller.getInstance().getAllUsers();

@@ -49,7 +49,7 @@ public class Controller {
 	
 	
 
-	public String crearDepartamento(DepartamentoDTO departamento) {
+	public String crearDepartamento(DepartamentoDTO departamento) throws InvalidException {
 		dao.insertDepartamento(departamento);
 		return "Departamento guardado correctamente";
 	}

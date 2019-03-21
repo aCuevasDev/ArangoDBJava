@@ -8,7 +8,7 @@ import com.arangodb.entity.DocumentField.Type;
 import model.dto.EmpleadoDTO;
 
 public class Incidencia implements IKeyable {
-
+	
 	@DocumentField(Type.KEY)
 	private Integer id;
 	private EmpleadoDTO origen;
@@ -17,17 +17,19 @@ public class Incidencia implements IKeyable {
 	private String descripcion;
 	private Date fechaInicio;
 	private Date fechaFin;
+	private boolean urgente;
 
 	public Incidencia() {
 	}
 
-	public Incidencia(EmpleadoDTO origen, EmpleadoDTO destino, String titulo, String descripcion) {
+	public Incidencia(EmpleadoDTO origen, EmpleadoDTO destino, String titulo, String descripcion, boolean urgente) {
 		super();
 		this.origen = origen;
 		this.destino = destino;
 		this.titulo = titulo;
 		this.descripcion = descripcion;
 		this.fechaInicio = new Date();
+		this.urgente = urgente;
 	}
 
 	public String getTitulo() {
@@ -84,5 +86,12 @@ public class Incidencia implements IKeyable {
 	public void setDestino(EmpleadoDTO destino) {
 		this.destino = destino;
 	}
-
+	
+	public boolean isUrgente() {
+		return urgente;
+	}
+	
+	public void setUrgente(boolean urgente) {
+		this.urgente = urgente;
+	}
 }

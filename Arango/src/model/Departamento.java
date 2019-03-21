@@ -19,7 +19,7 @@ public class Departamento implements IKeyable {
 		this.jefe = jefe;
 		this.empleados = empleados;
 	}
-	
+		
 	public String getNombre() {
 		return nombre;
 	}

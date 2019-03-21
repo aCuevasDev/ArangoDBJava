@@ -6,8 +6,9 @@ public class InvalidException extends Exception {
 
 	public enum Tipo {
 		
-		INVALID_CREDENTIALS("Invalid credentials."), 
-		ALREADY_EXISTS("User already exists.");
+		INVALID_CREDENTIALS("Usuario o contrasena incorrectos."), 
+		USER_EXISTS("Nombre de usuario ya existe."),
+		DEPARTMENT_EXISTS("Departamento ya existe");
 		
 		private String message;
 		

@@ -4,7 +4,6 @@ import java.util.List;
 
 import exception.InvalidException;
 import exception.InvalidException.Tipo;
-import model.Departamento;
 import model.Empleado;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;

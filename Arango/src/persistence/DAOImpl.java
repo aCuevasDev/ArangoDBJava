@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.arangodb.util.MapBuilder;
 
+import exception.InvalidException;
 import model.Empleado;
 import model.Evento.Tipo;
 import model.Incidencia;
@@ -104,7 +105,8 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public List<RankingDTO> getRankingEmpleados() {
-		return find(RankingDTO.class);
+//		return find(RankingDTO.class);
+		return null;
 	}
 
 	@Override
@@ -113,11 +115,10 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public void insertDepartamento(DepartamentoDTO d) {
+	public void insertDepartamento(DepartamentoDTO d) throws InvalidException {
 		if (!exists(d))
 			store(d);
-		// TODO THROW EXCEPTION
-
+		throw new InvalidException(InvalidException.Tipo.DEPARTMENT_EXISTS);
 	}
 
 	@Override
@@ -145,5 +146,16 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		// TODO Throw exception
 		return new Empleado(emp, departamentos.get(0));
 	}
+	
+//	public Departamento initializeDepartamento(DepartamentoDTO dep) {
+//		List<EmpleadoDTO> empleados = find(EmpleadoDTO.class,new MapBuilder().put("username", dep.getJefe()).get());
+//		
+//		//if (departamentos.isEmpty()) 
+//		// TODO Throw exception
+//		
+//		return new Departamento();
+//	}
+	
+	
 
 }

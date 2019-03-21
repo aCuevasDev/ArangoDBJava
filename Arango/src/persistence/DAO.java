@@ -2,6 +2,7 @@ package persistence;
 
 import java.util.List;
 
+import exception.InvalidException;
 import model.*;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
@@ -19,7 +20,7 @@ public interface DAO {
     public void insertEmpleado(EmpleadoDTO e);
     
     // Método para insertar un nuevo departamento.
-    public void insertDepartamento(DepartamentoDTO d);
+    public void insertDepartamento(DepartamentoDTO d) throws InvalidException;
     
     // Método para modificar el perfil de un departamento.
     public void updateDepartamento(DepartamentoDTO d);

@@ -5,6 +5,7 @@ import java.util.List;
 import model.*;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
+import model.dto.EventoDTO;
 import model.dto.IncidenciaDTO;
 import model.dto.RankingDTO;
 
@@ -21,7 +22,7 @@ public interface DAO {
     public void insertDepartamento(DepartamentoDTO d);
     
     // Método para modificar el perfil de un departamento.
-    public void updateDepartamento(Departamento d);
+    public void updateDepartamento(DepartamentoDTO d);
 
     // Método para validar el login de un empleado.
     public boolean loginEmpleado(String user, String pass);
@@ -36,7 +37,7 @@ public interface DAO {
     public Incidencia getIncidenciaById(int id);
 
     // Obtener una lista de todas las incidencias
-    public List<Incidencia> selectAllIncidencias();
+    public List<IncidenciaDTO> selectAllIncidencias();
     
     // Obtener una lista de todos los empleados
     public List<EmpleadoDTO> selectAllEmpleados();
@@ -46,11 +47,11 @@ public interface DAO {
 
     // Obtener la lista de incidencias con destino un determinado
     // empleado, a partir de un objeto empleado.
-    public List<Incidencia> getIncidenciaByDestino(Empleado e);
+    public List<IncidenciaDTO> getIncidenciaByDestino(Empleado e);
 
     // Obtener la lista de incidencias con origen un determinado
     // empleado, a partir de un objeto empleado.
-    public List<Incidencia> getIncidenciaByOrigen(Empleado e);
+    public List<IncidenciaDTO> getIncidenciaByOrigen(Empleado e);
 
     
     // Método para insertar un evento en la tabla historial.
@@ -60,10 +61,10 @@ public interface DAO {
     // 1) Cuando un usuario hace login 
     // 2) Cuando un usuario crea una incidencia de tipo urgente 
     // 3) Cuando se consultan las incidencias destinadas a un usuario 
-    public void insertarEvento(Evento e);
+    public void insertarEvento(EventoDTO e);
     
     // Obtener la fecha-hora del último inicio de sesión para un empleado.
-    public Evento getUltimoInicioSesion(Empleado e);
+    public EventoDTO getUltimoInicioSesion(EmpleadoDTO e);
 
     // Obtener el ranking de los empleados por cantidad de incidencias
     // urgentes creadas (más incidencias urgentes primero).
@@ -71,6 +72,8 @@ public interface DAO {
     
     public void close();
     
+    public EmpleadoDTO getEmpleado(String username, String pass);
     
+    public Empleado initializeEmpleado(EmpleadoDTO emp);
 
 }

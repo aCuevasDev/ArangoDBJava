@@ -68,7 +68,6 @@ public class InputAsker {
      * @return String (optionA or optionB) - input by user
      */
     public static String askString(String message, String optionA, String optionB) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String answer = "";
         do {
             answer = askString(message);

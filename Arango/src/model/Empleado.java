@@ -4,6 +4,7 @@ import com.arangodb.entity.DocumentField;
 import com.arangodb.entity.DocumentField.Type;
 
 import model.dto.DepartamentoDTO;
+import model.dto.EmpleadoDTO;
 
 public class Empleado implements IKeyable {
 
@@ -15,9 +16,7 @@ public class Empleado implements IKeyable {
 	private boolean jefe;
 	private DepartamentoDTO departamento;
 
-	public Empleado(String nombre, String apellidos, String username, String contrasenya,
-			DepartamentoDTO departamento) {
-		super();
+	public Empleado(String nombre, String apellidos, String username, String contrasenya, DepartamentoDTO departamento) {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.username = username;
@@ -27,13 +26,21 @@ public class Empleado implements IKeyable {
 	}
 
 	public Empleado(String nombre, String apellidos, String username, String contrasenya) {
-		super();
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.username = username;
 		this.contrasenya = contrasenya;
 		this.departamento = null;
 		this.jefe = false;
+	}
+	
+	public Empleado(EmpleadoDTO empleado, DepartamentoDTO departamento) {
+		this.nombre = empleado.getNombre();
+		this.apellidos = empleado.getApellidos();
+		this.username = empleado.getUsername();
+		this.contrasenya = empleado.getContrasenya();
+		this.jefe = empleado.isJefe();
+		this.departamento = departamento;
 	}
 
 	public Empleado() {

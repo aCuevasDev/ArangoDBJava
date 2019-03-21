@@ -47,10 +47,4 @@ public class Evento implements IKeyable{
 	public String getKey() {
 		return String.valueOf(id);
 	}
-	
-	
-	
-	
-	
-
 }

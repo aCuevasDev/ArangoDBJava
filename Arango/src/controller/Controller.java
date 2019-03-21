@@ -2,6 +2,8 @@ package controller;
 
 import java.util.List;
 
+import exception.InvalidException;
+import exception.InvalidException.Tipo;
 import model.Departamento;
 import model.Empleado;
 import model.dto.DepartamentoDTO;
@@ -35,13 +37,18 @@ public class Controller {
 	}
 
 	private Controller() {
-		this.usuarioLogeado = null;
 		this.dao = DAOImpl.getInstance();
 	}
 
-	public boolean login(String username, String contrasenya) {
-		return dao.loginEmpleado(username, contrasenya);
+	public String login(String username, String contrasenya) throws InvalidException {
+		if (dao.loginEmpleado(username, contrasenya)) {
+			usuarioLogeado = dao.initializeEmpleado(dao.getEmpleado(username, contrasenya));
+			return "Usuario creado correctamente.";
+		}
+		throw new InvalidException(Tipo.INVALID_CREDENTIALS);
 	}
+	
+	
 
 	public String crearDepartamento(DepartamentoDTO departamento) {
 		dao.insertDepartamento(departamento);

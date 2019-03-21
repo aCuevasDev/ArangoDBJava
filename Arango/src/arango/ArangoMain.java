@@ -1,19 +1,18 @@
 package arango;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import controller.Controller;
-import model.Departamento;
-import model.Empleado;
-import model.Incidencia;
+import exception.FatalException;
+import exception.InvalidException;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
-import model.dto.IncidenciaDTO;
-import persistence.DAOImpl;
 
 public class ArangoMain {
 
+	private static Controller controller;
+	
 	/**
 	 * <pre>
 	 *  TODO Cuevas: No me gusta nada tener estos m�todos aqu�, yo los pondr�a en el Controller. Pero como quer�is vosotros que es pijada m�a. Tambi�n cambiar�a el nombre del paquete :*
@@ -22,25 +21,46 @@ public class ArangoMain {
 
 	public static void main(String[] args) {
 		try {
-			Controller.getInstance().crearEmpleado(new EmpleadoDTO("emp", "emp", "emp", "emp", crearDepartamento().getNombre()));
-			IncidenciaDTO incidencia = new IncidenciaDTO("origen", "destino", "Test1", "incidencia test");
-			DAOImpl.getInstance().insertIncidencia(incidencia);
-		} catch (Exception e) {
-			e.printStackTrace();
+			controller = Controller.getInstance();
+			authMenu();
+		} catch (FatalException e) {
+			System.err.println(e.getMessage());
 		} finally {
-			Controller.getInstance().closeConexion();
+			controller.closeConexion();
 		}
+	}
+	
+	
+	private static void authMenu() {
+		boolean cont = true;
+		int option;
+		do {
+			option = InputAsker.askElementList("", Arrays.asList("Login","Registrarse","Salir"));
+			switch(option) {
+				case 0: login(); break;
+				case 1: register(); break;
+				case 2: 
+					System.out.println("Hasta la proxima!");
+					cont = false;
+					break;
+				default: System.err.println("Opcion invalida");
+			}
+		} while(cont);
+	}
+	
+	private static void mainMenu() {
+		// TODO Implementation
+	}
+	
+	private static void register() {
+		// TODO Implementation
 	}
 
 
-	public static void login() {
+	private static void login() throws InvalidException {
 		String username = InputAsker.askString("Introduce tu username");
 		String contrasenya = InputAsker.askString("Introduce tu contrasenya");
-		if (Controller.getInstance().login(username, contrasenya)) {
-			System.out.println("Bienvenido");
-		} else {
-			System.out.println("Usuario o contraseña incorrectos");
-		}
+		System.out.println(Controller.getInstance().login(username, contrasenya));
 	}
 
 	private static DepartamentoDTO crearDepartamento() {

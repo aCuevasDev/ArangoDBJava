@@ -27,29 +27,35 @@ public class ArangoMain {
 	
 	
 	private static void authMenu() {
-		boolean cont = true;
 		int option;
 		do {
+			option = InputAsker.askElementList("Selecciona una opcion:", Arrays.asList("Login","Salir"));
+			switch(option) {
+				case 0: login(); break;
+				case 1: System.out.println("Hasta la proxima!"); break;
+				default: System.err.println("Opcion invalida");
+			}
+		} while(option != 1);
+	}
+	
+	// @Bou
+	private static void mainMenu() {
+		int option;
+		do {
+			option = InputAsker.askElementList("Selecciona una opcion: ", Arrays.asList("Login","Registrarse","Salir"));
 			try {
-				option = InputAsker.askElementList("", Arrays.asList("Login","Registrarse","Salir"));
 				switch(option) {
 					case 0: login(); break;
 					case 1: register(); break;
 					case 2: 
 						System.out.println("Hasta la proxima!");
-						cont = false;
 						break;
 					default: System.err.println("Opcion invalida");
 				}
 			} catch (InvalidException e) {
 				System.err.println(e.getMessage());
 			}
-		} while(cont);
-	}
-	
-	// @Bou
-	private static void mainMenu() {
-		// TODO Implementation 
+		} while(option != 2);
 	}
 	
 	// @Vives
@@ -93,14 +99,16 @@ public class ArangoMain {
 		// TODO implementation (solo jefe)		
 	}
 	
-		
-	
-	private static void login() throws InvalidException {
-		String username = InputAsker.askString("Introduce tu username");
-		String contrasenya = InputAsker.askString("Introduce tu contrasenya");
-		controller.login(username, contrasenya);
-		System.out.println("Bienvenido, " + username);
-		mainMenu();
+	private static void login() {
+		try {
+			String username = InputAsker.askString("Introduce tu username");
+			String contrasenya = InputAsker.askString("Introduce tu contrasenya");
+			controller.login(username, contrasenya);
+			System.out.println("Bienvenido, " + username);
+			mainMenu();
+		} catch (InvalidException e) {
+			System.err.println(e.getMessage());
+		}
 	}
 
 	private static DepartamentoDTO crearDepartamento() throws InvalidException {
@@ -111,6 +119,7 @@ public class ArangoMain {
 		newDepartamento.setJefe(eleccion == 0 ? null : empleados.get(eleccion - 1).getNombre());
 		Controller.getInstance().crearDepartamento(newDepartamento);
 		return newDepartamento;
+		// TODO (Solo jefes)
 		// TODO poner el empleado como que es jefe y añadir al departamento
 		// TODO Cuevas: todas las tildes y ñ me salen raras, hay que a�adir UTF-8
 	}

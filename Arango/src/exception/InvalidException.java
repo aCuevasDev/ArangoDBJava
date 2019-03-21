@@ -8,7 +8,8 @@ public class InvalidException extends Exception {
 		
 		INVALID_CREDENTIALS("Usuario o contrasena incorrectos."), 
 		USER_EXISTS("Nombre de usuario ya existe."),
-		DEPARTMENT_EXISTS("Departamento ya existe");
+		DEPARTMENT_EXISTS("Departamento ya existe"),
+		LOGGED_OUT("No estas logueado");
 		
 		private String message;
 		

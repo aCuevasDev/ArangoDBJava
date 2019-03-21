@@ -67,6 +67,13 @@ public class Controller {
 		dao.close();
 	}
 
+	
+	public boolean isJefe() throws InvalidException {
+		if (usuarioLogeado == null)
+			throw new InvalidException(Tipo.LOGGED_OUT);
+		return usuarioLogeado.isJefe();
+		
+	}
 	// public static void main(String[] args) {
 //		try {
 //			init();
@@ -125,5 +132,7 @@ public class Controller {
 //		}
 //
 //	}
+	
+	
 
 }

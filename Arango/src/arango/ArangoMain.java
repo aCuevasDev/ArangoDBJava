@@ -1,5 +1,6 @@
 package arango;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,6 +14,20 @@ import model.dto.EmpleadoDTO;
 public class ArangoMain {
 
 	private static Controller controller;
+	// Estas listas no permiten añadir o quitar elementos on the fly
+	private static final List<String> opcionesEmpleado = Arrays.asList( 
+			"Actualizar empleado.", 
+			"Solucionar incidencia.", 
+			"Listar incidencias"
+	); 
+	private static final List<String> opcionesJefe = Arrays.asList(
+			"Registrar empleado.", 
+			"Borrar empleado.", 
+			"Crear departamento", 
+			"Actualizar departamento", 
+			"Mostrar rnanking", 
+			"Crear incidencia."
+	); 
 
 	public static void main(String[] args) {
 		try {
@@ -41,21 +56,34 @@ public class ArangoMain {
 	// @Bou
 	private static void mainMenu() {
 		int option;
+		List<String> options = getOptionsList();
 		do {
-			option = InputAsker.askElementList("Selecciona una opcion: ", Arrays.asList("Login","Registrarse","Salir"));
+			option = InputAsker.pedirIndice("Selecciona una opcion: ", options, true);
 			try {
 				switch(option) {
-					case 0: login(); break;
-					case 1: register(); break;
-					case 2: 
-						System.out.println("Hasta la proxima!");
-						break;
+					case 1: updateEmpleado(); break;
+					case 2: solucionarIncidencia(); break;
+					case 3: listarIncidencias(); break;
+					case 4: register(); break;
+					case 5: deleteEmpleado(); break;
+					case 6: updateDepartamento(); break;
+					case 7: mostrarRanking(); break;
+					case 8: crearIncidencia(); break;
+					case 0: System.out.println("Hasta la proxima!"); break;
 					default: System.err.println("Opcion invalida");
 				}
 			} catch (InvalidException e) {
 				System.err.println(e.getMessage());
 			}
-		} while(option != 2);
+		} while (option != 0);
+	}
+	
+	private static List<String> getOptionsList() {
+		List<String> options = new ArrayList<>();
+		options.addAll(opcionesEmpleado);
+		if (controller.isJefe())
+			options.addAll(opcionesJefe);
+		return options;
 	}
 	
 	// @Vives
@@ -69,7 +97,7 @@ public class ArangoMain {
 	}
 	
 	// @Bou
-	private static void updateDepartamento() {
+	private static void updateDepartamento() throws InvalidException {
 		// TODO implementation (solo jefe)
 	}
 	

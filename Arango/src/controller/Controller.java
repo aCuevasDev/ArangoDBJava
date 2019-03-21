@@ -68,9 +68,7 @@ public class Controller {
 	}
 
 	
-	public boolean isJefe() throws InvalidException {
-		if (usuarioLogeado == null)
-			throw new InvalidException(Tipo.LOGGED_OUT);
+	public boolean isJefe() {
 		return usuarioLogeado.isJefe();
 		
 	}

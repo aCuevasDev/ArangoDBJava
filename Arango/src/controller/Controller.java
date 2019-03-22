@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 import exception.InvalidException;
 import exception.InvalidException.Tipo;
 import model.Empleado;
+import model.Incidencia;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
+import model.dto.IncidenciaDTO;
 import persistence.DAO;
 import persistence.DAOImpl;
 
@@ -37,7 +39,7 @@ public class Controller {
 
 	public String login(String username, String contrasenya) throws InvalidException {
 		if (dao.loginEmpleado(username, contrasenya)) {
-			usuarioLogeado = dao.initializeEmpleado(dao.getEmpleado(username, contrasenya));
+			usuarioLogeado = dao.initialize(dao.getEmpleado(username, contrasenya));
 			return "Usuario creado correctamente.";
 		}
 		throw new InvalidException(Tipo.INVALID_CREDENTIALS);
@@ -84,6 +86,12 @@ public class Controller {
 
 	public void updateEmpleado(EmpleadoDTO empleado) {
 		dao.updateEmpleado(empleado);
+	}
+
+	public List<IncidenciaDTO> getUserIncidencias() {
+		if (!usuarioLogeado.isJefe()) 
+			return dao.getIncidenciaByDestino(usuarioLogeado);
+		return dao.getIncidenciasByDepartamento(usuarioLogeado.getDepartamento());
 	}
 
 }

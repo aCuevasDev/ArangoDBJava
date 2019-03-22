@@ -140,7 +140,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public Empleado initializeEmpleado(EmpleadoDTO emp) {
+	public Empleado initialize(EmpleadoDTO emp) {
 		List<DepartamentoDTO> departamentos = find(DepartamentoDTO.class, new MapBuilder().put("nombre", emp.getDepartamento()).get());
 		//if (departamentos.isEmpty()) 
 		// TODO Throw exception
@@ -151,6 +151,24 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	public List<DepartamentoDTO> selectAllDepartments() {
 		return find(DepartamentoDTO.class);
 	}
+
+	@Override
+	public List<IncidenciaDTO> getIncidenciasByDepartamento(DepartamentoDTO dep) {
+		return selectAllIncidencias()
+				.stream()
+				.map(i -> initialize(i))
+				.filter(i -> i.getDestino().getDepartamento().equals(dep.getNombre()))
+				.map(i -> new IncidenciaDTO(i))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public Incidencia initialize(IncidenciaDTO inc) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 	
 //	public Departamento initializeDepartamento(DepartamentoDTO dep) {
 //		List<EmpleadoDTO> empleados = find(EmpleadoDTO.class,new MapBuilder().put("username", dep.getJefe()).get());

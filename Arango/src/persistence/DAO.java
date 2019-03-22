@@ -75,8 +75,12 @@ public interface DAO {
     
     public EmpleadoDTO getEmpleado(String username, String pass);
     
-    public Empleado initializeEmpleado(EmpleadoDTO emp);
+    public Empleado initialize(EmpleadoDTO emp);
+    
+    public Incidencia initialize(IncidenciaDTO inc);
 
 	public List<DepartamentoDTO> selectAllDepartments();
+	
+	public List<IncidenciaDTO> getIncidenciasByDepartamento(DepartamentoDTO dep);
 
 }

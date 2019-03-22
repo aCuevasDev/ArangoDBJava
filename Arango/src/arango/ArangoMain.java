@@ -9,7 +9,6 @@ import com.arangodb.ArangoDBException;
 import controller.Controller;
 import exception.InvalidException;
 import exception.InvalidException.Tipo;
-import model.Empleado;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
 
@@ -65,7 +64,7 @@ public class ArangoMain {
 				switch(option) {
 					case 1: updateEmpleado(); break;
 					case 2: solucionarIncidencia(); break;
-					case 3: listarIncidencias(); break;
+					case 3: controller.getUserIncidencias().forEach(System.out::println); break;
 					case 4: register(); break;
 					case 5: deleteEmpleado(); break;
 					case 6: crearDepartamento(); break;
@@ -143,13 +142,7 @@ public class ArangoMain {
 	// @Cuevas
 	private static void solucionarIncidencia() {
 		// TODO implementation (todas)
-	}
-
-	// @Bou
-	private static void listarIncidencias() {
-		// TODO implementation (jefe todas departamento, empleado solo suyas)
-	}
-	
+	}	
 	
 	// @Vives
 	private static void mostrarRanking() {

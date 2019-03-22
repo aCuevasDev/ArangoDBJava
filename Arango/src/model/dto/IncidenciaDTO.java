@@ -11,7 +11,7 @@ import model.Incidencia;
 public class IncidenciaDTO implements IKeyable {
 
 	@DocumentField(Type.KEY)
-	private Integer id;
+	private String id;
 	private String origen;
 	private String destino;
 	private String titulo;
@@ -71,9 +71,7 @@ public class IncidenciaDTO implements IKeyable {
 
 	@Override
 	public String getKey() {
-		return String.valueOf(id);
-		// TODO Cuevas: String.valueOf(id) daba un error Response: 400, Error: 1221 -
-		// illegal document key
+		return id;
 	}
 
 	public String getOrigen() {
@@ -91,5 +89,13 @@ public class IncidenciaDTO implements IKeyable {
 	public void setDestino(String destino) {
 		this.destino = destino;
 	}
+
+	@Override
+	public String toString() {
+		return "IncidenciaDTO [origen=" + origen + ", destino=" + destino + ", titulo=" + titulo + ", descripcion="
+				+ descripcion + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + "]";
+	}
+
+	
 
 }

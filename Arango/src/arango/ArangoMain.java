@@ -11,6 +11,8 @@ import exception.InvalidException;
 import exception.InvalidException.Tipo;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
+import model.dto.IncidenciaDTO;
+import persistence.DAOImpl;
 
 public class ArangoMain {
 
@@ -102,14 +104,10 @@ public class ArangoMain {
 		System.out.println("Estas editando el departamento: " + dep.getNombre());
 		int opt;
 		do {
-			opt = InputAsker.pedirIndice("Que dato quieres editar?", Arrays.asList("Nombre", "Anadir empleado", "Quitar empleado"), true);
+			opt = InputAsker.pedirIndice("Que dato quieres editar?", Arrays.asList("Anadir empleado", "Quitar empleado"), true);
 			switch (opt) {
-				case 1: 
-					dep.setNombre(InputAsker.askString("Introduce el nuevo nombre: "));
-					controller.updateDepartamento(dep);
-					break;
-				case 2: addEmpleadoADepartamento(dep); break;
-				case 3: removeEmpleadDeDepartamento(dep);
+				case 1: addEmpleadoADepartamento(dep); break;
+				case 2: removeEmpleadDeDepartamento(dep);
 			}
 		} while(opt != 0);
 	}
@@ -147,8 +145,10 @@ public class ArangoMain {
 	}
 	
 	// @Cuevas
-	private static void crearIncidencia() {
-		// TODO implementation (solo jefe)		
+	private static void crearIncidencia() throws InvalidException {
+		// TODO implementation (solo jefe)	
+		checkJefe();
+		DAOImpl.getInstance().insertIncidencia(new IncidenciaDTO("emp", "emp", "test", "testest"));
 	}
 	
 	private static void login() {
@@ -164,6 +164,7 @@ public class ArangoMain {
 	}
 
 	private static DepartamentoDTO crearDepartamento() throws InvalidException {
+		checkJefe();
 		DepartamentoDTO newDepartamento = new DepartamentoDTO();
 		newDepartamento.setNombre(InputAsker.askString("Introduce el nombre del departamento: "));
 		List<EmpleadoDTO> empleados = Controller.getInstance().getAllUsers();
@@ -177,7 +178,7 @@ public class ArangoMain {
 	}
 	
 	private static void checkJefe() throws InvalidException {
-		if (controller.getUsuarioLogeado().isJefe())
+		if (!controller.getUsuarioLogeado().isJefe())
 			throw new InvalidException(Tipo.UNAUTHORIZED);
 	}
 }

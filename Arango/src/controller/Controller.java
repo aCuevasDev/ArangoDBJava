@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import exception.InvalidException;
 import exception.InvalidException.Tipo;
 import model.Empleado;
-import model.Incidencia;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
 import model.dto.IncidenciaDTO;

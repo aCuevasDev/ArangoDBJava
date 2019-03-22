@@ -67,11 +67,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public void insertIncidencia(IncidenciaDTO i) {
-		if (!exists(i))
-			store(i);
-		// else
-		// TODO THROW ALREADY_EXISTS EXCEPTION
-
+		store(i);
 	}
 
 	@Override
@@ -153,12 +149,12 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public List<IncidenciaDTO> getIncidenciasByDepartamento(DepartamentoDTO dep) {
-		return selectAllIncidencias()
-				.stream()
-				.map(i -> initialize(i))
-				.filter(i -> i.getDestino().getDepartamento().equals(dep.getNombre()))
-				.map(i -> new IncidenciaDTO(i))
-				.collect(Collectors.toList());
+		return selectAllIncidencias();
+//				.stream()
+//				.map(i -> initialize(i))
+//				.filter(i -> i.getDestino().getDepartamento().equals(dep.getNombre()))
+//				.map(i -> new IncidenciaDTO(i))
+//				.collect(Collectors.toList());
 	}
 
 	@Override

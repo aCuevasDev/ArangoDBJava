@@ -44,7 +44,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public void updateEmpleado(Empleado e) {
+	public void updateEmpleado(EmpleadoDTO e) {
 		store(e);
 	}
 
@@ -145,6 +145,11 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		//if (departamentos.isEmpty()) 
 		// TODO Throw exception
 		return new Empleado(emp, departamentos.get(0));
+	}
+
+	@Override
+	public List<DepartamentoDTO> selectAllDepartments() {
+		return find(DepartamentoDTO.class);
 	}
 	
 //	public Departamento initializeDepartamento(DepartamentoDTO dep) {

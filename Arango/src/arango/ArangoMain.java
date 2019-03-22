@@ -8,6 +8,8 @@ import com.arangodb.ArangoDBException;
 
 import controller.Controller;
 import exception.InvalidException;
+import exception.InvalidException.Tipo;
+import model.Empleado;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
 
@@ -44,13 +46,13 @@ public class ArangoMain {
 	private static void authMenu() {
 		int option;
 		do {
-			option = InputAsker.askElementList("Selecciona una opcion:", Arrays.asList("Login","Salir"));
+			option = InputAsker.pedirIndice("Selecciona una opcion:", Arrays.asList("Login"), true);
 			switch(option) {
-				case 0: login(); break;
-				case 1: System.out.println("Hasta la proxima!"); break;
+				case 1: login(); break;
+				case 0: System.out.println("Hasta la proxima!"); break;
 				default: System.err.println("Opcion invalida");
 			}
-		} while(option != 1);
+		} while(option != 0);
 	}
 	
 	// @Bou
@@ -66,9 +68,10 @@ public class ArangoMain {
 					case 3: listarIncidencias(); break;
 					case 4: register(); break;
 					case 5: deleteEmpleado(); break;
-					case 6: updateDepartamento(); break;
-					case 7: mostrarRanking(); break;
-					case 8: crearIncidencia(); break;
+					case 6: crearDepartamento(); break;
+					case 7: updateDepartamento(); break;
+					case 8: mostrarRanking(); break;
+					case 9: crearIncidencia(); break;
 					case 0: System.out.println("Hasta la proxima!"); break;
 					default: System.err.println("Opcion invalida");
 				}
@@ -81,7 +84,7 @@ public class ArangoMain {
 	private static List<String> getOptionsList() {
 		List<String> options = new ArrayList<>();
 		options.addAll(opcionesEmpleado);
-		if (controller.isJefe())
+		if (controller.getUsuarioLogeado().isJefe())
 			options.addAll(opcionesJefe);
 		return options;
 	}
@@ -98,9 +101,40 @@ public class ArangoMain {
 	
 	// @Bou
 	private static void updateDepartamento() throws InvalidException {
-		// TODO implementation (solo jefe)
+		checkJefe();
+		DepartamentoDTO dep = controller.getUsuarioLogeado().getDepartamento();
+		System.out.println("Estas editando el departamento: " + dep.getNombre());
+		int opt;
+		do {
+			opt = InputAsker.pedirIndice("Que dato quieres editar?", Arrays.asList("Nombre", "Añadir empleado", "Quitar empleado"), true);
+			switch (opt) {
+				case 1: 
+					dep.setNombre(InputAsker.askString("Introduce el nuevo nombre: "));
+					controller.updateDepartamento(dep);
+					break;
+				case 2: addEmpleadoADepartamento(dep); break;
+				case 3: removeEmpleadDeDepartamento(dep);
+			}
+		} while(opt != 0);
 	}
-	
+
+
+	private static void removeEmpleadDeDepartamento(DepartamentoDTO dep) {
+		List<EmpleadoDTO> emps = controller.getEmpleados(dep, true);
+		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado a quitar", emps, false));
+		empleado.setDepartamento(null);
+		controller.updateEmpleado(empleado);
+	}
+
+
+	private static void addEmpleadoADepartamento(DepartamentoDTO dep) {
+		List<EmpleadoDTO> emps = controller.getEmpleados(dep, false);
+		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado a añadir", emps, false));
+		empleado.setDepartamento(dep.getNombre());
+		controller.updateEmpleado(empleado);
+	}
+
+
 	// @Vives
 	private static void deleteEmpleado() {
 		// TODO implementation (solo jefe)
@@ -150,5 +184,10 @@ public class ArangoMain {
 		// TODO (Solo jefes)
 		// TODO poner el empleado como que es jefe y aÃ±adir al departamento
 		// TODO Cuevas: todas las tildes y Ã± me salen raras, hay que aï¿½adir UTF-8
+	}
+	
+	private static void checkJefe() throws InvalidException {
+		if (controller.getUsuarioLogeado().isJefe())
+			throw new InvalidException(Tipo.UNAUTHORIZED);
 	}
 }

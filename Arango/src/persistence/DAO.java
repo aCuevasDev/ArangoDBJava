@@ -29,7 +29,7 @@ public interface DAO {
     public boolean loginEmpleado(String user, String pass);
 
     // Método para modificar el perfil de un empleado.
-    public void updateEmpleado(Empleado e);
+    public void updateEmpleado(EmpleadoDTO empleado);
 
     // Método para eliminar un empleado.
     public void removeEmpleado(Empleado e);
@@ -76,5 +76,7 @@ public interface DAO {
     public EmpleadoDTO getEmpleado(String username, String pass);
     
     public Empleado initializeEmpleado(EmpleadoDTO emp);
+
+	public List<DepartamentoDTO> selectAllDepartments();
 
 }

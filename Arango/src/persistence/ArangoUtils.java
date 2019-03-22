@@ -20,6 +20,10 @@ public abstract class ArangoUtils {
 		db = connection.db("GuacamoleDB");
 	}
 	
+	protected <T>  T getByKey(IKeyable object, Class<T> tClass) {
+		return db.query("RETURN DOCUMENT('" + tClass.getSimpleName().toLowerCase() + "/" + object.getKey() + "')", tClass).first();
+	}
+	
 	protected void close() {
 		connection.shutdown();
 	}

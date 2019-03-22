@@ -38,10 +38,9 @@ public class Controller {
 	}
 
 	public String login(String username, String contrasenya) throws InvalidException {
-		if (dao.loginEmpleado(username, contrasenya)) {
-			usuarioLogeado = dao.initialize(dao.getEmpleado(username, contrasenya));
+		usuarioLogeado = dao.loginEmpleado(username, contrasenya);
+		if (usuarioLogeado != null)
 			return "Usuario creado correctamente.";
-		}
 		throw new InvalidException(Tipo.INVALID_CREDENTIALS);
 	}
 	

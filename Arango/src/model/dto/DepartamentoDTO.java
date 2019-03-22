@@ -16,7 +16,11 @@ public class DepartamentoDTO implements IKeyable {
 		this.nombre = departamento.getNombre();
 		this.jefe = departamento.getJefe().getNombre();
 	}
-
+	
+	public DepartamentoDTO(String nombre) {
+		this.nombre = nombre;
+	}
+	
 	public DepartamentoDTO() {
 	}
 

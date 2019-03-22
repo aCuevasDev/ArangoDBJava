@@ -43,6 +43,10 @@ public class EmpleadoDTO implements IKeyable {
 		this.departamento = null;
 		this.jefe = false;
 	}
+	
+	public EmpleadoDTO(String username) {
+		this.username = username;
+	}
 
 	public EmpleadoDTO() {}
 

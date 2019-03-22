@@ -26,7 +26,7 @@ public interface DAO {
     public void updateDepartamento(DepartamentoDTO d);
 
     // Método para validar el login de un empleado.
-    public boolean loginEmpleado(String user, String pass);
+    public Empleado loginEmpleado(String user, String pass);
 
     // Método para modificar el perfil de un empleado.
     public void updateEmpleado(EmpleadoDTO empleado);

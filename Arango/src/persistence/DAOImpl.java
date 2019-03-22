@@ -36,11 +36,12 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public boolean loginEmpleado(String username, String pass) {
-		EmpleadoDTO emp = getEmpleado(username, pass);
-		if (emp == null) return false;
+	public Empleado loginEmpleado(String username, String pass) {
+		EmpleadoDTO emp = getByKey(new EmpleadoDTO(username), EmpleadoDTO.class);
+		if (emp == null || !emp.getContrasenya().equals(pass)) 
+			return null;
 		store(new EventoDTO(Tipo.LOGIN, emp.getUsername()));
-		return true;
+		return initialize(emp);
 	}
 
 	@Override
@@ -141,10 +142,8 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public Empleado initialize(EmpleadoDTO emp) {
-		List<DepartamentoDTO> departamentos = find(DepartamentoDTO.class, new MapBuilder().put("nombre", emp.getDepartamento()).get());
-		//if (departamentos.isEmpty()) 
-		// TODO Throw exception
-		return new Empleado(emp, departamentos.get(0));
+		DepartamentoDTO departamento = getByKey(new DepartamentoDTO(emp.getDepartamento()), DepartamentoDTO.class);
+		return departamento == null ? null : new Empleado(emp, departamento);
 	}
 
 	@Override

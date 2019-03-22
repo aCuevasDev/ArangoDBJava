@@ -15,7 +15,7 @@ import model.dto.EmpleadoDTO;
 public class ArangoMain {
 
 	private static Controller controller;
-	// Estas listas no permiten añadir o quitar elementos on the fly
+	// Estas listas no permiten anadir o quitar elementos on the fly
 	private static final List<String> opcionesEmpleado = Arrays.asList( 
 			"Actualizar empleado.", 
 			"Solucionar incidencia.", 
@@ -41,7 +41,6 @@ public class ArangoMain {
 		}
 	}
 	
-	
 	private static void authMenu() {
 		int option;
 		do {
@@ -49,12 +48,10 @@ public class ArangoMain {
 			switch(option) {
 				case 1: login(); break;
 				case 0: System.out.println("Hasta la proxima!"); break;
-				default: System.err.println("Opcion invalida");
 			}
 		} while(option != 0);
 	}
 	
-	// @Bou
 	private static void mainMenu() {
 		int option;
 		List<String> options = getOptionsList();
@@ -105,7 +102,7 @@ public class ArangoMain {
 		System.out.println("Estas editando el departamento: " + dep.getNombre());
 		int opt;
 		do {
-			opt = InputAsker.pedirIndice("Que dato quieres editar?", Arrays.asList("Nombre", "Añadir empleado", "Quitar empleado"), true);
+			opt = InputAsker.pedirIndice("Que dato quieres editar?", Arrays.asList("Nombre", "Anadir empleado", "Quitar empleado"), true);
 			switch (opt) {
 				case 1: 
 					dep.setNombre(InputAsker.askString("Introduce el nuevo nombre: "));
@@ -128,7 +125,7 @@ public class ArangoMain {
 
 	private static void addEmpleadoADepartamento(DepartamentoDTO dep) {
 		List<EmpleadoDTO> emps = controller.getEmpleados(dep, false);
-		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado a añadir", emps, false));
+		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado a anadir", emps, false));
 		empleado.setDepartamento(dep.getNombre());
 		controller.updateEmpleado(empleado);
 	}

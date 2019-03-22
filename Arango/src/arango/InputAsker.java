@@ -248,7 +248,7 @@ public class InputAsker {
                 System.out.println("Error de entrada / salida.");
                 error = true;
             } catch (NumberFormatException ex) {
-                System.out.println("Debes introducir un número entero.");
+                System.out.println("Debes introducir un nï¿½mero entero.");
                 error = true;
             }
         } while (error);
@@ -279,7 +279,7 @@ public class InputAsker {
                 System.out.println("Error de entrada / salida.");
                 error = true;
             } catch (NumberFormatException ex) {
-                System.out.println("Debes introducir un número entero.");
+                System.out.println("Debes introducir un nï¿½mero entero.");
                 error = true;
             }
         } while (error);
@@ -301,6 +301,6 @@ public class InputAsker {
         if (salirConZero) {
             System.out.println("0. Salir.");
         }
-        return pedirEntero(pregunta, salirConZero ? 0 : 1, lista.size()) - 1;
+        return pedirEntero(pregunta, salirConZero ? 0 : 1, lista.size());
     }
 }

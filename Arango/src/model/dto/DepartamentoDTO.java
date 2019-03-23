@@ -50,4 +50,8 @@ public class DepartamentoDTO implements IKeyable {
 		return nombre;
 	}
 
+	@Override
+	public String toString() {
+		return nombre;
+	}
 }

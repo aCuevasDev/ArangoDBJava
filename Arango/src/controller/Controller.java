@@ -43,15 +43,16 @@ public class Controller {
 		throw new InvalidException(Tipo.INVALID_CREDENTIALS);
 	}
 	
-	
-
 	public String crearDepartamento(DepartamentoDTO departamento) throws InvalidException {
 		dao.insertDepartamento(departamento);
 		return "Departamento guardado correctamente";
 	}
 
-	public String crearEmpleado(EmpleadoDTO empleado) {
+	public String crearEmpleado(EmpleadoDTO empleado) throws InvalidException {
 		dao.insertEmpleado(empleado);
+		if(empleado.isJefe()) {
+			dao.updateDepartamento(new DepartamentoDTO(empleado.getDepartamento(), empleado.getNombreCompleto()));
+		}
 		return "Empleado guardado correctamente";
 	}
 
@@ -59,6 +60,10 @@ public class Controller {
 		return dao.selectAllEmpleados();
 	}
 
+	public List<DepartamentoDTO> getAllDepartamentos() {
+		return dao.selectAllDepartments();
+	}
+	
 	public void closeConexion() {
 		dao.close();
 	}
@@ -67,9 +72,17 @@ public class Controller {
 		dao.updateDepartamento(dep);
 	}
 
+	public void eliminarEmpleado(EmpleadoDTO emp) {
+		dao.removeEmpleado(emp);
+		if(emp.isJefe()) {
+			dao.updateDepartamento(new DepartamentoDTO(emp.getDepartamento()));
+		}
+	}
+	
 	public List<DepartamentoDTO> getAllDepartments() {
 		return dao.selectAllDepartments();
 	}
+	
 	
 	public Empleado getUsuarioLogeado() {
 		return usuarioLogeado;

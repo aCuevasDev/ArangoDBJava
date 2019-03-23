@@ -17,7 +17,7 @@ import model.dto.RankingDTO;
 public interface DAO {
 
     // Método para insertar un nuevo empleado.
-    public void insertEmpleado(EmpleadoDTO e);
+    public void insertEmpleado(EmpleadoDTO e) throws InvalidException;
     
     // Método para insertar un nuevo departamento.
     public void insertDepartamento(DepartamentoDTO d) throws InvalidException;
@@ -32,7 +32,7 @@ public interface DAO {
     public void updateEmpleado(EmpleadoDTO empleado);
 
     // Método para eliminar un empleado.
-    public void removeEmpleado(Empleado e);
+    public void removeEmpleado(EmpleadoDTO e);
 
     // Obtener una Incidencia a partir de su Id.
     public Incidencia getIncidenciaById(int id);

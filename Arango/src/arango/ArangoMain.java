@@ -88,8 +88,24 @@ public class ArangoMain {
 	}
 	
 	// @Vives
-	private static void register() {
+	private static EmpleadoDTO register() throws InvalidException {
+		checkJefe();
 		// TODO Implementation (solo jefe)
+		EmpleadoDTO newEmpleado = new EmpleadoDTO();
+		newEmpleado.setNombre(InputAsker.askString("Introduce el nombre del empleado: "));
+		newEmpleado.setApellidos(InputAsker.askString("Introduce los apellidos del empleado: "));
+		newEmpleado.setUsername(InputAsker.askString("Introduce el username del empleado: "));
+		newEmpleado.setContrasenya(InputAsker.askString("Introduce la contraseña del empleado: "));
+		List<DepartamentoDTO> departamentos = Controller.getInstance().getAllDepartamentos();
+		int eleccion = InputAsker.askElementList("Escoje el departamento", departamentos);
+		if(eleccion == 0) {
+			newEmpleado.setDepartamento(null);
+		}else {
+			newEmpleado.setDepartamento(departamentos.get(eleccion - 1).getNombre());
+			newEmpleado.setJefe(departamentos.get(eleccion - 1).getJefe() == null);
+		}
+		System.out.println(Controller.getInstance().crearEmpleado(newEmpleado));
+		return newEmpleado;
 	}
 	
 	// @Cuevas
@@ -115,7 +131,7 @@ public class ArangoMain {
 
 	private static void removeEmpleadDeDepartamento(DepartamentoDTO dep) {
 		List<EmpleadoDTO> emps = controller.getEmpleados(dep, true);
-		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado a quitar", emps, false));
+		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado a quitar", emps, false) - 1);
 		empleado.setDepartamento(null);
 		controller.updateEmpleado(empleado);
 	}
@@ -123,15 +139,19 @@ public class ArangoMain {
 
 	private static void addEmpleadoADepartamento(DepartamentoDTO dep) {
 		List<EmpleadoDTO> emps = controller.getEmpleados(dep, false);
-		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado a anadir", emps, false));
+		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado a anadir", emps, false) - 1);
 		empleado.setDepartamento(dep.getNombre());
 		controller.updateEmpleado(empleado);
 	}
 
 
 	// @Vives
-	private static void deleteEmpleado() {
+	private static void deleteEmpleado() throws InvalidException {
+		checkJefe();
 		// TODO implementation (solo jefe)
+		List<EmpleadoDTO> empleados = Controller.getInstance().getAllUsers();
+		EmpleadoDTO empleado = empleados.get(InputAsker.pedirIndice("Introduce el empleado a eliminar", empleados, false) - 1);
+		controller.eliminarEmpleado(empleado);
 	}
 	
 	// @Cuevas
@@ -140,7 +160,8 @@ public class ArangoMain {
 	}	
 	
 	// @Vives
-	private static void mostrarRanking() {
+	private static void mostrarRanking() throws InvalidException {
+		checkJefe();
 		// TODO implementation solo jefe, incidencias urgentes 2 puntos otras 1 punto.
 	}
 	
@@ -169,12 +190,13 @@ public class ArangoMain {
 		newDepartamento.setNombre(InputAsker.askString("Introduce el nombre del departamento: "));
 		List<EmpleadoDTO> empleados = Controller.getInstance().getAllUsers();
 		int eleccion = InputAsker.askElementList("Escoje al jefe", empleados);
-		newDepartamento.setJefe(eleccion == 0 ? null : empleados.get(eleccion - 1).getNombre());
+		newDepartamento.setJefe(eleccion == 0 ? null : empleados.get(eleccion - 1).getNombreCompleto());
 		Controller.getInstance().crearDepartamento(newDepartamento);
 		return newDepartamento;
 		// TODO (Solo jefes)
 		// TODO poner el empleado como que es jefe y añadir al departamento
 		// TODO Cuevas: todas las tildes y ñ me salen raras, hay que a�adir UTF-8
+		// TODO falta cambiar el estado del empleado a jefe y sacarlo del departamento en el que estaba
 	}
 	
 	private static void checkJefe() throws InvalidException {

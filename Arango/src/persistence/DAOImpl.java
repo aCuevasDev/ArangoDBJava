@@ -29,10 +29,10 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	private DAOImpl() {}
 
 	@Override
-	public void insertEmpleado(EmpleadoDTO e) {
-		if (!exists(e))
-			store(e);
-		// TODO THROW EXCEPTION
+	public void insertEmpleado(EmpleadoDTO e) throws InvalidException {
+		if (exists(e))
+			throw new InvalidException(InvalidException.Tipo.USER_EXISTS);
+		store(e);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public void removeEmpleado(Empleado e) {
+	public void removeEmpleado(EmpleadoDTO e) {
 		delete(e);
 	}
 

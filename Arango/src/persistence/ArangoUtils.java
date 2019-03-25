@@ -67,8 +67,9 @@ public abstract class ArangoUtils {
 		}
 		String query = "FOR doc IN " + collectionName + " FILTER";
 		for (String key : filters.keySet())
-			query += " doc." + collectionName + "." + key + " == @" + key + " &&";
+			query += " doc." + key + " == @" + key + " &&";
 		query = query.substring(0, query.length() - 2) + "RETURN doc";
+
 		ArangoCursor<T> cursor = db.query(query, filters, null, tClass);
 		return cursor.asListRemaining();
 	}

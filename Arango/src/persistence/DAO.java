@@ -48,11 +48,11 @@ public interface DAO {
 
     // Obtener la lista de incidencias con destino un determinado
     // empleado, a partir de un objeto empleado.
-    public List<IncidenciaDTO> getIncidenciaByDestino(Empleado e);
+    public List<IncidenciaDTO> getIncidenciaByDestino(EmpleadoDTO e);
 
     // Obtener la lista de incidencias con origen un determinado
     // empleado, a partir de un objeto empleado.
-    public List<IncidenciaDTO> getIncidenciaByOrigen(Empleado e);
+    public List<IncidenciaDTO> getIncidenciaByOrigen(EmpleadoDTO e);
 
     
     // Método para insertar un evento en la tabla historial.
@@ -82,5 +82,9 @@ public interface DAO {
 	public List<DepartamentoDTO> selectAllDepartments();
 	
 	public List<IncidenciaDTO> getIncidenciasByDepartamento(DepartamentoDTO dep);
+	
+	public void updateIncidencia(IncidenciaDTO in);
+	
+    public List<EmpleadoDTO> getEmpleadosByDepartamento(DepartamentoDTO dep);
 
 }

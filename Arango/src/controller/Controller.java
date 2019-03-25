@@ -51,13 +51,17 @@ public class Controller {
 	public String crearEmpleado(EmpleadoDTO empleado) throws InvalidException {
 		dao.insertEmpleado(empleado);
 		if(empleado.isJefe()) {
-			dao.updateDepartamento(new DepartamentoDTO(empleado.getDepartamento(), empleado.getNombreCompleto()));
+			dao.updateDepartamento(new DepartamentoDTO(empleado.getDepartamento(), empleado.getUsername()));
 		}
 		return "Empleado guardado correctamente";
 	}
 
 	public List<EmpleadoDTO> getAllUsers() {
 		return dao.selectAllEmpleados();
+	}
+	
+	public List<EmpleadoDTO> getUsersPorDepartamento(DepartamentoDTO dep) {
+		return dao.getEmpleadosByDepartamento(dep);
 	}
 
 	public List<DepartamentoDTO> getAllDepartamentos() {
@@ -77,12 +81,18 @@ public class Controller {
 		if(emp.isJefe()) {
 			dao.updateDepartamento(new DepartamentoDTO(emp.getDepartamento()));
 		}
+		if(emp.equals(new EmpleadoDTO(usuarioLogeado))) {
+			usuarioLogeado = null;
+		}
 	}
 	
 	public List<DepartamentoDTO> getAllDepartments() {
 		return dao.selectAllDepartments();
 	}
 	
+	public List<IncidenciaDTO> getIncidenciasPorEmpleado(EmpleadoDTO emp){
+		return dao.getIncidenciaByDestino(emp);
+	}
 	
 	public Empleado getUsuarioLogeado() {
 		return usuarioLogeado;
@@ -99,9 +109,13 @@ public class Controller {
 		dao.updateEmpleado(empleado);
 	}
 
+	public void updateIncidencia(IncidenciaDTO incidencia) {
+		dao.updateIncidencia(incidencia);
+	}
+	
 	public List<IncidenciaDTO> getUserIncidencias() {
 		if (!usuarioLogeado.isJefe()) 
-			return dao.getIncidenciaByDestino(usuarioLogeado);
+			return dao.getIncidenciaByDestino(new EmpleadoDTO(usuarioLogeado));
 		return dao.getIncidenciasByDepartamento(usuarioLogeado.getDepartamento());
 	}
 

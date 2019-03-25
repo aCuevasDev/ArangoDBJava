@@ -85,4 +85,6 @@ public interface DAO {
 
 	public void updateIncidencia(IncidenciaDTO incidencia);
 
+	public EmpleadoDTO getEmpleado(String username);
+
 }

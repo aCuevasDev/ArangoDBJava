@@ -112,4 +112,13 @@ public class Controller {
 		dao.updateIncidencia(incidencia);
 	}
 
+	public void insertIncidencia(IncidenciaDTO incidenciaDTO) {
+		dao.insertIncidencia(incidenciaDTO);
+		
+	}
+
+	public EmpleadoDTO getEmpleado(String username) {
+		return dao.getEmpleado(username);
+	}
+
 }

@@ -228,9 +228,29 @@ public class ArangoMain {
 
 	// @Cuevas
 	private static void crearIncidencia() throws InvalidException {
-		// TODO implementation (solo jefe)
 		checkJefe();
-		DAOImpl.getInstance().insertIncidencia(new IncidenciaDTO("emp", "emp", "test", "testest"));
+		Empleado usuarioLogueado = controller.getUsuarioLogeado();
+		IncidenciaDTO incidenciaDTO = new IncidenciaDTO();
+		boolean exists = false;
+		
+		String titulo = InputAsker.askString("Introduce el título: ");
+		String desc = InputAsker.askString("Introduce la descripción: ");
+		String destino;
+		do {
+		destino = InputAsker.askString("Introduce el empleado de destino: ");
+		exists = (controller.getEmpleado(destino) != null);
+		if (!exists)
+			System.err.println("El usuario no existe.");
+		} while (!exists);
+		String origen = usuarioLogueado.getUsername();
+		
+		incidenciaDTO.setTitulo(titulo);
+		incidenciaDTO.setDescripcion(desc);
+		incidenciaDTO.setFechaInicio(new Date());
+		incidenciaDTO.setDestino(destino);
+		incidenciaDTO.setOrigen(origen);
+		
+		controller.insertIncidencia(incidenciaDTO);
 	}
 
 	private static void login() {

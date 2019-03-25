@@ -165,6 +165,12 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		store(incidencia);
 	}
 
+	@Override
+	public EmpleadoDTO getEmpleado(String username) {
+		EmpleadoDTO emp = getByKey(new EmpleadoDTO(username), EmpleadoDTO.class);
+		return emp;
+	}
+
 //	public Departamento initializeDepartamento(DepartamentoDTO dep) {
 //		List<EmpleadoDTO> empleados = find(EmpleadoDTO.class,new MapBuilder().put("username", dep.getJefe()).get());
 //		

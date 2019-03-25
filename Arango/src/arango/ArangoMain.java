@@ -2,6 +2,7 @@ package arango;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.arangodb.ArangoDBException;
@@ -96,7 +97,7 @@ public class ArangoMain {
 					crearIncidencia();
 					break;
 				case 0:
-					System.out.println("Hasta la proxima!");
+					System.out.println("Adiós!");
 					break;
 				default:
 					System.err.println("Opcion invalida");
@@ -207,7 +208,16 @@ public class ArangoMain {
 	// @Cuevas
 	private static void solucionarIncidencia() throws InvalidException {
 		checkJefe();
-
+		List<IncidenciaDTO> incidencias = controller.getUserIncidenciasNotSolved();
+		if (incidencias.size() > 0) {
+		int index = InputAsker.pedirIndice("Qué incidencia quieres marcar como solucionada?", incidencias, true);
+		IncidenciaDTO incidencia = incidencias.get(index);
+		incidencia.setFechaFin(new Date());
+		controller.updateIncidencia(incidencia);
+		} else {
+			System.out.println("No hay incidencias por solucionar.");
+			InputAsker.pedirTecla("Pulse una tecla para continuar.");
+		}
 	}
 
 	// @Vives

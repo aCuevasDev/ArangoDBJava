@@ -26,7 +26,8 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		return instance;
 	}
 
-	private DAOImpl() {}
+	private DAOImpl() {
+	}
 
 	@Override
 	public void insertEmpleado(EmpleadoDTO e) throws InvalidException {
@@ -38,7 +39,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	@Override
 	public Empleado loginEmpleado(String username, String pass) {
 		EmpleadoDTO emp = getByKey(new EmpleadoDTO(username), EmpleadoDTO.class);
-		if (emp == null || !emp.getContrasenya().equals(pass)) 
+		if (emp == null || !emp.getContrasenya().equals(pass))
 			return null;
 		store(new EventoDTO(Tipo.LOGIN, emp.getUsername()));
 		return initialize(emp);
@@ -89,14 +90,9 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public EventoDTO getUltimoInicioSesion(EmpleadoDTO emp) {
-		Map<String, Object> filters = new MapBuilder()
-				.put("empleado", emp.getUsername())
-				.put("tipo", Tipo.LOGIN)
-				.get();
-		return find(EventoDTO.class, filters)
-				.stream()
-				.sorted((event, other) -> event.getFecha().compareTo(other.getFecha()))
-				.collect(Collectors.toList())
+		Map<String, Object> filters = new MapBuilder().put("empleado", emp.getUsername()).put("tipo", Tipo.LOGIN).get();
+		return find(EventoDTO.class, filters).stream()
+				.sorted((event, other) -> event.getFecha().compareTo(other.getFecha())).collect(Collectors.toList())
 				.get(0);
 	}
 
@@ -132,7 +128,8 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	public EmpleadoDTO getEmpleado(String username, String pass) {
 		Map<String, Object> filters = new MapBuilder().put("username", username).put("contrasenya", pass).get();
 		List<EmpleadoDTO> empleados = find(EmpleadoDTO.class, filters);
-		if (empleados.isEmpty()) return null;
+		if (empleados.isEmpty())
+			return null;
 		return empleados.get(0);
 	}
 
@@ -162,9 +159,12 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
-	
+
+	@Override
+	public void updateIncidencia(IncidenciaDTO incidencia) {
+		store(incidencia);
+	}
+
 //	public Departamento initializeDepartamento(DepartamentoDTO dep) {
 //		List<EmpleadoDTO> empleados = find(EmpleadoDTO.class,new MapBuilder().put("username", dep.getJefe()).get());
 //		
@@ -173,7 +173,5 @@ public class DAOImpl extends ArangoUtils implements DAO {
 //		
 //		return new Departamento();
 //	}
-	
-	
 
 }

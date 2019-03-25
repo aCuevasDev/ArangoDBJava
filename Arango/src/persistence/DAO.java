@@ -40,9 +40,15 @@ public interface DAO {
 
 	// Obtener una lista de todas las incidencias
 	public List<IncidenciaDTO> selectAllIncidencias();
+    // Obtener la lista de incidencias con destino un determinado
+    // empleado, a partir de un objeto empleado.
+    public List<IncidenciaDTO> getIncidenciaByDestino(EmpleadoDTO e);
 
 	// Obtener una lista de todos los empleados
 	public List<EmpleadoDTO> selectAllEmpleados();
+    // Obtener la lista de incidencias con origen un determinado
+    // empleado, a partir de un objeto empleado.
+    public List<IncidenciaDTO> getIncidenciaByOrigen(EmpleadoDTO e);
 
 	// Insertar una incidencia a partir de un objeto incidencia
 	public void insertIncidencia(IncidenciaDTO i);
@@ -82,6 +88,10 @@ public interface DAO {
 	public List<DepartamentoDTO> selectAllDepartments();
 
 	public List<IncidenciaDTO> getIncidenciasByDepartamento(DepartamentoDTO dep);
+	
+	public void updateIncidencia(IncidenciaDTO in);
+	
+    public List<EmpleadoDTO> getEmpleadosByDepartamento(DepartamentoDTO dep);
 
 	public void updateIncidencia(IncidenciaDTO incidencia);
 

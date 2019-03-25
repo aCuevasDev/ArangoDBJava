@@ -72,13 +72,13 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public List<IncidenciaDTO> getIncidenciaByDestino(Empleado e) {
+	public List<IncidenciaDTO> getIncidenciaByDestino(EmpleadoDTO e) {
 		Map<String, Object> filters = new MapBuilder().put("destino", e.getUsername()).get();
 		return find(IncidenciaDTO.class, filters);
 	}
 
 	@Override
-	public List<IncidenciaDTO> getIncidenciaByOrigen(Empleado e) {
+	public List<IncidenciaDTO> getIncidenciaByOrigen(EmpleadoDTO e) {
 		Map<String, Object> filters = new MapBuilder().put("origen", e.getUsername()).get();
 		return find(IncidenciaDTO.class, filters);
 	}
@@ -159,6 +159,26 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public EmpleadoDTO getEmpleado(String username, String pass) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateIncidencia(IncidenciaDTO in) {
+		store(in);
+	}
+
+	@Override
+	public List<EmpleadoDTO> getEmpleadosByDepartamento(DepartamentoDTO dep) {
+		Map<String, Object> filters = new MapBuilder().put("departamento", dep.getNombre()).get();
+		return find(EmpleadoDTO.class, filters);
+	}
+	
+	
+	
 
 	@Override
 	public void updateIncidencia(IncidenciaDTO incidencia) {

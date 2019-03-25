@@ -13,7 +13,7 @@ import persistence.DAO;
 import persistence.DAOImpl;
 
 public class Controller {
-	
+
 	private static Controller instance;
 
 	private Empleado usuarioLogeado;
@@ -42,7 +42,7 @@ public class Controller {
 			return "Usuario creado correctamente.";
 		throw new InvalidException(Tipo.INVALID_CREDENTIALS);
 	}
-	
+
 	public String crearDepartamento(DepartamentoDTO departamento) throws InvalidException {
 		dao.insertDepartamento(departamento);
 		return "Departamento guardado correctamente";
@@ -50,7 +50,7 @@ public class Controller {
 
 	public String crearEmpleado(EmpleadoDTO empleado) throws InvalidException {
 		dao.insertEmpleado(empleado);
-		if(empleado.isJefe()) {
+		if (empleado.isJefe()) {
 			dao.updateDepartamento(new DepartamentoDTO(empleado.getDepartamento(), empleado.getNombreCompleto()));
 		}
 		return "Empleado guardado correctamente";
@@ -63,36 +63,33 @@ public class Controller {
 	public List<DepartamentoDTO> getAllDepartamentos() {
 		return dao.selectAllDepartments();
 	}
-	
+
 	public void closeConexion() {
 		dao.close();
 	}
-	
+
 	public void updateDepartamento(DepartamentoDTO dep) {
 		dao.updateDepartamento(dep);
 	}
 
 	public void eliminarEmpleado(EmpleadoDTO emp) {
 		dao.removeEmpleado(emp);
-		if(emp.isJefe()) {
+		if (emp.isJefe()) {
 			dao.updateDepartamento(new DepartamentoDTO(emp.getDepartamento()));
 		}
 	}
-	
+
 	public List<DepartamentoDTO> getAllDepartments() {
 		return dao.selectAllDepartments();
 	}
-	
-	
+
 	public Empleado getUsuarioLogeado() {
 		return usuarioLogeado;
 	}
-	
+
 	public List<EmpleadoDTO> getEmpleados(DepartamentoDTO dep, boolean inside) {
-		return dao.selectAllEmpleados()
-			.stream()
-			.filter(e -> inside ? e.getDepartamento().equals(dep.getNombre()) : !e.getDepartamento().equals(dep.getNombre()))
-			.collect(Collectors.toList());
+		return dao.selectAllEmpleados().stream().filter(e -> inside ? e.getDepartamento().equals(dep.getNombre())
+				: !e.getDepartamento().equals(dep.getNombre())).collect(Collectors.toList());
 	}
 
 	public void updateEmpleado(EmpleadoDTO empleado) {
@@ -100,9 +97,19 @@ public class Controller {
 	}
 
 	public List<IncidenciaDTO> getUserIncidencias() {
-		if (!usuarioLogeado.isJefe()) 
+		if (!usuarioLogeado.isJefe())
 			return dao.getIncidenciaByDestino(usuarioLogeado);
 		return dao.getIncidenciasByDepartamento(usuarioLogeado.getDepartamento());
+	}
+
+	public List<IncidenciaDTO> getUserIncidenciasNotSolved() {
+		return getUserIncidencias().stream()
+				.filter((incidencia) -> incidencia.getFechaFin() == null)
+				.collect(Collectors.toList());
+	}
+
+	public void updateIncidencia(IncidenciaDTO incidencia) {
+		dao.updateIncidencia(incidencia);
 	}
 
 }

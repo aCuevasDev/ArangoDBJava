@@ -123,8 +123,4 @@ public class Controller {
 				.collect(Collectors.toList());
 	}
 
-	public void updateIncidencia(IncidenciaDTO incidencia) {
-		dao.updateIncidencia(incidencia);
-	}
-
 }

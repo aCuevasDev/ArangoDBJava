@@ -53,14 +53,6 @@ public interface DAO {
 	// Insertar una incidencia a partir de un objeto incidencia
 	public void insertIncidencia(IncidenciaDTO i);
 
-	// Obtener la lista de incidencias con destino un determinado
-	// empleado, a partir de un objeto empleado.
-	public List<IncidenciaDTO> getIncidenciaByDestino(Empleado e);
-
-	// Obtener la lista de incidencias con origen un determinado
-	// empleado, a partir de un objeto empleado.
-	public List<IncidenciaDTO> getIncidenciaByOrigen(Empleado e);
-
 	// Método para insertar un evento en la tabla historial.
 	// Pasaremos como parámetro un objeto tipo evento, y no devolverá nada.
 	// Llamaremos a este método desde los métodos
@@ -88,8 +80,6 @@ public interface DAO {
 	public List<DepartamentoDTO> selectAllDepartments();
 
 	public List<IncidenciaDTO> getIncidenciasByDepartamento(DepartamentoDTO dep);
-	
-	public void updateIncidencia(IncidenciaDTO in);
 	
     public List<EmpleadoDTO> getEmpleadosByDepartamento(DepartamentoDTO dep);
 

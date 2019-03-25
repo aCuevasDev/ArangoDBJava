@@ -161,24 +161,10 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public EmpleadoDTO getEmpleado(String username, String pass) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void updateIncidencia(IncidenciaDTO in) {
-		store(in);
-	}
-
-	@Override
 	public List<EmpleadoDTO> getEmpleadosByDepartamento(DepartamentoDTO dep) {
 		Map<String, Object> filters = new MapBuilder().put("departamento", dep.getNombre()).get();
 		return find(EmpleadoDTO.class, filters);
 	}
-	
-	
-	
 
 	@Override
 	public void updateIncidencia(IncidenciaDTO incidencia) {

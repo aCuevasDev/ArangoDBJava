@@ -119,7 +119,7 @@ public class Controller {
 	}
 
 	public void insertIncidencia(IncidenciaDTO incidenciaDTO) {
-		dao.insertIncidencia(incidenciaDTO);
+		//dao.insertIncidencia(incidenciaDTO);
 		
 	}
 

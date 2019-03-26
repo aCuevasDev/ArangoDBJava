@@ -14,7 +14,6 @@ import model.Empleado;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
 import model.dto.IncidenciaDTO;
-import persistence.DAOImpl;
 
 public class ArangoMain {
 
@@ -127,7 +126,7 @@ public class ArangoMain {
 		newEmpleado.setApellidos(InputAsker.askString("Introduce los apellidos del empleado: "));
 		newEmpleado.setUsername(InputAsker.askString("Introduce el username del empleado: "));
 		newEmpleado.setContrasenya(InputAsker.askString("Introduce la contraseña del empleado: "));
-		List<DepartamentoDTO> departamentos = Controller.getInstance().getAllDepartamentos();
+		List<DepartamentoDTO> departamentos = controller.getAllDepartamentos();
 		int eleccion = InputAsker.askElementList("Escoje el departamento", departamentos);
 		if (eleccion == 0) {
 			newEmpleado.setDepartamento(null);
@@ -135,7 +134,7 @@ public class ArangoMain {
 			newEmpleado.setDepartamento(departamentos.get(eleccion - 1).getNombre());
 			newEmpleado.setJefe(departamentos.get(eleccion - 1).getJefe() == null);
 		}
-		System.out.println(Controller.getInstance().crearEmpleado(newEmpleado));
+		System.out.println(controller.crearEmpleado(newEmpleado));
 		return newEmpleado;
 	}
 
@@ -198,11 +197,11 @@ public class ArangoMain {
 	private static void deleteEmpleado() throws InvalidException {
 		checkJefe();
 		// TODO implementation (solo jefe)
-		List<EmpleadoDTO> empleados = Controller.getInstance().getUsersPorDepartamento(controller.getUsuarioLogeado().getDepartamento());
+		List<EmpleadoDTO> empleados = controller.getEmpleados(controller.getUsuarioLogeado().getDepartamento(), true);
 		EmpleadoDTO empleado = empleados.get(InputAsker.pedirIndice("Introduce el empleado a eliminar", empleados, false) - 1);
 		List<IncidenciaDTO> incidencias = controller.getIncidenciasPorEmpleado(empleado);
 		if(incidencias.size() > 0) {
-			List<EmpleadoDTO> allEmpleados = Controller.getInstance().getAllUsers();
+			List<EmpleadoDTO> allEmpleados = controller.getAllUsers();
 			allEmpleados.remove(empleado);
 			int eleccion = InputAsker.pedirIndice("Escoje al empleado que recibirá todas la incidencias de : " + empleado.getNombreCompleto(), allEmpleados, false) - 1;
 			incidencias.stream().forEach(i -> {
@@ -218,10 +217,10 @@ public class ArangoMain {
 		checkJefe();
 		List<IncidenciaDTO> incidencias = controller.getUserIncidenciasNotSolved();
 		if (incidencias.size() > 0) {
-		int index = InputAsker.pedirIndice("Qué incidencia quieres marcar como solucionada?", incidencias, true);
-		IncidenciaDTO incidencia = incidencias.get(index);
-		incidencia.setFechaFin(new Date());
-		controller.updateIncidencia(incidencia);
+			int index = InputAsker.pedirIndice("Qué incidencia quieres marcar como solucionada?", incidencias, true);
+			IncidenciaDTO incidencia = incidencias.get(index);
+			incidencia.setFechaFin(new Date());
+			controller.updateIncidencia(incidencia);
 		} else {
 			System.out.println("No hay incidencias por solucionar.");
 			InputAsker.pedirTecla("Pulse una tecla para continuar.");
@@ -277,10 +276,10 @@ public class ArangoMain {
 		checkJefe();
 		DepartamentoDTO newDepartamento = new DepartamentoDTO();
 		newDepartamento.setNombre(InputAsker.askString("Introduce el nombre del departamento: "));
-		List<EmpleadoDTO> empleados = Controller.getInstance().getAllUsers();
+		List<EmpleadoDTO> empleados = controller.getAllUsers();
 		int eleccion = InputAsker.askElementList("Escoje al jefe", empleados);
 		newDepartamento.setJefe(eleccion == 0 ? null : empleados.get(eleccion - 1).getUsername());
-		Controller.getInstance().crearDepartamento(newDepartamento);
+		controller.crearDepartamento(newDepartamento);
 		return newDepartamento;
 		// TODO (Solo jefes)
 		// TODO poner el empleado como que es jefe y añadir al departamento

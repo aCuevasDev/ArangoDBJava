@@ -59,10 +59,6 @@ public class Controller {
 	public List<EmpleadoDTO> getAllUsers() {
 		return dao.selectAllEmpleados();
 	}
-	
-	public List<EmpleadoDTO> getUsersPorDepartamento(DepartamentoDTO dep) {
-		return dao.getEmpleadosByDepartamento(dep);
-	}
 
 	public List<DepartamentoDTO> getAllDepartamentos() {
 		return dao.selectAllDepartments();
@@ -99,8 +95,7 @@ public class Controller {
 	}
 
 	public List<EmpleadoDTO> getEmpleados(DepartamentoDTO dep, boolean inside) {
-		return dao.selectAllEmpleados().stream().filter(e -> inside ? e.getDepartamento().equals(dep.getNombre())
-				: !e.getDepartamento().equals(dep.getNombre())).collect(Collectors.toList());
+		return dao.selectEmpleados(dep, inside);
 	}
 
 	public void updateEmpleado(EmpleadoDTO empleado) {
@@ -121,10 +116,6 @@ public class Controller {
 		return getUserIncidencias().stream()
 				.filter((incidencia) -> incidencia.getFechaFin() == null)
 				.collect(Collectors.toList());
-	}
-
-	public void updateIncidencia(IncidenciaDTO incidencia) {
-		dao.updateIncidencia(incidencia);
 	}
 
 	public void insertIncidencia(IncidenciaDTO incidenciaDTO) {

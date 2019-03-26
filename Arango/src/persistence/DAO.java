@@ -81,10 +81,10 @@ public interface DAO {
 
 	public List<IncidenciaDTO> getIncidenciasByDepartamento(DepartamentoDTO dep);
 	
-    public List<EmpleadoDTO> getEmpleadosByDepartamento(DepartamentoDTO dep);
-
 	public void updateIncidencia(IncidenciaDTO incidencia);
 
 	public EmpleadoDTO getEmpleado(String username);
+	
+	public List<EmpleadoDTO> selectEmpleados(DepartamentoDTO dep, boolean inside);
 
 }

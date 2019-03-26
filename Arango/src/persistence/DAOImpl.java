@@ -125,8 +125,9 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 	
 	public List<EmpleadoDTO> selectEmpleados(DepartamentoDTO dep, boolean inside) {
-		Map<String, Object> filters = new MapBuilder().put("departamento", dep.getKey()).get();
-		return find(EmpleadoDTO.class, filters);
+		//Map<String, Object> filters = new MapBuilder().put("departamento", dep.getKey()).get();
+		String query = "for e in empleadodto filter e.departamento " + (inside ? "=" : "!") + "= \"" + dep.getKey() + "\" return e";
+		return query(query, EmpleadoDTO.class);
 	}
 
 	@Override
@@ -163,12 +164,6 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	public Incidencia initialize(IncidenciaDTO inc) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public List<EmpleadoDTO> getEmpleadosByDepartamento(DepartamentoDTO dep) {
-		Map<String, Object> filters = new MapBuilder().put("departamento", dep.getNombre()).get();
-		return find(EmpleadoDTO.class, filters);
 	}
 
 	@Override

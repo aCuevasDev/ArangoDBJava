@@ -98,9 +98,13 @@ public class EmpleadoDTO implements IKeyable {
 		this.jefe = jefe;
 	}
 
+	public String getNombreCompleto() {
+		return new StringBuilder(apellidos).append(" ,").append(nombre).toString();
+	}
+	
 	@Override
 	public String toString() {
-		return username + " " + contrasenya;
+		return getNombreCompleto();
 	}
 
 	@Override

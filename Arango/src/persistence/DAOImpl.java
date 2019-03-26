@@ -127,6 +127,11 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	public List<EmpleadoDTO> selectAllEmpleados() {
 		return find(EmpleadoDTO.class);
 	}
+	
+	public List<EmpleadoDTO> selectEmpleados(DepartamentoDTO dep, boolean inside) {
+		Map<String, Object> filters = new MapBuilder().put("departamento", dep.getKey()).get();
+		return find(EmpleadoDTO.class, filters);
+	}
 
 	@Override
 	public EmpleadoDTO getEmpleado(String username, String pass) {

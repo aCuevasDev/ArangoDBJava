@@ -43,8 +43,6 @@ public class Controller {
 		throw new InvalidException(Tipo.INVALID_CREDENTIALS);
 	}
 	
-	
-
 	public String crearDepartamento(DepartamentoDTO departamento) throws InvalidException {
 		dao.insertDepartamento(departamento);
 		return "Departamento guardado correctamente";
@@ -90,6 +88,10 @@ public class Controller {
 		if (!usuarioLogeado.isJefe()) 
 			return dao.getIncidenciaByDestino(usuarioLogeado);
 		return dao.getIncidenciasByDepartamento(usuarioLogeado.getDepartamento());
+	}
+
+	public boolean isUserLogged() {
+		return usuarioLogeado != null;
 	}
 
 }

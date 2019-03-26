@@ -17,7 +17,6 @@ import persistence.DAOImpl;
 public class ArangoMain {
 
 	private static Controller controller;
-	// Estas listas no permiten anadir o quitar elementos on the fly
 	private static final List<String> opcionesEmpleado = Arrays.asList( 
 			"Actualizar empleado.", 
 			"Solucionar incidencia.", 
@@ -58,6 +57,8 @@ public class ArangoMain {
 		int option;
 		List<String> options = getOptionsList();
 		do {
+			if (controller.getUsuarioLogeado() == null)
+				break;
 			option = InputAsker.pedirIndice("Selecciona una opcion: ", options, true);
 			try {
 				switch(option) {
@@ -76,7 +77,7 @@ public class ArangoMain {
 			} catch (InvalidException e) {
 				System.err.println(e.getMessage());
 			}
-		} while (option != 0);
+		} while (option != 0 && controller.isUserLogged());
 	}
 	
 	private static List<String> getOptionsList() {
@@ -100,14 +101,14 @@ public class ArangoMain {
 	// @Bou
 	private static void updateDepartamento() throws InvalidException {
 		checkJefe();
-		DepartamentoDTO dep = controller.getUsuarioLogeado().getDepartamento();
-		System.out.println("Estas editando el departamento: " + dep.getNombre());
+		List<DepartamentoDTO> deps = controller.getAllDepartments();
+		DepartamentoDTO dep = deps.get(InputAsker.pedirIndice("Escoge el departamento: ", deps, false));
 		int opt;
 		do {
 			opt = InputAsker.pedirIndice("Que dato quieres editar?", Arrays.asList("Anadir empleado", "Quitar empleado"), true);
 			switch (opt) {
 				case 1: addEmpleadoADepartamento(dep); break;
-				case 2: removeEmpleadDeDepartamento(dep);
+				case 2: removeEmpleadDeDepartamento(dep); break;
 			}
 		} while(opt != 0);
 	}
@@ -123,7 +124,7 @@ public class ArangoMain {
 
 	private static void addEmpleadoADepartamento(DepartamentoDTO dep) {
 		List<EmpleadoDTO> emps = controller.getEmpleados(dep, false);
-		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado a anadir", emps, false));
+		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado a anadir", emps, false)-1);
 		empleado.setDepartamento(dep.getNombre());
 		controller.updateEmpleado(empleado);
 	}
@@ -170,7 +171,7 @@ public class ArangoMain {
 		List<EmpleadoDTO> empleados = Controller.getInstance().getAllUsers();
 		int eleccion = InputAsker.askElementList("Escoje al jefe", empleados);
 		newDepartamento.setJefe(eleccion == 0 ? null : empleados.get(eleccion - 1).getNombre());
-		Controller.getInstance().crearDepartamento(newDepartamento);
+		controller.crearDepartamento(newDepartamento);
 		return newDepartamento;
 		// TODO (Solo jefes)
 		// TODO poner el empleado como que es jefe y añadir al departamento

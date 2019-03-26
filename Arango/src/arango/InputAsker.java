@@ -218,7 +218,7 @@ public class InputAsker {
             num = askInt(message);
             if (num < 0 || num > lista.size()) {
                 System.out.println("Error, the number must be between " + 0 + " and " + lista.size());
-            }else {
+            } else {
             	if(num != 0) {
             		if(!nuevaLista.add(lista.get(num - 1))) {
             			System.out.println("Ya esta en la lista...");
@@ -226,7 +226,7 @@ public class InputAsker {
             	}
             }
         } while (num != 0 );
-    	
+        
         return nuevaLista;
     }
     

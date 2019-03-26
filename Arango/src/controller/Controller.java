@@ -123,4 +123,21 @@ public class Controller {
 				.collect(Collectors.toList());
 	}
 
+	public void updateIncidencia(IncidenciaDTO incidencia) {
+		dao.updateIncidencia(incidencia);
+	}
+
+	public void insertIncidencia(IncidenciaDTO incidenciaDTO) {
+		dao.insertIncidencia(incidenciaDTO);
+		
+	}
+
+	public EmpleadoDTO getEmpleado(String username) {
+		return dao.getEmpleado(username);
+	}
+
+	public boolean isUserLogged() {
+		return usuarioLogeado != null;
+	}
+
 }

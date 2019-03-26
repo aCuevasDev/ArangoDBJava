@@ -61,7 +61,6 @@ public abstract class ArangoUtils {
 	protected <T> List<T> find(Class<T> tClass, Map<String, Object> filters) {
 		String collectionName = tClass.getSimpleName().toLowerCase();
 		ArangoCollection collection = db.collection(collectionName);
-
 		if (!collection.exists()) {
 			return new ArrayList<>();
 		}
@@ -73,10 +72,39 @@ public abstract class ArangoUtils {
 		ArangoCursor<T> cursor = db.query(query, filters, null, tClass);
 		return cursor.asListRemaining();
 	}
+	
+	protected <T> List<T> findWhereDifferent(Class<T> tClass, Map<String, Object> filters) {
+		String collectionName = tClass.getSimpleName().toLowerCase();
+		ArangoCollection collection = db.collection(collectionName);
+		if (!collection.exists()) {
+			return new ArrayList<>();
+		}
+		String query = "FOR doc IN " + collectionName + " FILTER";
+		for (String key : filters.keySet())
+			query += " doc." + collectionName + "." + key + " != @" + key + " &&";
+		query = query.substring(0, query.length() - 2) + "RETURN doc";
+		ArangoCursor<T> cursor = db.query(query, filters, null, tClass);
+		return cursor.asListRemaining();
+	}
+	
+	protected <T> List<T> query(String query, Class<T> tClass) {
+		return db.query(query, tClass).asListRemaining();
+	}
 
 	protected void delete(IKeyable object) {
 		String nameClass = object.getClass().getSimpleName().toLowerCase();
 		db.collection(nameClass).deleteDocument(object.getKey());
+	}
+	
+	class QueryFilter {
+		boolean equal;
+		String value;
+		
+		@Override
+		public String toString() {
+			// TODO Auto-generated method stub
+			return value;
+		}
 	}
 
 }

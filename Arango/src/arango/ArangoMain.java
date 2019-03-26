@@ -66,6 +66,8 @@ public class ArangoMain {
 		int option;
 		List<String> options = getOptionsList();
 		do {
+			if (controller.getUsuarioLogeado() == null)
+				break;
 			option = InputAsker.pedirIndice("Selecciona una opcion: ", options, true);
 			try {
 				switch (option) {
@@ -105,7 +107,7 @@ public class ArangoMain {
 			} catch (InvalidException e) {
 				System.err.println(e.getMessage());
 			}
-		} while (option != 0);
+		} while (option != 0 && controller.isUserLogged());
 	}
 
 	private static List<String> getOptionsList() {
@@ -165,18 +167,15 @@ public class ArangoMain {
 	// @Bou
 	private static void updateDepartamento() throws InvalidException {
 		checkJefe();
-		DepartamentoDTO dep = controller.getUsuarioLogeado().getDepartamento();
-		System.out.println("Estás editando el departamento: " + dep.getNombre());
+		List<DepartamentoDTO> deps = controller.getAllDepartments();
+		DepartamentoDTO dep = deps.get(InputAsker.pedirIndice("Escoge el departamento: ", deps, false));
 		int opt;
 		do {
 			opt = InputAsker.pedirIndice("Que dato quieres editar?",
 					Arrays.asList("Anadir empleado", "Quitar empleado"), true);
 			switch (opt) {
-			case 1:
-				addEmpleadoADepartamento(dep);
-				break;
-			case 2:
-				removeEmpleadDeDepartamento(dep);
+				case 1: addEmpleadoADepartamento(dep); break;
+				case 2: removeEmpleadDeDepartamento(dep); break;
 			}
 		} while (opt != 0);
 	}
@@ -237,9 +236,29 @@ public class ArangoMain {
 
 	// @Cuevas
 	private static void crearIncidencia() throws InvalidException {
-		// TODO implementation (solo jefe)
 		checkJefe();
-		DAOImpl.getInstance().insertIncidencia(new IncidenciaDTO("emp", "emp", "test", "testest"));
+		Empleado usuarioLogueado = controller.getUsuarioLogeado();
+		IncidenciaDTO incidenciaDTO = new IncidenciaDTO();
+		boolean exists = false;
+		
+		String titulo = InputAsker.askString("Introduce el título: ");
+		String desc = InputAsker.askString("Introduce la descripción: ");
+		String destino;
+		do {
+		destino = InputAsker.askString("Introduce el empleado de destino: ");
+		exists = (controller.getEmpleado(destino) != null);
+		if (!exists)
+			System.err.println("El usuario no existe.");
+		} while (!exists);
+		String origen = usuarioLogueado.getUsername();
+		
+		incidenciaDTO.setTitulo(titulo);
+		incidenciaDTO.setDescripcion(desc);
+		incidenciaDTO.setFechaInicio(new Date());
+		incidenciaDTO.setDestino(destino);
+		incidenciaDTO.setOrigen(origen);
+		
+		controller.insertIncidencia(incidenciaDTO);
 	}
 
 	private static void login() {

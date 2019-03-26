@@ -49,6 +49,11 @@ public class DepartamentoDTO implements IKeyable {
 	public String getKey() {
 		return nombre;
 	}
+	
+	@Override
+	public String toString() {
+		return nombre;
+	}
 
 	@Override
 	public String toString() {

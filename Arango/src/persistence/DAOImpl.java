@@ -123,6 +123,11 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	public List<EmpleadoDTO> selectAllEmpleados() {
 		return find(EmpleadoDTO.class);
 	}
+	
+	public List<EmpleadoDTO> selectEmpleados(DepartamentoDTO dep, boolean inside) {
+		Map<String, Object> filters = new MapBuilder().put("departamento", dep.getKey()).get();
+		return find(EmpleadoDTO.class, filters);
+	}
 
 	@Override
 	public EmpleadoDTO getEmpleado(String username, String pass) {
@@ -169,6 +174,12 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	@Override
 	public void updateIncidencia(IncidenciaDTO incidencia) {
 		store(incidencia);
+	}
+
+	@Override
+	public EmpleadoDTO getEmpleado(String username) {
+		EmpleadoDTO emp = getByKey(new EmpleadoDTO(username), EmpleadoDTO.class);
+		return emp;
 	}
 
 //	public Departamento initializeDepartamento(DepartamentoDTO dep) {

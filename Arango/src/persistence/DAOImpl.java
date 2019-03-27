@@ -109,9 +109,9 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public void insertDepartamento(DepartamentoDTO d) throws InvalidException {
-		if (!exists(d))
-			store(d);
-		throw new InvalidException(InvalidException.Tipo.DEPARTMENT_EXISTS);
+		if (exists(d))
+			throw new InvalidException(InvalidException.Tipo.DEPARTMENT_EXISTS);
+		store(d);
 	}
 
 	@Override

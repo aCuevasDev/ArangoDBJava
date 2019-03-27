@@ -142,7 +142,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	@Override
 	public Empleado initialize(EmpleadoDTO emp) {
 		DepartamentoDTO departamento = getByKey(new DepartamentoDTO(emp.getDepartamento()), DepartamentoDTO.class);
-		return departamento == null ? null : new Empleado(emp, departamento);
+		return new Empleado(emp, departamento);
 	}
 
 	@Override
@@ -168,8 +168,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public EmpleadoDTO getEmpleado(String username) {
-		EmpleadoDTO emp = getByKey(new EmpleadoDTO(username), EmpleadoDTO.class);
-		return emp;
+		return getByKey(new EmpleadoDTO(username), EmpleadoDTO.class);
 	}
 
 //	public Departamento initializeDepartamento(DepartamentoDTO dep) {

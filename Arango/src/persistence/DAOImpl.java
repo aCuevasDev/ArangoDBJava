@@ -152,7 +152,10 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public List<IncidenciaDTO> getIncidenciasByDepartamento(DepartamentoDTO dep) {
-		return query("",IncidenciaDTO.class);
+		return query(
+			"for e in empleadodto filter e.departamento == \""+ dep.getKey() + "\" for i in incidenciadto filter i.destino == e._key return i",
+			IncidenciaDTO.class
+		);
 	}
 
 	@Override

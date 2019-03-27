@@ -171,10 +171,11 @@ public class ArangoMain {
 		int opt;
 		do {
 			opt = InputAsker.pedirIndice("Que dato quieres editar?",
-					Arrays.asList("Anadir empleado", "Quitar empleado"), true);
+					Arrays.asList("Añadir empleado", "Quitar empleado", "Cambiar jefe"), true);
 			switch (opt) {
 				case 1: addEmpleadoADepartamento(dep); break;
 				case 2: removeEmpleadDeDepartamento(dep); break;
+				case 3: cambiarJefe(dep);
 			}
 		} while (opt != 0);
 	}
@@ -191,6 +192,16 @@ public class ArangoMain {
 		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado a anadir", emps, false) - 1);
 		empleado.setDepartamento(dep.getNombre());
 		controller.updateEmpleado(empleado);
+	}
+	
+	// @Vives
+	private static void cambiarJefe(DepartamentoDTO dep) {
+		List<EmpleadoDTO> emps = controller.getEmpleados(dep, true);
+		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado que será el jefe", emps, false) - 1);
+		empleado.setJefe(true);
+		controller.updateEmpleado(empleado);
+		dep.setJefe(empleado.getUsername());
+		controller.updateDepartamento(dep);
 	}
 
 	// @Vives

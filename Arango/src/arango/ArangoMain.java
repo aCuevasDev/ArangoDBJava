@@ -237,11 +237,11 @@ public class ArangoMain {
 	private static void crearIncidencia() throws InvalidException {
 		checkJefe();
 		Empleado usuarioLogueado = controller.getUsuarioLogeado();
-		IncidenciaDTO incidenciaDTO = new IncidenciaDTO();
-		boolean exists = false;
+		boolean exists;
 		
 		String titulo = InputAsker.askString("Introduce el título: ");
 		String desc = InputAsker.askString("Introduce la descripción: ");
+		boolean urgente = InputAsker.yesOrNo("Es urgente?");
 		String destino;
 		do {
 		destino = InputAsker.askString("Introduce el empleado de destino: ");
@@ -251,11 +251,8 @@ public class ArangoMain {
 		} while (!exists);
 		String origen = usuarioLogueado.getUsername();
 		
-		incidenciaDTO.setTitulo(titulo);
-		incidenciaDTO.setDescripcion(desc);
-		incidenciaDTO.setFechaInicio(new Date());
-		incidenciaDTO.setDestino(destino);
-		incidenciaDTO.setOrigen(origen);
+		IncidenciaDTO incidenciaDTO = new IncidenciaDTO(origen,destino,titulo,desc,urgente);
+		
 		
 		controller.insertIncidencia(incidenciaDTO);
 	}
@@ -283,7 +280,6 @@ public class ArangoMain {
 		return newDepartamento;
 		// TODO (Solo jefes)
 		// TODO poner el empleado como que es jefe y añadir al departamento
-		// TODO Cuevas: todas las tildes y ñ me salen raras, hay que a�adir UTF-8
 		// TODO falta cambiar el estado del empleado a jefe y sacarlo del departamento
 		// en el que estaba
 	}

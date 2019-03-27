@@ -320,5 +320,35 @@ public class InputAsker {
 			}
 		} while (error);
 	}
+	
+	/**
+	 * Method to ask the user a binary question.
+	 * 
+	 * @param text
+	 * @return true or false whether the user pressed yes or no.
+	 */
+	public static boolean yesOrNo(String text) {
+		boolean error = false;
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String cadena = "";
+		do {
+			try {
+				System.out.println(text);
+				cadena = br.readLine();
+				if (cadena.equals(""))
+					System.out.println("No puedes dejar este campo en blanco.");
+
+				if (cadena.equalsIgnoreCase("si") || cadena.equalsIgnoreCase("s"))
+					return true;
+				if (cadena.equalsIgnoreCase("no") || cadena.equalsIgnoreCase("n"))
+					return false;
+				System.out.println("Debes insertar (s)i o (n)o.");
+				error = true;
+			} catch (IOException ex) {
+				System.out.println("Input / Output error.");
+			}
+		} while (error);
+		return false;
+	}
 
 }

@@ -248,22 +248,17 @@ public class ArangoMain {
 	private static void crearIncidencia() throws InvalidException {
 		checkJefe();
 		Empleado usuarioLogueado = controller.getUsuarioLogeado();
+		List<EmpleadoDTO> empleadosEnDepartamento = controller.getEmpleados(usuarioLogueado.getDepartamento(), true);
 		boolean exists;
 		
 		String titulo = InputAsker.askString("Introduce el título: ");
 		String desc = InputAsker.askString("Introduce la descripción: ");
 		boolean urgente = InputAsker.yesOrNo("Es urgente?");
-		String destino;
-		do {
-		destino = InputAsker.askString("Introduce el empleado de destino: ");
-		exists = (controller.getEmpleado(destino) != null);
-		if (!exists)
-			System.err.println("El usuario no existe.");
-		} while (!exists);
+		int indexEmpleado = InputAsker.pedirIndice("Cuál es el usuario de destino?",empleadosEnDepartamento , false);
+		String destino = empleadosEnDepartamento.get(indexEmpleado-1).getUsername();
 		String origen = usuarioLogueado.getUsername();
 		
 		IncidenciaDTO incidenciaDTO = new IncidenciaDTO(origen,destino,titulo,desc,urgente);
-		
 		
 		controller.insertIncidencia(incidenciaDTO);
 	}

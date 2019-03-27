@@ -18,15 +18,18 @@ public class IncidenciaDTO implements IKeyable {
 	private String descripcion;
 	private Date fechaInicio;
 	private Date fechaFin;
+	private boolean urgente;
 
-	public IncidenciaDTO() {}
+	public IncidenciaDTO() {
+	}
 
-	public IncidenciaDTO(String origen, String destino, String titulo, String descripcion) {
+	public IncidenciaDTO(String origen, String destino, String titulo, String descripcion, boolean urgente) {
 		this.origen = origen;
 		this.destino = destino;
 		this.titulo = titulo;
 		this.descripcion = descripcion;
 		this.fechaInicio = new Date();
+		this.urgente = urgente;
 	}
 
 	public IncidenciaDTO(Incidencia i) {
@@ -96,6 +99,18 @@ public class IncidenciaDTO implements IKeyable {
 				+ descripcion + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + "]";
 	}
 
-	
+	/**
+	 * @return the urgente
+	 */
+	public boolean isUrgente() {
+		return urgente;
+	}
+
+	/**
+	 * @param urgente the urgente to set
+	 */
+	public void setUrgente(boolean urgente) {
+		this.urgente = urgente;
+	}
 
 }

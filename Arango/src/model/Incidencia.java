@@ -23,7 +23,6 @@ public class Incidencia implements IKeyable {
 	}
 
 	public Incidencia(EmpleadoDTO origen, EmpleadoDTO destino, String titulo, String descripcion, boolean urgente) {
-		super();
 		this.origen = origen;
 		this.destino = destino;
 		this.titulo = titulo;
@@ -67,8 +66,6 @@ public class Incidencia implements IKeyable {
 	@Override
 	public String getKey() {
 		return String.valueOf(id);
-		// TODO Cuevas: String.valueOf(id) daba un error Response: 400, Error: 1221 -
-		// illegal document key
 	}
 
 	public EmpleadoDTO getOrigen() {

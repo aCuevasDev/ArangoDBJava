@@ -244,7 +244,7 @@ public class ArangoMain {
 		String desc = InputAsker.askString("Introduce la descripción: ");
 		boolean urgente = InputAsker.yesOrNo("Es urgente?");
 		int indexEmpleado = InputAsker.pedirIndice("Cuál es el usuario de destino?",empleadosEnDepartamento , false);
-		String destino = empleadosEnDepartamento.get(indexEmpleado).getUsername();
+		String destino = empleadosEnDepartamento.get(indexEmpleado-1).getUsername();
 		String origen = usuarioLogueado.getUsername();
 		
 		IncidenciaDTO incidenciaDTO = new IncidenciaDTO(origen,destino,titulo,desc,urgente);

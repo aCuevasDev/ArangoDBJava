@@ -53,6 +53,14 @@ public abstract class ArangoUtils {
 		else
 			update(object);
 	}
+	
+	protected void forceStore(IKeyable object) {
+		String collectionName = object.getClass().getSimpleName().toLowerCase();
+		ArangoCollection collection = db.collection(collectionName);
+		if (!collection.exists())
+			db.createCollection(collectionName);
+		db.collection(collectionName).insertDocument(object);
+	}
 
 	private void update(IKeyable object) {
 		db.collection(object.getClass().getSimpleName().toLowerCase()).updateDocument(object.getKey(), object);

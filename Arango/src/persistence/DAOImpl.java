@@ -68,7 +68,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public void insertIncidencia(IncidenciaDTO i) {
-		store(i);
+		forceStore(i);
 	}
 
 	@Override

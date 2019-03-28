@@ -229,7 +229,7 @@ public class ArangoMain {
 		List<IncidenciaDTO> incidencias = controller.getUserIncidenciasNotSolved();
 		if (incidencias.size() > 0) {
 			int index = InputAsker.pedirIndice("Qué incidencia quieres marcar como solucionada?", incidencias, true);
-			IncidenciaDTO incidencia = incidencias.get(index);
+			IncidenciaDTO incidencia = incidencias.get(index-1);
 			incidencia.setFechaFin(new Date());
 			controller.updateIncidencia(incidencia);
 		} else {

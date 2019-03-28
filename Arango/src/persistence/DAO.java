@@ -87,4 +87,8 @@ public interface DAO {
 	
 	public List<EmpleadoDTO> selectEmpleados(DepartamentoDTO dep, boolean inside);
 
+	public void crearEvento(EventoDTO evento);
+
+	public List<EmpleadoDTO> selectBecarios();
+
 }

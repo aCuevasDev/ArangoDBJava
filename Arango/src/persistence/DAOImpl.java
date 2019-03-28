@@ -174,6 +174,20 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		return getByKey(new EmpleadoDTO(username), EmpleadoDTO.class);
 	}
 
+	@Override
+	public void crearEvento(EventoDTO evento) {
+		store(evento);
+	}
+
+	@Override
+	public List<EmpleadoDTO> selectBecarios() {
+		Map<String, Object> filters = new MapBuilder().put("jefe", false).get();
+		List<EmpleadoDTO> empleados = find(EmpleadoDTO.class, filters);
+		if (empleados.isEmpty())
+			return null;
+		return empleados;
+	}
+
 //	public Departamento initializeDepartamento(DepartamentoDTO dep) {
 //		List<EmpleadoDTO> empleados = find(EmpleadoDTO.class,new MapBuilder().put("username", dep.getJefe()).get());
 //		

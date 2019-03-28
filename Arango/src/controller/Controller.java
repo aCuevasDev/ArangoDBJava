@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 import exception.InvalidException;
 import exception.InvalidException.Tipo;
 import model.Empleado;
+import model.Evento;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
+import model.dto.EventoDTO;
 import model.dto.IncidenciaDTO;
 import persistence.DAO;
 import persistence.DAOImpl;
@@ -59,6 +61,10 @@ public class Controller {
 	public List<EmpleadoDTO> getAllUsers() {
 		return dao.selectAllEmpleados();
 	}
+	
+	public List<EmpleadoDTO> getBecarios() {
+		return dao.selectBecarios();
+	}
 
 	public List<DepartamentoDTO> getAllDepartamentos() {
 		return dao.selectAllDepartments();
@@ -104,6 +110,8 @@ public class Controller {
 
 	public void updateIncidencia(IncidenciaDTO incidencia) {
 		dao.updateIncidencia(incidencia);
+		if (incidencia.isUrgente())
+			crearEvento(new EventoDTO(Evento.Tipo.FIN_INCIDENCIA, incidencia.getDestino()));
 	}
 	
 	public List<IncidenciaDTO> getUserIncidencias() {
@@ -129,6 +137,10 @@ public class Controller {
 
 	public boolean isUserLogged() {
 		return usuarioLogeado != null;
+	}
+
+	public void crearEvento(EventoDTO evento) {
+		dao.crearEvento(evento);
 	}
 
 }

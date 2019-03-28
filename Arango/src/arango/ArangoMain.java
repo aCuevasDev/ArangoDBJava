@@ -249,7 +249,6 @@ public class ArangoMain {
 		checkJefe();
 		Empleado usuarioLogueado = controller.getUsuarioLogeado();
 		List<EmpleadoDTO> empleadosEnDepartamento = controller.getEmpleados(usuarioLogueado.getDepartamento(), true);
-		boolean exists;
 		
 		String titulo = InputAsker.askString("Introduce el título: ");
 		String desc = InputAsker.askString("Introduce la descripción: ");

@@ -86,5 +86,7 @@ public interface DAO {
 	public EmpleadoDTO getEmpleado(String username);
 	
 	public List<EmpleadoDTO> selectEmpleados(DepartamentoDTO dep, boolean inside);
+	
+	public RankingDTO getRanking(DepartamentoDTO dep);
 
 }

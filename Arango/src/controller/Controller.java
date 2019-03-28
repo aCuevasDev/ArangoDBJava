@@ -40,8 +40,10 @@ public class Controller {
 
 	public String login(String username, String contrasenya) throws InvalidException {
 		usuarioLogeado = dao.loginEmpleado(username, contrasenya);
-		if (usuarioLogeado != null)
+		if (usuarioLogeado != null) {
+			crearEvento(Evento.Tipo.LOGIN, usuarioLogeado.getUsername());
 			return "Usuario creado correctamente.";
+		}
 		throw new InvalidException(Tipo.INVALID_CREDENTIALS);
 	}
 

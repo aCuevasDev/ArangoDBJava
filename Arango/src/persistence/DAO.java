@@ -89,4 +89,8 @@ public interface DAO {
 	
 	public RankingDTO getRanking(DepartamentoDTO dep);
 
+	public void crearEvento(EventoDTO evento);
+
+	public List<EmpleadoDTO> selectBecarios();
+
 }

@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 import exception.InvalidException;
 import exception.InvalidException.Tipo;
 import model.Empleado;
+import model.Evento;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
+import model.dto.EventoDTO;
 import model.dto.IncidenciaDTO;
 import persistence.DAO;
 import persistence.DAOImpl;
@@ -38,8 +40,10 @@ public class Controller {
 
 	public String login(String username, String contrasenya) throws InvalidException {
 		usuarioLogeado = dao.loginEmpleado(username, contrasenya);
-		if (usuarioLogeado != null)
+		if (usuarioLogeado != null) {
+			crearEvento(Evento.Tipo.LOGIN, usuarioLogeado.getUsername());
 			return "Usuario creado correctamente.";
+		}
 		throw new InvalidException(Tipo.INVALID_CREDENTIALS);
 	}
 
@@ -58,6 +62,10 @@ public class Controller {
 
 	public List<EmpleadoDTO> getAllUsers() {
 		return dao.selectAllEmpleados();
+	}
+	
+	public List<EmpleadoDTO> getBecarios() {
+		return dao.selectBecarios();
 	}
 
 	public List<DepartamentoDTO> getAllDepartamentos() {
@@ -104,6 +112,8 @@ public class Controller {
 
 	public void updateIncidencia(IncidenciaDTO incidencia) {
 		dao.updateIncidencia(incidencia);
+		if (incidencia.isUrgente())
+			crearEvento(Evento.Tipo.FIN_INCIDENCIA, incidencia.getDestino());
 	}
 	
 	public List<IncidenciaDTO> getUserIncidencias() {
@@ -129,6 +139,10 @@ public class Controller {
 
 	public boolean isUserLogged() {
 		return usuarioLogeado != null;
+	}
+
+	public void crearEvento(Evento.Tipo tipo, String empleado) {
+		dao.crearEvento(new EventoDTO(tipo, empleado));
 	}
 
 }

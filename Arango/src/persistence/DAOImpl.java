@@ -41,8 +41,11 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		EmpleadoDTO emp = getByKey(new EmpleadoDTO(username), EmpleadoDTO.class);
 		if (emp == null || !emp.getContrasenya().equals(pass))
 			return null;
-		store(new EventoDTO(Tipo.LOGIN, emp.getUsername()));
 		return initialize(emp);
+	}
+	
+	public void crearEvento(EventoDTO evento) {
+		store(evento);
 	}
 
 	@Override

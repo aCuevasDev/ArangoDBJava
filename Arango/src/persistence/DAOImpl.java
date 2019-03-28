@@ -44,6 +44,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		return initialize(emp);
 	}
 	
+	@Override
 	public void crearEvento(EventoDTO evento) {
 		store(evento);
 	}
@@ -175,11 +176,6 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	@Override
 	public EmpleadoDTO getEmpleado(String username) {
 		return getByKey(new EmpleadoDTO(username), EmpleadoDTO.class);
-	}
-
-	@Override
-	public void crearEvento(EventoDTO evento) {
-		store(evento);
 	}
 
 	@Override

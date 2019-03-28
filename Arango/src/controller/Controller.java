@@ -111,7 +111,7 @@ public class Controller {
 	public void updateIncidencia(IncidenciaDTO incidencia) {
 		dao.updateIncidencia(incidencia);
 		if (incidencia.isUrgente())
-			crearEvento(new EventoDTO(Evento.Tipo.FIN_INCIDENCIA, incidencia.getDestino()));
+			crearEvento(Evento.Tipo.FIN_INCIDENCIA, incidencia.getDestino());
 	}
 	
 	public List<IncidenciaDTO> getUserIncidencias() {
@@ -139,8 +139,8 @@ public class Controller {
 		return usuarioLogeado != null;
 	}
 
-	public void crearEvento(EventoDTO evento) {
-		dao.crearEvento(evento);
+	public void crearEvento(Evento.Tipo tipo, String empleado) {
+		dao.crearEvento(new EventoDTO(tipo, empleado));
 	}
 
 }

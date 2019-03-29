@@ -188,10 +188,10 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		+ "filter e.departamento == '" + dep.getKey() + "' "
 				+ "for i in eventodto "
 				+ "filter i.empleado == e._key && i.tipo == 'FIN_INCIDENCIA' "
-						+ "collect user = e._key with count into incidenciasResueltas"
+						+ "collect user = e._key with count into incidenciasResueltas "
 						+ "return {"
 						+ "'nombre' : user,"
-						+ "'incidenciasResueltas' : incidenciasResueltas"
+						+ "'incidenciasResueltas' : incidenciasResueltas "
 						+ "}",
 			RankingDTO.class
 		);

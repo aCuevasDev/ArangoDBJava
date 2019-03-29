@@ -20,7 +20,7 @@ public class RankingDTO implements Comparable<RankingDTO>{
 
 	@Override
 	public int compareTo(RankingDTO o) {
-		return incidenciasResueltas - o.incidenciasResueltas;
+		return o.incidenciasResueltas - incidenciasResueltas;
 	}
 
 }

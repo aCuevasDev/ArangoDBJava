@@ -23,16 +23,16 @@ public class ArangoMain {
 	// Estas listas no permiten anadir o quitar elementos on the fly
 	private static final List<String> opcionesEmpleado = Arrays.asList( 
 			"Actualizar empleado.", 
-			"Solucionar incidencia.", 
-			"Listar incidencias"
+			"Listar incidencias",
+			"Solucionar incidencia."			
 	); 
 	private static final List<String> opcionesJefe = Arrays.asList(
+			"Crear incidencia.",
+			"Mostrar ranking",
 			"Registrar empleado.", 
 			"Borrar empleado.", 
 			"Crear departamento", 
-			"Actualizar departamento", 
-			"Mostrar ranking", 
-			"Crear incidencia."
+			"Actualizar departamento"			
 	); 
 	// @formatter:on
 
@@ -66,43 +66,21 @@ public class ArangoMain {
 		int option;
 		List<String> options = getOptionsList();
 		do {
-			if (controller.getUsuarioLogeado() == null)
-				break;
+			if (controller.getUsuarioLogeado() == null) break;
 			option = InputAsker.pedirIndice("Selecciona una opcion: ", options, true);
 			try {
 				switch (option) {
-				case 1:
-					updateEmpleado();
-					break;
-				case 2:
-					solucionarIncidencia();
-					break;
-				case 3:
-					controller.getUserIncidencias().forEach(System.out::println);
-					break;
-				case 4:
-					register();
-					break;
-				case 5:
-					deleteEmpleado();
-					break;
-				case 6:
-					crearDepartamento();
-					break;
-				case 7:
-					updateDepartamento();
-					break;
-				case 8:
-					mostrarRanking();
-					break;
-				case 9:
-					crearIncidencia();
-					break;
-				case 0:
-					System.out.println("Adiós!");
-					break;
-				default:
-					System.err.println("Opcion invalida");
+					case 1: updateEmpleado(); break;
+					case 2: controller.getUserIncidencias().forEach(System.out::println); break;
+					case 3: solucionarIncidencia(); break;
+					case 4: crearIncidencia(); break;
+					case 5: mostrarRanking(); break;
+					case 6: register(); break;
+					case 7: deleteEmpleado(); break;
+					case 8: crearDepartamento(); break;
+					case 9: updateDepartamento(); break;
+					case 0: System.out.println("Adiós!"); break;
+					default: System.err.println("Opcion invalida");
 				}
 			} catch (InvalidException e) {
 				System.err.println(e.getMessage());
@@ -244,7 +222,7 @@ public class ArangoMain {
 		checkJefe();
 		List<RankingDTO> ranking = controller.getRanking();
 		for (int i = 0; i < ranking.size(); i++) {
-			System.out.println((i+1) + ranking.get(i).toString());
+			System.out.println((i+1) + ". " + ranking.get(i).toString());
 		}
 	}
 

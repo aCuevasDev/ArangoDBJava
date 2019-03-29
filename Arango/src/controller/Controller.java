@@ -50,6 +50,15 @@ public class Controller {
 	}
 
 	public String crearDepartamento(DepartamentoDTO departamento) throws InvalidException {
+		if (departamento.getJefe() != null) {
+			EmpleadoDTO empleado = dao.getEmpleado(departamento.getJefe());
+			if (empleado.isJefe())
+				dao.updateDepartamento(new DepartamentoDTO(empleado.getDepartamento()));
+			else
+				empleado.setJefe(true);
+			empleado.setDepartamento(departamento.getNombre());
+			dao.updateEmpleado(empleado);
+		}
 		dao.insertDepartamento(departamento);
 		return "Departamento guardado correctamente";
 	}

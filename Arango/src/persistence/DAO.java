@@ -90,5 +90,5 @@ public interface DAO {
 	public void crearEvento(EventoDTO evento);
 
 	public List<EmpleadoDTO> selectBecarios();
-
+	
 }

@@ -1,13 +1,10 @@
 package controller;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import exception.InvalidException;
 import exception.InvalidException.Tipo;
-import model.Empleado;
-import model.Evento;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
 import model.dto.EventoDTO;
@@ -20,7 +17,7 @@ public class Controller {
 
 	private static Controller instance;
 
-	private Empleado usuarioLogeado;
+	private EmpleadoDTO usuarioLogeado;
 	private DAO dao;
 
 	/**
@@ -43,7 +40,7 @@ public class Controller {
 	public String login(String username, String contrasenya) throws InvalidException {
 		usuarioLogeado = dao.loginEmpleado(username, contrasenya);
 		if (usuarioLogeado != null) {
-			crearEvento(Evento.Tipo.LOGIN, usuarioLogeado.getUsername());
+			crearEvento(EventoDTO.Tipo.LOGIN, usuarioLogeado.getUsername());
 			return "Usuario creado correctamente.";
 		}
 		throw new InvalidException(Tipo.INVALID_CREDENTIALS);
@@ -96,7 +93,7 @@ public class Controller {
 		if (emp.isJefe()) {
 			dao.updateDepartamento(new DepartamentoDTO(emp.getDepartamento()));
 		}
-		if(emp.equals(new EmpleadoDTO(usuarioLogeado))) {
+		if(emp.equals(usuarioLogeado)) {
 			usuarioLogeado = null;
 		}
 	}
@@ -109,7 +106,7 @@ public class Controller {
 		return dao.getIncidenciaByDestino(emp);
 	}
 	
-	public Empleado getUsuarioLogeado() {
+	public EmpleadoDTO getUsuarioLogeado() {
 		return usuarioLogeado;
 	}
 
@@ -124,13 +121,13 @@ public class Controller {
 	public void updateIncidencia(IncidenciaDTO incidencia) {
 		dao.updateIncidencia(incidencia);
 		if (incidencia.isUrgente())
-			crearEvento(Evento.Tipo.FIN_INCIDENCIA, incidencia.getDestino());
+			crearEvento(EventoDTO.Tipo.SOLUCION_INCIDENCIA, incidencia.getDestino());
 	}
 	
 	public List<IncidenciaDTO> getUserIncidencias() {
 		if (!usuarioLogeado.isJefe()) 
-			return dao.getIncidenciaByDestino(new EmpleadoDTO(usuarioLogeado));
-		return dao.getIncidenciasByDepartamento(usuarioLogeado.getDepartamento());
+			return dao.getIncidenciaByDestino(usuarioLogeado);
+		return dao.getIncidenciasByDepartamento(new DepartamentoDTO(usuarioLogeado.getDepartamento()));
 	}
 
 	public List<IncidenciaDTO> getUserIncidenciasNotSolved() {
@@ -152,12 +149,12 @@ public class Controller {
 		return usuarioLogeado != null;
 	}
 
-	public void crearEvento(Evento.Tipo tipo, String empleado) {
+	public void crearEvento(EventoDTO.Tipo tipo, String empleado) {
 		dao.crearEvento(new EventoDTO(tipo, empleado));
 	}
 
 	public List<RankingDTO> getRanking() {
-		return dao.getRanking(new DepartamentoDTO(usuarioLogeado.getDepartamento().getNombre())).stream().sorted().collect(Collectors.toList());
+		return dao.getRanking(new DepartamentoDTO(usuarioLogeado.getDepartamento())).stream().sorted().collect(Collectors.toList());
 	}
 
 }

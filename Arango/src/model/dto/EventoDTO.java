@@ -5,12 +5,14 @@ import java.util.Date;
 import com.arangodb.entity.DocumentField;
 import com.arangodb.entity.DocumentField.Type;
 
-import model.Evento;
-import model.Evento.Tipo;
-import model.IKeyable;
+import persistence.IKeyable;
 
 public class EventoDTO implements IKeyable{
 
+	public enum Tipo {
+		LOGIN, CREACION_INCIDENCIA, CONSULTA_INCIDENCIA, SOLUCION_INCIDENCIA;
+	}
+	
 	
 	@DocumentField(Type.KEY)
 	private Integer id;
@@ -19,12 +21,6 @@ public class EventoDTO implements IKeyable{
 	private String empleado;
 	
 	public EventoDTO() {}
-
-	public EventoDTO(Evento evento) {
-		this.tipo = evento.getTipo();
-		this.fecha = evento.getFecha();
-		this.empleado = evento.getEmpleado().getNombre();
-	}
 	
 	public EventoDTO(Tipo tipo, String empleado) {
 		this.tipo = tipo;

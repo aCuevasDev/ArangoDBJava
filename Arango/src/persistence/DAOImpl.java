@@ -7,9 +7,6 @@ import java.util.stream.Collectors;
 import com.arangodb.util.MapBuilder;
 
 import exception.InvalidException;
-import model.Empleado;
-import model.Evento.Tipo;
-import model.Incidencia;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
 import model.dto.EventoDTO;
@@ -37,11 +34,11 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public Empleado loginEmpleado(String username, String pass) {
+	public EmpleadoDTO loginEmpleado(String username, String pass) {
 		EmpleadoDTO emp = getByKey(new EmpleadoDTO(username), EmpleadoDTO.class);
 		if (emp == null || !emp.getContrasenya().equals(pass))
 			return null;
-		return initialize(emp);
+		return emp;
 	}
 	
 	@Override
@@ -60,9 +57,9 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public Incidencia getIncidenciaById(int id) {
+	public IncidenciaDTO getIncidenciaById(int id) {
 		Map<String, Object> filters = new MapBuilder().put("id", id).get();
-		return find(Incidencia.class, filters).stream().findFirst().get();
+		return find(IncidenciaDTO.class, filters).stream().findFirst().get();
 	}
 
 	@Override
@@ -94,7 +91,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public EventoDTO getUltimoInicioSesion(EmpleadoDTO emp) {
-		Map<String, Object> filters = new MapBuilder().put("empleado", emp.getUsername()).put("tipo", Tipo.LOGIN).get();
+		Map<String, Object> filters = new MapBuilder().put("empleado", emp.getUsername()).put("tipo", model.dto.EventoDTO.Tipo.LOGIN).get();
 		return find(EventoDTO.class, filters).stream()
 				.sorted((event, other) -> event.getFecha().compareTo(other.getFecha())).collect(Collectors.toList())
 				.get(0);
@@ -138,12 +135,6 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public Empleado initialize(EmpleadoDTO emp) {
-		DepartamentoDTO departamento = getByKey(new DepartamentoDTO(emp.getDepartamento()), DepartamentoDTO.class);
-		return new Empleado(emp, departamento);
-	}
-
-	@Override
 	public List<DepartamentoDTO> selectAllDepartments() {
 		return find(DepartamentoDTO.class);
 	}
@@ -154,12 +145,6 @@ public class DAOImpl extends ArangoUtils implements DAO {
 			"for e in empleadodto filter e.departamento == \""+ dep.getKey() + "\" for i in incidenciadto filter i.destino == e._key return i",
 			IncidenciaDTO.class
 		);
-	}
-
-	@Override
-	public Incidencia initialize(IncidenciaDTO inc) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -196,14 +181,5 @@ public class DAOImpl extends ArangoUtils implements DAO {
 			RankingDTO.class
 		);
 	}
-
-//	public Departamento initializeDepartamento(DepartamentoDTO dep) {
-//		List<EmpleadoDTO> empleados = find(EmpleadoDTO.class,new MapBuilder().put("username", dep.getJefe()).get());
-//		
-//		//if (departamentos.isEmpty()) 
-//		// TODO Throw exception
-//		
-//		return new Departamento();
-//	}
 
 }

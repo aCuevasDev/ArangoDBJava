@@ -10,7 +10,6 @@ import com.arangodb.ArangoDBException;
 import controller.Controller;
 import exception.InvalidException;
 import exception.InvalidException.Tipo;
-import model.Empleado;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
 import model.dto.IncidenciaDTO;
@@ -19,8 +18,6 @@ import model.dto.RankingDTO;
 public class ArangoMain {
 
 	private static Controller controller;
-	// @formatter:off
-	// Estas listas no permiten anadir o quitar elementos on the fly
 	private static final List<String> opcionesEmpleado = Arrays.asList( 
 			"Actualizar empleado.", 
 			"Listar incidencias",
@@ -34,7 +31,6 @@ public class ArangoMain {
 			"Crear departamento", 
 			"Actualizar departamento"			
 	); 
-	// @formatter:on
 
 	public static void main(String[] args) {
 		try {
@@ -99,7 +95,6 @@ public class ArangoMain {
 	// @Vives
 	private static EmpleadoDTO register() throws InvalidException {
 		checkJefe();
-		// TODO Implementation (solo jefe)
 		EmpleadoDTO newEmpleado = new EmpleadoDTO();
 		newEmpleado.setNombre(InputAsker.askString("Introduce el nombre del empleado: "));
 		newEmpleado.setApellidos(InputAsker.askString("Introduce los apellidos del empleado: "));
@@ -119,7 +114,7 @@ public class ArangoMain {
 
 	// @Cuevas
 	private static void updateEmpleado() {
-		Empleado usuariologueado = controller.getUsuarioLogeado();
+		EmpleadoDTO usuariologueado = controller.getUsuarioLogeado();
 		System.out.println("Editando tu perfil: ");
 		int opt; // nombre, apellido, contraseña.
 		do {
@@ -139,7 +134,7 @@ public class ArangoMain {
 				usuariologueado.setContrasenya(value);
 			}
 		} while (opt != 0);
-		controller.updateEmpleado(new EmpleadoDTO(usuariologueado));
+		controller.updateEmpleado(usuariologueado);
 	}
 
 	// @Bou
@@ -186,8 +181,7 @@ public class ArangoMain {
 	// @Vives
 	private static void deleteEmpleado() throws InvalidException {
 		checkJefe();
-		// TODO implementation (solo jefe)
-		List<EmpleadoDTO> empleados = controller.getEmpleados(controller.getUsuarioLogeado().getDepartamento(), true);
+		List<EmpleadoDTO> empleados = controller.getEmpleados(new DepartamentoDTO(controller.getUsuarioLogeado().getDepartamento()), true);
 		EmpleadoDTO empleado = empleados.get(InputAsker.pedirIndice("Introduce el empleado a eliminar", empleados, false) - 1);
 		List<IncidenciaDTO> incidencias = controller.getIncidenciasPorEmpleado(empleado);
 		if(incidencias.size() > 0) {
@@ -229,8 +223,8 @@ public class ArangoMain {
 	// @Cuevas
 	private static void crearIncidencia() throws InvalidException {
 		checkJefe();
-		Empleado usuarioLogueado = controller.getUsuarioLogeado();
-		List<EmpleadoDTO> empleadosEnDepartamento = controller.getEmpleados(usuarioLogueado.getDepartamento(), true);
+		EmpleadoDTO usuarioLogueado = controller.getUsuarioLogeado();
+		List<EmpleadoDTO> empleadosEnDepartamento = controller.getEmpleados(new DepartamentoDTO(usuarioLogueado.getDepartamento()), true);
 		String titulo = InputAsker.askString("Introduce el título: ");
 		String desc = InputAsker.askString("Introduce la descripción: ");
 		boolean urgente = InputAsker.yesOrNo("Es urgente?");
@@ -264,10 +258,6 @@ public class ArangoMain {
 		newDepartamento.setJefe(eleccion == 0 ? null : empleados.get(eleccion - 1).getUsername());
 		controller.crearDepartamento(newDepartamento);
 		return newDepartamento;
-		// TODO (Solo jefes)
-		// TODO poner el empleado como que es jefe y añadir al departamento
-		// TODO falta cambiar el estado del empleado a jefe y sacarlo del departamento
-		// en el que estaba
 	}
 
 	private static void checkJefe() throws InvalidException {

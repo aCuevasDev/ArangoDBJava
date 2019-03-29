@@ -2,9 +2,7 @@ package model.dto;
 
 import com.arangodb.entity.DocumentField;
 import com.arangodb.entity.DocumentField.Type;
-
-import model.Departamento;
-import model.IKeyable;
+import persistence.IKeyable;
 
 public class DepartamentoDTO implements IKeyable {
 
@@ -12,11 +10,6 @@ public class DepartamentoDTO implements IKeyable {
 	private String nombre;
 	private String jefe;
 
-	public DepartamentoDTO(Departamento departamento) {
-		this.nombre = departamento.getNombre();
-		this.jefe = departamento.getJefe().getNombre();
-	}
-	
 	public DepartamentoDTO(String nombre) {
 		this.nombre = nombre;
 	}

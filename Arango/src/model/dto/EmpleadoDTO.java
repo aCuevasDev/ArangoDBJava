@@ -2,9 +2,7 @@ package model.dto;
 
 import com.arangodb.entity.DocumentField;
 import com.arangodb.entity.DocumentField.Type;
-
-import model.Empleado;
-import model.IKeyable;
+import persistence.IKeyable;
 
 public class EmpleadoDTO implements IKeyable {
 
@@ -17,15 +15,6 @@ public class EmpleadoDTO implements IKeyable {
 	private boolean jefe;
 	private String departamento;
 	
-	public EmpleadoDTO(Empleado empleado) {
-		this.nombre = empleado.getNombre();
-		this.apellidos = empleado.getApellidos();
-		this.username = empleado.getUsername();
-		this.contrasenya = empleado.getContrasenya();
-		this.departamento = empleado.getDepartamento().getNombre();
-		this.jefe = empleado.isJefe();
-	}
-
 	public EmpleadoDTO(String nombre, String apellidos, String username, String contrasenya, String departamento) {
 		this.nombre = nombre;
 		this.apellidos = apellidos;

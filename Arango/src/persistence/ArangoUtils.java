@@ -8,7 +8,6 @@ import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDatabase;
-import model.IKeyable;
 
 public abstract class ArangoUtils {
 

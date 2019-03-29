@@ -5,8 +5,7 @@ import java.util.Date;
 import com.arangodb.entity.DocumentField;
 import com.arangodb.entity.DocumentField.Type;
 
-import model.IKeyable;
-import model.Incidencia;
+import persistence.IKeyable;
 
 public class IncidenciaDTO implements IKeyable {
 
@@ -30,14 +29,6 @@ public class IncidenciaDTO implements IKeyable {
 		this.descripcion = descripcion;
 		this.fechaInicio = new Date();
 		this.urgente = urgente;
-	}
-
-	public IncidenciaDTO(Incidencia i) {
-		this.origen = i.getOrigen().getUsername();
-		this.destino = i.getDestino().getUsername();
-		this.titulo = i.getTitulo();
-		this.descripcion = i.getDescripcion();
-		this.fechaInicio = i.getFechaInicio();
 	}
 
 	public String getTitulo() {

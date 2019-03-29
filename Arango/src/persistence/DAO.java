@@ -3,8 +3,6 @@ package persistence;
 import java.util.List;
 
 import exception.InvalidException;
-import model.Empleado;
-import model.Incidencia;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
 import model.dto.EventoDTO;
@@ -27,7 +25,7 @@ public interface DAO {
 	public void updateDepartamento(DepartamentoDTO d);
 
 	// Método para validar el login de un empleado.
-	public Empleado loginEmpleado(String user, String pass);
+	public EmpleadoDTO loginEmpleado(String user, String pass);
 
 	// Método para modificar el perfil de un empleado.
 	public void updateEmpleado(EmpleadoDTO empleado);
@@ -36,7 +34,7 @@ public interface DAO {
 	public void removeEmpleado(EmpleadoDTO e);
 
 	// Obtener una Incidencia a partir de su Id.
-	public Incidencia getIncidenciaById(int id);
+	public IncidenciaDTO getIncidenciaById(int id);
 
 	// Obtener una lista de todas las incidencias
 	public List<IncidenciaDTO> selectAllIncidencias();
@@ -68,10 +66,6 @@ public interface DAO {
 	public void close();
 
 	public EmpleadoDTO getEmpleado(String username, String pass);
-
-	public Empleado initialize(EmpleadoDTO emp);
-
-	public Incidencia initialize(IncidenciaDTO inc);
 
 	public List<DepartamentoDTO> selectAllDepartments();
 

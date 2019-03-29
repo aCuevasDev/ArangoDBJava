@@ -187,6 +187,23 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		return empleados;
 	}
 
+	@Override
+	public RankingDTO getRanking(DepartamentoDTO dep) {
+		//return query(
+		/*for e in empleadodto 
+		filter e.departamento == "Sexo" 
+		for i in eventodto 
+		filter i.empleado == e._key && i.tipo == "FIN_INCIDENCIA" 
+		collect user = e._key with count into incidenciasResueltas
+		return {
+		    "nombre" : user,
+		    "incidenciasResueltas" : incidenciasResueltas
+		}*/
+//			RankingDTO.class
+//		);
+		return null;
+	}
+
 //	public Departamento initializeDepartamento(DepartamentoDTO dep) {
 //		List<EmpleadoDTO> empleados = find(EmpleadoDTO.class,new MapBuilder().put("username", dep.getJefe()).get());
 //		

@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import exception.InvalidException;
@@ -147,7 +148,7 @@ public class Controller {
 	}
 
 	public List<RankingDTO> getRanking() {
-		return dao.getRankingEmpleados();
+		return dao.getRanking(new DepartamentoDTO(usuarioLogeado.getDepartamento().getNombre())).stream().sorted().collect(Collectors.toList());
 	}
 
 }

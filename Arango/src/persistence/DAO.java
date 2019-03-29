@@ -65,10 +65,6 @@ public interface DAO {
 	// Obtener la fecha-hora del último inicio de sesión para un empleado.
 	public EventoDTO getUltimoInicioSesion(EmpleadoDTO e);
 
-	// Obtener el ranking de los empleados por cantidad de incidencias
-	// urgentes creadas (más incidencias urgentes primero).
-	public List<RankingDTO> getRankingEmpleados();
-
 	public void close();
 
 	public EmpleadoDTO getEmpleado(String username, String pass);
@@ -86,7 +82,9 @@ public interface DAO {
 	public EmpleadoDTO getEmpleado(String username);
 	
 	public List<EmpleadoDTO> selectEmpleados(DepartamentoDTO dep, boolean inside);
-	
+
+	// Obtener el ranking de los empleados por cantidad de incidencias
+	// urgentes creadas (más incidencias urgentes primero).
 	public List<RankingDTO> getRanking(DepartamentoDTO dep);
 
 	public void crearEvento(EventoDTO evento);

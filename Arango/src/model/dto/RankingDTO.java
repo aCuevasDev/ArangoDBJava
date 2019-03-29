@@ -1,9 +1,9 @@
 package model.dto;
 
-public class RankingDTO {
+public class RankingDTO implements Comparable<RankingDTO>{
 	
 	private String nombre;
-	private int incidenciasResueltas;
+	private Integer incidenciasResueltas;
 	
 	public int getIncidenciasResueltas() {
 		return incidenciasResueltas;
@@ -16,6 +16,11 @@ public class RankingDTO {
 	@Override
 	public String toString() {
 		return nombre + ": " + incidenciasResueltas;
+	}
+
+	@Override
+	public int compareTo(RankingDTO o) {
+		return incidenciasResueltas - o.incidenciasResueltas;
 	}
 
 }

@@ -101,12 +101,6 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public List<RankingDTO> getRankingEmpleados() {
-//		return find(RankingDTO.class);
-		return null;
-	}
-
-	@Override
 	public void close() {
 		super.close();
 	}

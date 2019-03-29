@@ -11,6 +11,7 @@ import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
 import model.dto.EventoDTO;
 import model.dto.IncidenciaDTO;
+import model.dto.RankingDTO;
 import persistence.DAO;
 import persistence.DAOImpl;
 
@@ -143,6 +144,10 @@ public class Controller {
 
 	public void crearEvento(Evento.Tipo tipo, String empleado) {
 		dao.crearEvento(new EventoDTO(tipo, empleado));
+	}
+
+	public List<RankingDTO> getRanking() {
+		return dao.getRankingEmpleados();
 	}
 
 }

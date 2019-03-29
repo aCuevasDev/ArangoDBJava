@@ -14,6 +14,7 @@ import model.Empleado;
 import model.dto.DepartamentoDTO;
 import model.dto.EmpleadoDTO;
 import model.dto.IncidenciaDTO;
+import model.dto.RankingDTO;
 
 public class ArangoMain {
 
@@ -241,7 +242,10 @@ public class ArangoMain {
 	// @Vives
 	private static void mostrarRanking() throws InvalidException {
 		checkJefe();
-		// TODO implementation solo jefe, incidencias urgentes 2 puntos otras 1 punto.
+		List<RankingDTO> ranking = controller.getRanking();
+		for (int i = 0; i < ranking.size(); i++) {
+			System.out.println((i+1) + ranking.get(i).toString());
+		}
 	}
 
 	// @Cuevas

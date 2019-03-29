@@ -137,7 +137,6 @@ public class ArangoMain {
 		controller.updateEmpleado(usuariologueado);
 	}
 
-	// @Bou
 	private static void updateDepartamento() throws InvalidException {
 		checkJefe();
 		List<DepartamentoDTO> deps = controller.getAllDepartments();
@@ -198,7 +197,6 @@ public class ArangoMain {
 
 	// @Cuevas
 	private static void solucionarIncidencia() throws InvalidException {
-		checkJefe();
 		List<IncidenciaDTO> incidencias = controller.getUserIncidenciasNotSolved();
 		if (incidencias.size() > 0) {
 			int index = InputAsker.pedirIndice("Qué incidencia quieres marcar como solucionada?", incidencias, true);
@@ -252,7 +250,7 @@ public class ArangoMain {
 	private static DepartamentoDTO crearDepartamento() throws InvalidException {
 		checkJefe();
 		DepartamentoDTO newDepartamento = new DepartamentoDTO();
-		newDepartamento.setNombre(InputAsker.askString("Introduce el nombre del departamento: "));
+		newDepartamento.setNombre(InputAsker.askString("Introduce el nombre del departamento: ").trim().replace(" ", "_"));
 		List<EmpleadoDTO> empleados = controller.getAllUsers();
 		int eleccion = InputAsker.askElementList("Escoje al jefe", empleados);
 		newDepartamento.setJefe(eleccion == 0 ? null : empleados.get(eleccion - 1).getUsername());

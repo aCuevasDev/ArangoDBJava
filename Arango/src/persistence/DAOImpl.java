@@ -188,20 +188,19 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public RankingDTO getRanking(DepartamentoDTO dep) {
-		//return query(
-		/*for e in empleadodto 
-		filter e.departamento == "Sexo" 
-		for i in eventodto 
-		filter i.empleado == e._key && i.tipo == "FIN_INCIDENCIA" 
-		collect user = e._key with count into incidenciasResueltas
-		return {
-		    "nombre" : user,
-		    "incidenciasResueltas" : incidenciasResueltas
-		}*/
-//			RankingDTO.class
-//		);
-		return null;
+	public List<RankingDTO> getRanking(DepartamentoDTO dep) {
+		return query(
+		"for e in empleadodto "
+		+ "filter e.departamento == '" + dep.getKey() + "' "
+				+ "for i in eventodto "
+				+ "filter i.empleado == e._key && i.tipo == 'FIN_INCIDENCIA' "
+						+ "collect user = e._key with count into incidenciasResueltas"
+						+ "return {"
+						+ "'nombre' : user,"
+						+ "'incidenciasResueltas' : incidenciasResueltas"
+						+ "}",
+			RankingDTO.class
+		);
 	}
 
 //	public Departamento initializeDepartamento(DepartamentoDTO dep) {

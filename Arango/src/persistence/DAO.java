@@ -3,11 +3,11 @@ package persistence;
 import java.util.List;
 
 import exception.InvalidException;
-import model.dto.DepartamentoDTO;
-import model.dto.EmpleadoDTO;
-import model.dto.EventoDTO;
-import model.dto.IncidenciaDTO;
-import model.dto.RankingDTO;
+import model.DepartamentoDTO;
+import model.EmpleadoDTO;
+import model.EventoDTO;
+import model.IncidenciaDTO;
+import model.RankingDTO;
 
 /**
  *

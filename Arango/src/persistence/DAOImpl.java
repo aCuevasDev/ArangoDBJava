@@ -7,11 +7,11 @@ import java.util.stream.Collectors;
 import com.arangodb.util.MapBuilder;
 
 import exception.InvalidException;
-import model.dto.DepartamentoDTO;
-import model.dto.EmpleadoDTO;
-import model.dto.EventoDTO;
-import model.dto.IncidenciaDTO;
-import model.dto.RankingDTO;
+import model.DepartamentoDTO;
+import model.EmpleadoDTO;
+import model.EventoDTO;
+import model.IncidenciaDTO;
+import model.RankingDTO;
 
 public class DAOImpl extends ArangoUtils implements DAO {
 
@@ -91,7 +91,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public EventoDTO getUltimoInicioSesion(EmpleadoDTO emp) {
-		Map<String, Object> filters = new MapBuilder().put("empleado", emp.getUsername()).put("tipo", model.dto.EventoDTO.Tipo.LOGIN).get();
+		Map<String, Object> filters = new MapBuilder().put("empleado", emp.getUsername()).put("tipo", model.EventoDTO.Tipo.LOGIN).get();
 		return find(EventoDTO.class, filters).stream()
 				.sorted((event, other) -> event.getFecha().compareTo(other.getFecha())).collect(Collectors.toList())
 				.get(0);

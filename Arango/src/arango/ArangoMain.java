@@ -10,10 +10,10 @@ import com.arangodb.ArangoDBException;
 import controller.Controller;
 import exception.InvalidException;
 import exception.InvalidException.Tipo;
-import model.dto.DepartamentoDTO;
-import model.dto.EmpleadoDTO;
-import model.dto.IncidenciaDTO;
-import model.dto.RankingDTO;
+import model.DepartamentoDTO;
+import model.EmpleadoDTO;
+import model.IncidenciaDTO;
+import model.RankingDTO;
 
 public class ArangoMain {
 

@@ -5,11 +5,11 @@ import java.util.stream.Collectors;
 
 import exception.InvalidException;
 import exception.InvalidException.Tipo;
-import model.dto.DepartamentoDTO;
-import model.dto.EmpleadoDTO;
-import model.dto.EventoDTO;
-import model.dto.IncidenciaDTO;
-import model.dto.RankingDTO;
+import model.DepartamentoDTO;
+import model.EmpleadoDTO;
+import model.EventoDTO;
+import model.IncidenciaDTO;
+import model.RankingDTO;
 import persistence.DAO;
 import persistence.DAOImpl;
 

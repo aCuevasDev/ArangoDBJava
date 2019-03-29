@@ -1,4 +1,4 @@
-package model.dto;
+package model;
 
 import com.arangodb.entity.DocumentField;
 import com.arangodb.entity.DocumentField.Type;

@@ -1,15 +1,21 @@
-package arango;
+package springboot;
+
+import javax.annotation.PreDestroy;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import com.arangodb.ArangoDBException;
 
+import arango.ArangoMain;
 import controller.Controller;
 
+@EnableAutoConfiguration(exclude = { ErrorMvcAutoConfiguration.class })
 @SpringBootApplication
 public class Application {
 
@@ -31,6 +37,11 @@ public class Application {
 		} finally {
 			Controller.getInstance().closeConexion();
 		}
+	}
+
+	@PreDestroy
+	public void closeResources() {
+		Controller.getInstance().closeConexion();
 	}
 
 }

@@ -47,6 +47,7 @@ public class ArangoMain {
 				break;
 			case 0:
 				System.out.println("Hasta la proxima!");
+				System.exit(0);
 				break;
 			}
 		} while (option != 0);
@@ -134,8 +135,8 @@ public class ArangoMain {
 		System.out.println("Editando tu perfil: ");
 		int opt; // nombre, apellido, contraseña.
 		do {
-			opt = InputAsker.pedirIndice("Qué dato quieres editar?",
-					Arrays.asList("Nombre", "Apellidos", "Contraseña"), true);
+			opt = InputAsker.pedirIndice("Qué dato quieres editar?", Arrays.asList("Nombre", "Apellidos", "Contraseña"),
+					true);
 			String value = "";
 			if (opt != 0)
 				value = InputAsker.askString("Cambiarlo a: ");

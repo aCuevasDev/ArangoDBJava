@@ -25,7 +25,8 @@ public abstract class ArangoUtils {
 	}
 
 	protected void close() {
-		connection.shutdown();
+		if (connection != null)
+			connection.shutdown();
 	}
 
 	protected <T> List<T> find(Class<T> tClass) {
@@ -52,7 +53,7 @@ public abstract class ArangoUtils {
 		else
 			update(object);
 	}
-	
+
 	protected void forceStore(IKeyable object) {
 		String collectionName = object.getClass().getSimpleName().toLowerCase();
 		ArangoCollection collection = db.collection(collectionName);
@@ -79,7 +80,7 @@ public abstract class ArangoUtils {
 		ArangoCursor<T> cursor = db.query(query, filters, null, tClass);
 		return cursor.asListRemaining();
 	}
-	
+
 	protected <T> List<T> query(String query, Class<T> tClass) {
 		return db.query(query, tClass).asListRemaining();
 	}
@@ -88,11 +89,11 @@ public abstract class ArangoUtils {
 		String nameClass = object.getClass().getSimpleName().toLowerCase();
 		db.collection(nameClass).deleteDocument(object.getKey());
 	}
-	
+
 	class QueryFilter {
 		boolean equal;
 		String value;
-		
+
 		@Override
 		public String toString() {
 			// TODO Auto-generated method stub

@@ -38,7 +38,7 @@ public class Controller {
 	}
 
 	public String login(String username, String contrasenya) throws InvalidException {
-		usuarioLogeado = dao.loginEmpleado(username, contrasenya);
+		usuarioLogeado = dao.getEmpleado(username, contrasenya);
 		if (usuarioLogeado != null) {
 			crearEvento(EventoDTO.Tipo.LOGIN, usuarioLogeado.getUsername());
 			return "Usuario creado correctamente.";
@@ -69,15 +69,11 @@ public class Controller {
 	}
 
 	public List<EmpleadoDTO> getAllUsers() {
-		return dao.selectAllEmpleados();
-	}
-	
-	public List<EmpleadoDTO> getBecarios() {
-		return dao.selectBecarios();
+		return dao.getEmpleados();
 	}
 
 	public List<DepartamentoDTO> getAllDepartamentos() {
-		return dao.selectAllDepartments();
+		return dao.getDepartmentos();
 	}
 
 	public void closeConexion() {
@@ -99,11 +95,11 @@ public class Controller {
 	}
 
 	public List<DepartamentoDTO> getAllDepartments() {
-		return dao.selectAllDepartments();
+		return dao.getDepartmentos();
 	}
 	
 	public List<IncidenciaDTO> getIncidenciasPorEmpleado(EmpleadoDTO emp){
-		return dao.getIncidenciaByDestino(emp);
+		return dao.getIncidencias(emp, true);
 	}
 	
 	public EmpleadoDTO getUsuarioLogeado() {
@@ -111,7 +107,7 @@ public class Controller {
 	}
 
 	public List<EmpleadoDTO> getEmpleados(DepartamentoDTO dep, boolean inside) {
-		return dao.selectEmpleados(dep, inside);
+		return dao.getEmpleados(dep, inside);
 	}
 
 	public void updateEmpleado(EmpleadoDTO empleado) {
@@ -126,8 +122,8 @@ public class Controller {
 	
 	public List<IncidenciaDTO> getUserIncidencias() {
 		if (!usuarioLogeado.isJefe()) 
-			return dao.getIncidenciaByDestino(usuarioLogeado);
-		return dao.getIncidenciasByDepartamento(new DepartamentoDTO(usuarioLogeado.getDepartamento()));
+			return dao.getIncidencias(usuarioLogeado, true);
+		return dao.getIncidencias(new DepartamentoDTO(usuarioLogeado.getDepartamento()));
 	}
 
 	public List<IncidenciaDTO> getUserIncidenciasNotSolved() {
@@ -150,7 +146,7 @@ public class Controller {
 	}
 
 	public void crearEvento(EventoDTO.Tipo tipo, String empleado) {
-		dao.crearEvento(new EventoDTO(tipo, empleado));
+		dao.insertEvento(new EventoDTO(tipo, empleado));
 	}
 
 	public List<RankingDTO> getRanking() {

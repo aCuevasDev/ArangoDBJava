@@ -7,7 +7,7 @@ import com.arangodb.entity.DocumentField.Type;
 
 import persistence.ArangoUtils.IKeyable;
 
-public class EventoDTO implements IKeyable {
+public class EventoDTO implements IKeyable, Comparable<EventoDTO> {
 
 	public enum Tipo {
 		LOGIN, CREACION_INCIDENCIA, CONSULTA_INCIDENCIA, SOLUCION_INCIDENCIA;
@@ -49,6 +49,11 @@ public class EventoDTO implements IKeyable {
 	@Override
 	public String getKey() {
 		return String.valueOf(id);
+	}
+
+	@Override
+	public int compareTo(EventoDTO o) {
+		return fecha.compareTo(o.fecha);
 	}
 	
 	

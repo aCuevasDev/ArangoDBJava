@@ -23,6 +23,10 @@ public class IncidenciaDTO implements IKeyable {
 
 	public IncidenciaDTO() {
 	}
+	
+	public IncidenciaDTO(int id) {
+		this.id = String.valueOf(id);
+	}
 
 	public IncidenciaDTO(String origen, String destino, String titulo, String descripcion, boolean urgente) {
 		this.origen = origen;

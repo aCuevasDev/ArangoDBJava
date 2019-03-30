@@ -157,4 +157,11 @@ public class Controller {
 		return dao.getRanking(new DepartamentoDTO(usuarioLogeado.getDepartamento())).stream().sorted().collect(Collectors.toList());
 	}
 
+	/**
+	 * @param usuarioLogeado the usuarioLogeado to set
+	 */
+	public void setUsuarioLogeado(EmpleadoDTO usuarioLogeado) {
+		this.usuarioLogeado = usuarioLogeado;
+	}
+
 }

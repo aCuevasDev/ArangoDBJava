@@ -48,12 +48,8 @@ public class ArangoMain {
 		do {
 			option = InputAsker.pedirIndice("Selecciona una opcion:", Arrays.asList("Login"), true);
 			switch (option) {
-			case 1:
-				login();
-				break;
-			case 0:
-				System.out.println("Hasta la proxima!");
-				break;
+				case 1: login(); break;
+				case 0: System.out.println("Hasta la proxima!"); break;
 			}
 		} while (option != 0);
 	}
@@ -92,7 +88,6 @@ public class ArangoMain {
 		return options;
 	}
 
-	// @Vives
 	private static EmpleadoDTO register() throws InvalidException {
 		checkJefe();
 		EmpleadoDTO newEmpleado = new EmpleadoDTO();
@@ -112,11 +107,10 @@ public class ArangoMain {
 		return newEmpleado;
 	}
 
-	// @Cuevas
 	private static void updateEmpleado() {
 		EmpleadoDTO usuariologueado = controller.getUsuarioLogeado();
 		System.out.println("Editando tu perfil: ");
-		int opt; // nombre, apellido, contraseña.
+		int opt;
 		do {
 			opt = InputAsker.pedirIndice("Qué dato quieres editar?", Arrays.asList("Nombre", "Apellidos", "Contraseña"),
 					true);
@@ -124,14 +118,9 @@ public class ArangoMain {
 			if (opt != 0)
 				value = InputAsker.askString("Cambiarlo a: ");
 			switch (opt) {
-			case 1:
-				usuariologueado.setNombre(value);
-				break;
-			case 2:
-				usuariologueado.setApellidos(value);
-				break;
-			case 3:
-				usuariologueado.setContrasenya(value);
+				case 1: usuariologueado.setNombre(value); break;
+				case 2: usuariologueado.setApellidos(value); break;
+				case 3: usuariologueado.setContrasenya(value);
 			}
 		} while (opt != 0);
 		controller.updateEmpleado(usuariologueado);
@@ -167,7 +156,6 @@ public class ArangoMain {
 		controller.updateEmpleado(empleado);
 	}
 	
-	// @Vives
 	private static void cambiarJefe(DepartamentoDTO dep) {
 		List<EmpleadoDTO> emps = controller.getEmpleados(dep, true);
 		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado que será el jefe", emps, false) - 1);
@@ -177,7 +165,6 @@ public class ArangoMain {
 		controller.updateDepartamento(dep);
 	}
 
-	// @Vives
 	private static void deleteEmpleado() throws InvalidException {
 		checkJefe();
 		List<EmpleadoDTO> empleados = controller.getEmpleados(new DepartamentoDTO(controller.getUsuarioLogeado().getDepartamento()), true);
@@ -195,7 +182,6 @@ public class ArangoMain {
 		controller.eliminarEmpleado(empleado);
 	}
 
-	// @Cuevas
 	private static void solucionarIncidencia() throws InvalidException {
 		List<IncidenciaDTO> incidencias = controller.getUserIncidenciasNotSolved();
 		if (incidencias.size() > 0) {
@@ -209,7 +195,6 @@ public class ArangoMain {
 		}
 	}
 
-	// @Vives
 	private static void mostrarRanking() throws InvalidException {
 		checkJefe();
 		List<RankingDTO> ranking = controller.getRanking();
@@ -218,7 +203,6 @@ public class ArangoMain {
 		}
 	}
 
-	// @Cuevas
 	private static void crearIncidencia() throws InvalidException {
 		checkJefe();
 		EmpleadoDTO usuarioLogueado = controller.getUsuarioLogeado();
@@ -229,9 +213,7 @@ public class ArangoMain {
 		int indexEmpleado = InputAsker.pedirIndice("Cuál es el usuario de destino?",empleadosEnDepartamento , false);
 		String destino = empleadosEnDepartamento.get(indexEmpleado-1).getUsername();
 		String origen = usuarioLogueado.getUsername();
-		
 		IncidenciaDTO incidenciaDTO = new IncidenciaDTO(origen,destino,titulo,desc,urgente);
-		
 		controller.insertIncidencia(incidenciaDTO);
 	}
 

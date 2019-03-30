@@ -5,9 +5,9 @@ import java.util.Date;
 import com.arangodb.entity.DocumentField;
 import com.arangodb.entity.DocumentField.Type;
 
-import persistence.IKeyable;
+import persistence.ArangoUtils.IKeyable;
 
-public class EventoDTO implements IKeyable{
+public class EventoDTO implements IKeyable {
 
 	public enum Tipo {
 		LOGIN, CREACION_INCIDENCIA, CONSULTA_INCIDENCIA, SOLUCION_INCIDENCIA;

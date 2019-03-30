@@ -6,7 +6,7 @@ import java.util.Date;
 import com.arangodb.entity.DocumentField;
 import com.arangodb.entity.DocumentField.Type;
 
-import persistence.IKeyable;
+import persistence.ArangoUtils.IKeyable;
 
 public class IncidenciaDTO implements IKeyable {
 

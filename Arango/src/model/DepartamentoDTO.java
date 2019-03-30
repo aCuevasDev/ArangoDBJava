@@ -2,7 +2,8 @@ package model;
 
 import com.arangodb.entity.DocumentField;
 import com.arangodb.entity.DocumentField.Type;
-import persistence.IKeyable;
+
+import persistence.ArangoUtils.IKeyable;
 
 public class DepartamentoDTO implements IKeyable {
 

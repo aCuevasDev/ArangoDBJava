@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.context.annotation.Bean;
+
 import com.arangodb.ArangoDBException;
 
 import controller.Controller;
@@ -18,20 +20,12 @@ import model.RankingDTO;
 public class ArangoMain {
 
 	private static Controller controller;
-	private static final List<String> opcionesEmpleado = Arrays.asList( 
-			"Actualizar empleado.", 
-			"Listar incidencias",
-			"Solucionar incidencia."			
-	); 
-	private static final List<String> opcionesJefe = Arrays.asList(
-			"Crear incidencia.",
-			"Mostrar ranking",
-			"Registrar empleado.", 
-			"Borrar empleado.", 
-			"Crear departamento", 
-			"Actualizar departamento"			
-	); 
+	private static final List<String> opcionesEmpleado = Arrays.asList("Actualizar empleado.", "Listar incidencias",
+			"Solucionar incidencia.");
+	private static final List<String> opcionesJefe = Arrays.asList("Crear incidencia.", "Mostrar ranking",
+			"Registrar empleado.", "Borrar empleado.", "Crear departamento", "Actualizar departamento");
 
+	@Bean
 	public static void main(String[] args) {
 		try {
 			controller = Controller.getInstance();
@@ -62,21 +56,43 @@ public class ArangoMain {
 		int option;
 		List<String> options = getOptionsList();
 		do {
-			if (controller.getUsuarioLogeado() == null) break;
+			if (controller.getUsuarioLogeado() == null)
+				break;
 			option = InputAsker.pedirIndice("Selecciona una opcion: ", options, true);
 			try {
 				switch (option) {
-					case 1: updateEmpleado(); break;
-					case 2: controller.getUserIncidencias().forEach(System.out::println); break;
-					case 3: solucionarIncidencia(); break;
-					case 4: crearIncidencia(); break;
-					case 5: mostrarRanking(); break;
-					case 6: register(); break;
-					case 7: deleteEmpleado(); break;
-					case 8: crearDepartamento(); break;
-					case 9: updateDepartamento(); break;
-					case 0: System.out.println("Adiós!"); break;
-					default: System.err.println("Opcion invalida");
+				case 1:
+					updateEmpleado();
+					break;
+				case 2:
+					controller.getUserIncidencias().forEach(System.out::println);
+					break;
+				case 3:
+					solucionarIncidencia();
+					break;
+				case 4:
+					crearIncidencia();
+					break;
+				case 5:
+					mostrarRanking();
+					break;
+				case 6:
+					register();
+					break;
+				case 7:
+					deleteEmpleado();
+					break;
+				case 8:
+					crearDepartamento();
+					break;
+				case 9:
+					updateDepartamento();
+					break;
+				case 0:
+					System.out.println("Adiós!");
+					break;
+				default:
+					System.err.println("Opcion invalida");
 				}
 			} catch (InvalidException e) {
 				System.err.println(e.getMessage());
@@ -118,8 +134,8 @@ public class ArangoMain {
 		System.out.println("Editando tu perfil: ");
 		int opt; // nombre, apellido, contraseña.
 		do {
-			opt = InputAsker.pedirIndice("Qué dato quieres editar?", Arrays.asList("Nombre", "Apellidos", "Contraseña"),
-					true);
+			opt = InputAsker.pedirIndice("Qué dato quieres editar?",
+					Arrays.asList("Nombre", "Apellidos", "Contraseña"), true);
 			String value = "";
 			if (opt != 0)
 				value = InputAsker.askString("Cambiarlo a: ");
@@ -146,9 +162,14 @@ public class ArangoMain {
 			opt = InputAsker.pedirIndice("Que dato quieres editar?",
 					Arrays.asList("Añadir empleado", "Quitar empleado", "Cambiar jefe"), true);
 			switch (opt) {
-				case 1: addEmpleadoADepartamento(dep); break;
-				case 2: removeEmpleadDeDepartamento(dep); break;
-				case 3: cambiarJefe(dep);
+			case 1:
+				addEmpleadoADepartamento(dep);
+				break;
+			case 2:
+				removeEmpleadDeDepartamento(dep);
+				break;
+			case 3:
+				cambiarJefe(dep);
 			}
 		} while (opt != 0);
 	}
@@ -166,11 +187,12 @@ public class ArangoMain {
 		empleado.setDepartamento(dep.getNombre());
 		controller.updateEmpleado(empleado);
 	}
-	
+
 	// @Vives
 	private static void cambiarJefe(DepartamentoDTO dep) {
 		List<EmpleadoDTO> emps = controller.getEmpleados(dep, true);
-		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado que será el jefe", emps, false) - 1);
+		EmpleadoDTO empleado = emps
+				.get(InputAsker.pedirIndice("Introduce el empleado que será el jefe", emps, false) - 1);
 		empleado.setJefe(true);
 		controller.updateEmpleado(empleado);
 		dep.setJefe(empleado.getUsername());
@@ -180,13 +202,17 @@ public class ArangoMain {
 	// @Vives
 	private static void deleteEmpleado() throws InvalidException {
 		checkJefe();
-		List<EmpleadoDTO> empleados = controller.getEmpleados(new DepartamentoDTO(controller.getUsuarioLogeado().getDepartamento()), true);
-		EmpleadoDTO empleado = empleados.get(InputAsker.pedirIndice("Introduce el empleado a eliminar", empleados, false) - 1);
+		List<EmpleadoDTO> empleados = controller
+				.getEmpleados(new DepartamentoDTO(controller.getUsuarioLogeado().getDepartamento()), true);
+		EmpleadoDTO empleado = empleados
+				.get(InputAsker.pedirIndice("Introduce el empleado a eliminar", empleados, false) - 1);
 		List<IncidenciaDTO> incidencias = controller.getIncidenciasPorEmpleado(empleado);
-		if(incidencias.size() > 0) {
+		if (incidencias.size() > 0) {
 			List<EmpleadoDTO> allEmpleados = controller.getAllUsers();
 			allEmpleados.remove(empleado);
-			int eleccion = InputAsker.pedirIndice("Escoje al empleado que recibirá todas la incidencias de : " + empleado.getNombreCompleto(), allEmpleados, false) - 1;
+			int eleccion = InputAsker.pedirIndice(
+					"Escoje al empleado que recibirá todas la incidencias de : " + empleado.getNombreCompleto(),
+					allEmpleados, false) - 1;
 			incidencias.stream().forEach(i -> {
 				i.setDestino(allEmpleados.get(eleccion).getUsername());
 				controller.updateIncidencia(i);
@@ -200,7 +226,7 @@ public class ArangoMain {
 		List<IncidenciaDTO> incidencias = controller.getUserIncidenciasNotSolved();
 		if (incidencias.size() > 0) {
 			int index = InputAsker.pedirIndice("Qué incidencia quieres marcar como solucionada?", incidencias, true);
-			IncidenciaDTO incidencia = incidencias.get(index-1);
+			IncidenciaDTO incidencia = incidencias.get(index - 1);
 			incidencia.setFechaFin(new Date());
 			controller.updateIncidencia(incidencia);
 		} else {
@@ -214,7 +240,7 @@ public class ArangoMain {
 		checkJefe();
 		List<RankingDTO> ranking = controller.getRanking();
 		for (int i = 0; i < ranking.size(); i++) {
-			System.out.println((i+1) + ". " + ranking.get(i).toString());
+			System.out.println((i + 1) + ". " + ranking.get(i).toString());
 		}
 	}
 
@@ -222,16 +248,17 @@ public class ArangoMain {
 	private static void crearIncidencia() throws InvalidException {
 		checkJefe();
 		EmpleadoDTO usuarioLogueado = controller.getUsuarioLogeado();
-		List<EmpleadoDTO> empleadosEnDepartamento = controller.getEmpleados(new DepartamentoDTO(usuarioLogueado.getDepartamento()), true);
+		List<EmpleadoDTO> empleadosEnDepartamento = controller
+				.getEmpleados(new DepartamentoDTO(usuarioLogueado.getDepartamento()), true);
 		String titulo = InputAsker.askString("Introduce el título: ");
 		String desc = InputAsker.askString("Introduce la descripción: ");
 		boolean urgente = InputAsker.yesOrNo("Es urgente?");
-		int indexEmpleado = InputAsker.pedirIndice("Cuál es el usuario de destino?",empleadosEnDepartamento , false);
-		String destino = empleadosEnDepartamento.get(indexEmpleado-1).getUsername();
+		int indexEmpleado = InputAsker.pedirIndice("Cuál es el usuario de destino?", empleadosEnDepartamento, false);
+		String destino = empleadosEnDepartamento.get(indexEmpleado - 1).getUsername();
 		String origen = usuarioLogueado.getUsername();
-		
-		IncidenciaDTO incidenciaDTO = new IncidenciaDTO(origen,destino,titulo,desc,urgente);
-		
+
+		IncidenciaDTO incidenciaDTO = new IncidenciaDTO(origen, destino, titulo, desc, urgente);
+
 		controller.insertIncidencia(incidenciaDTO);
 	}
 
@@ -250,7 +277,8 @@ public class ArangoMain {
 	private static DepartamentoDTO crearDepartamento() throws InvalidException {
 		checkJefe();
 		DepartamentoDTO newDepartamento = new DepartamentoDTO();
-		newDepartamento.setNombre(InputAsker.askString("Introduce el nombre del departamento: ").trim().replace(" ", "_"));
+		newDepartamento
+				.setNombre(InputAsker.askString("Introduce el nombre del departamento: ").trim().replace(" ", "_"));
 		List<EmpleadoDTO> empleados = controller.getAllUsers();
 		int eleccion = InputAsker.askElementList("Escoje al jefe", empleados);
 		newDepartamento.setJefe(eleccion == 0 ? null : empleados.get(eleccion - 1).getUsername());

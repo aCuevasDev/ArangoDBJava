@@ -39,7 +39,9 @@ public abstract class ArangoUtils {
 	}
 
 	protected boolean exists(IKeyable object) {
-		return db.collection(object.getClass().getSimpleName().toLowerCase()).documentExists(object.getKey());
+		ArangoCollection col = db.collection(object.getClass().getSimpleName().toLowerCase());		
+		if (col == null) return false;
+		return col.documentExists(object.getKey());
 	}
 
 	protected void store(IKeyable object) {

@@ -19,17 +19,19 @@ public class ArangoMain {
 
 	private static Controller controller;
 	private static final List<String> opcionesEmpleado = Arrays.asList( 
-			"Actualizar empleado.", 
+			"Ver mi perfil",
+			"Actualizar perfil.", 
 			"Listar incidencias",
 			"Solucionar incidencia."			
 	); 
 	private static final List<String> opcionesJefe = Arrays.asList(
 			"Crear incidencia.",
-			"Mostrar ranking",
+			"Mostrar ranking del departamento",
 			"Registrar empleado.", 
 			"Borrar empleado.", 
-			"Crear departamento", 
-			"Actualizar departamento"			
+			"Listar empleados del departamento.",
+			"Crear departamento.", 
+			"Actualizar departamento."			
 	); 
 
 	public static void main(String[] args) {
@@ -62,15 +64,17 @@ public class ArangoMain {
 			option = InputAsker.pedirIndice("Selecciona una opcion: ", options, true);
 			try {
 				switch (option) {
-					case 1: updateEmpleado(); break;
-					case 2: controller.getUserIncidencias().forEach(System.out::println); break;
-					case 3: solucionarIncidencia(); break;
-					case 4: crearIncidencia(); break;
-					case 5: mostrarRanking(); break;
-					case 6: register(); break;
-					case 7: deleteEmpleado(); break;
-					case 8: crearDepartamento(); break;
-					case 9: updateDepartamento(); break;
+					case 1: System.out.println(controller.getUsuarioLogeado()); break;
+					case 2: updateEmpleado(); break;
+					case 3: mostrarIncidencias(); break;
+					case 4: solucionarIncidencia(); break;
+					case 5: crearIncidencia(); break;
+					case 6: mostrarRanking(); break;
+					case 7: register(); break;
+					case 8: deleteEmpleado(); break;
+					case 9: listarDepartamento(); break;
+					case 10: crearDepartamento(); break;
+					case 11: updateDepartamento(); break;
 					case 0: System.out.println("Adiós!"); break;
 					default: System.err.println("Opcion invalida");
 				}
@@ -78,6 +82,20 @@ public class ArangoMain {
 				System.err.println(e.getMessage());
 			}
 		} while (option != 0 && controller.isUserLogged());
+	}
+
+	private static void listarDepartamento() {
+		System.out.println("------ Empleados ------");
+		controller
+			.getEmpleados(new DepartamentoDTO(controller.getUsuarioLogeado().getDepartamento()), true)
+			.forEach(System.out::println);
+		System.out.println("-----------------------");
+	}
+
+	private static void mostrarIncidencias() {
+		System.out.println("----- Incidencias -----");
+		controller.getUserIncidencias().forEach(System.out::println); 	
+		System.out.println("-----------------------");
 	}
 
 	private static List<String> getOptionsList() {
@@ -129,7 +147,7 @@ public class ArangoMain {
 	private static void updateDepartamento() throws InvalidException {
 		checkJefe();
 		List<DepartamentoDTO> deps = controller.getAllDepartments();
-		DepartamentoDTO dep = deps.get(InputAsker.pedirIndice("Escoge el departamento: ", deps, false));
+		DepartamentoDTO dep = deps.get(InputAsker.pedirIndice("Escoge el departamento: ", deps, false) -1);
 		int opt;
 		do {
 			opt = InputAsker.pedirIndice("Que dato quieres editar?",
@@ -144,6 +162,10 @@ public class ArangoMain {
 
 	private static void removeEmpleadDeDepartamento(DepartamentoDTO dep) {
 		List<EmpleadoDTO> emps = controller.getEmpleados(dep, true);
+		if (emps.isEmpty()) {
+			System.err.println("No hay empleados en este departamento.");
+			return;
+		}
 		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado a quitar", emps, false) - 1);
 		empleado.setDepartamento(null);
 		controller.updateEmpleado(empleado);
@@ -158,7 +180,18 @@ public class ArangoMain {
 	
 	private static void cambiarJefe(DepartamentoDTO dep) {
 		List<EmpleadoDTO> emps = controller.getEmpleados(dep, true);
-		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado que será el jefe", emps, false) - 1);
+		if (emps.isEmpty()) {
+			System.err.println("No hay empleados en este departamento.");
+			return;
+		}
+		if (dep.getJefe() != null) {
+			EmpleadoDTO emp = emps.stream().filter(e -> e.getNombre().equals(dep.getJefe())).findFirst().get();
+			if (emp != null) {
+				emp.setJefe(false);
+				controller.updateEmpleado(emp);
+			}
+		}
+		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado que será el jefe", emps, false) -1);
 		empleado.setJefe(true);
 		controller.updateEmpleado(empleado);
 		dep.setJefe(empleado.getUsername());
@@ -184,23 +217,23 @@ public class ArangoMain {
 
 	private static void solucionarIncidencia() throws InvalidException {
 		List<IncidenciaDTO> incidencias = controller.getUserIncidenciasNotSolved();
-		if (incidencias.size() > 0) {
-			int index = InputAsker.pedirIndice("Qué incidencia quieres marcar como solucionada?", incidencias, true);
-			IncidenciaDTO incidencia = incidencias.get(index-1);
+		if (!incidencias.isEmpty()) {
+			int index = InputAsker.pedirIndice("Qué incidencia quieres marcar como solucionada?", incidencias, false) - 1;
+			IncidenciaDTO incidencia = incidencias.get(index);
 			incidencia.setFechaFin(new Date());
 			controller.updateIncidencia(incidencia);
-		} else {
+		} else
 			System.out.println("No hay incidencias por solucionar.");
-			InputAsker.pedirTecla("Pulse una tecla para continuar.");
-		}
 	}
 
 	private static void mostrarRanking() throws InvalidException {
 		checkJefe();
 		List<RankingDTO> ranking = controller.getRanking();
+		System.out.println("------- Ranking -------");
 		for (int i = 0; i < ranking.size(); i++) {
 			System.out.println((i+1) + ". " + ranking.get(i).toString());
 		}
+		System.out.println("-----------------------");
 	}
 
 	private static void crearIncidencia() throws InvalidException {

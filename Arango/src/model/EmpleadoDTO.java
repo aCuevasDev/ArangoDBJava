@@ -88,14 +88,12 @@ public class EmpleadoDTO implements IKeyable {
 	}
 
 	public String getNombreCompleto() {
-		return new StringBuilder(apellidos).append(" ,").append(nombre).toString();
+		return new StringBuilder(apellidos).append(", ").append(nombre).toString();
 	}
-	
-	
 	
 	@Override
 	public String toString() {
-		return getNombreCompleto();
+		return "Nombre: " + nombre + ", apellidos: " + apellidos + ", username: " + username + ", jefe: " + jefe + ", departamento: " + departamento;
 	}
 
 	@Override

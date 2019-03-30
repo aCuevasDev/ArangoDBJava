@@ -1,5 +1,6 @@
 package persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -120,7 +121,8 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 	
 	public List<EmpleadoDTO> selectEmpleados(DepartamentoDTO dep, boolean inside) {
-		//Map<String, Object> filters = new MapBuilder().put("departamento", dep.getKey()).get();
+		if (!db.collection("empleadodto").exists())
+			return new ArrayList<EmpleadoDTO>();
 		String query = "for e in empleadodto filter e.departamento " + (inside ? "=" : "!") + "= \"" + dep.getKey() + "\" return e";
 		return query(query, EmpleadoDTO.class);
 	}
@@ -141,6 +143,8 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public List<IncidenciaDTO> getIncidenciasByDepartamento(DepartamentoDTO dep) {
+		if (!db.collection("incidenciadto").exists())
+			return new ArrayList<IncidenciaDTO>();
 		return query(
 			"for e in empleadodto filter e.departamento == \""+ dep.getKey() + "\" for i in incidenciadto filter i.destino == e._key return i",
 			IncidenciaDTO.class
@@ -168,11 +172,17 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	@Override
 	public List<RankingDTO> getRanking(DepartamentoDTO dep) {
+		if (!db.collection("incidenciadto").exists())
+			return new ArrayList<RankingDTO>();
+		if (!db.collection("departamentodto").exists())
+			return new ArrayList<RankingDTO>();
+		if (!db.collection("eventodto").exists())
+			return new ArrayList<RankingDTO>();
 		return query(
 		"for e in empleadodto "
 		+ "filter e.departamento == '" + dep.getKey() + "' "
 				+ "for i in eventodto "
-				+ "filter i.empleado == e._key && i.tipo == 'FIN_INCIDENCIA' "
+				+ "filter i.empleado == e._key && i.tipo == 'SOLUCION_INCIDENCIA' "
 						+ "collect user = e._key with count into incidenciasResueltas "
 						+ "return {"
 						+ "'nombre' : user,"

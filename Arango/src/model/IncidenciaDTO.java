@@ -1,5 +1,6 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.arangodb.entity.DocumentField;
@@ -18,6 +19,7 @@ public class IncidenciaDTO implements IKeyable {
 	private Date fechaInicio;
 	private Date fechaFin;
 	private boolean urgente;
+	private static SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
 
 	public IncidenciaDTO() {
 	}
@@ -86,8 +88,8 @@ public class IncidenciaDTO implements IKeyable {
 
 	@Override
 	public String toString() {
-		return "IncidenciaDTO [origen=" + origen + ", destino=" + destino + ", titulo=" + titulo + ", descripcion="
-				+ descripcion + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + "]";
+		return "Titulo: " + titulo + ", descripcion: " + descripcion + ", origen: " + origen + ", destino: " + destino +
+				", inicio: " + (fechaInicio != null ? formatter.format(fechaInicio) : "-") + ", fin: " + (fechaFin != null ? formatter.format(fechaFin) : "-");
 	}
 
 	/**

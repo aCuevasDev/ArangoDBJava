@@ -43,7 +43,10 @@ public class ArangoMain {
 			option = InputAsker.pedirIndice("Selecciona una opcion:", Arrays.asList("Login"), true);
 			switch (option) {
 				case 1: login(); break;
-				case 0: System.out.println("Hasta la proxima!"); break;
+				case 0: 
+					System.out.println("Hasta la proxima!"); 
+					System.exit(0);
+				break;
 			}
 		} while (option != 0);
 	}

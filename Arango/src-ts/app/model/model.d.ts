@@ -1,5 +1,5 @@
 /* tslint:disable */
-// Generated using typescript-generator version 2.12.476 on 2019-03-30 16:28:25.
+// Generated using typescript-generator version 2.12.476 on 2019-03-30 16:36:50.
 
 export interface DepartamentoDTO extends IKeyable {
     nombre: string;

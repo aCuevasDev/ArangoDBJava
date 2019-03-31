@@ -81,9 +81,9 @@ public class Controller {
 	 */
 	public void login(String username, String contrasenya) throws InvalidException {
 		setUsuarioLogeado(dao.getEmpleado(username, contrasenya));
-		if (isUsuaroLogueado())
-			crearEvento(EventoDTO.Tipo.LOGIN, usuarioLogeado.getUsername());
-		throw new InvalidException(Tipo.INVALID_CREDENTIALS);
+		if (!isUsuaroLogueado())
+			throw new InvalidException(Tipo.INVALID_CREDENTIALS);
+		crearEvento(EventoDTO.Tipo.LOGIN, usuarioLogeado.getUsername());
 	}
 	
 	
@@ -119,9 +119,8 @@ public class Controller {
 	 */
 	public void insertEmpleado(EmpleadoDTO empleado) throws InvalidException {
 		dao.insertEmpleado(empleado);
-		if(empleado.isJefe()) {
+		if(empleado.isJefe()) 
 			dao.updateDepartamento(new DepartamentoDTO(empleado.getDepartamento(), empleado.getUsername()));
-		}
 	}
 
 	/**

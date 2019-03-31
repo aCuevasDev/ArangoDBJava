@@ -48,6 +48,11 @@ public class ArangoMain {
 		}
 	}
 
+	/**
+	 * Menu inicial, contiene dos opciones:
+	 * 1. Login: Permite entrar en la aplicacion despues de pedir credenciales.
+	 * 0. Salir: Salir del programa.
+	 */
 	private static void authMenu() {
 		int option;
 		do {
@@ -62,12 +67,28 @@ public class ArangoMain {
 		} while (option != 0);
 	}
 
+	/**
+	 * Menu del usuario logueado cada opcion es explicada en su metodo correspondiente.
+	 * Contiene las siguentes opciones:
+	 *  0. Salir.
+	 *  1. Ver mi perfil
+	 *  2. Actualizar perfil.
+	 *  3. Listar incidencias
+	 *  4. Solucionar incidencia.
+	 * Opciones extras para los jefes:
+	 *  5. Crear incidencia.
+	 *  6. Mostrar ranking del departamento
+	 *  7. Registrar empleado.
+	 *  8. Borrar empleado.
+	 *  9. Listar empleados del departamento.
+	 *  10. Crear departamento.
+	 *  11. Actualizar departamento.
+	 */
 	private static void mainMenu() {
 		int option;
 		List<String> options = getOptionsList();
+		if (!controller.isUsuaroLogueado()) return;
 		do {
-			if (controller.getUsuarioLogeado() == null)
-				break;
 			option = InputAsker.pedirIndice("Selecciona una opcion: ", options, true);
 			try {
 				switch (option) {
@@ -91,6 +112,9 @@ public class ArangoMain {
 		} while (option != 0 && controller.isUsuaroLogueado());
 	}
 
+	/**
+	 * Muestra por consola los empleados del departamento del usuario logueado.
+	 */
 	private static void listarDepartamento() {
 		System.out.println("------ Empleados ------");
 		controller
@@ -99,12 +123,19 @@ public class ArangoMain {
 		System.out.println("-----------------------");
 	}
 
+	/**
+	 * Muestra las incidencias del usuario logueado.
+	 */
 	private static void mostrarIncidencias() {
 		System.out.println("----- Incidencias -----");
 		controller.getIncidenciasUsuarioLogueado().forEach(System.out::println); 	
 		System.out.println("-----------------------");
 	}
 
+	/**
+	 * Genera la lista de opciones para el menu principal teniendo en cuenta los permisos del usuario
+	 * @return lista de opciones (String)
+	 */
 	private static List<String> getOptionsList() {
 		List<String> options = new ArrayList<>();
 		options.addAll(opcionesEmpleado);
@@ -113,7 +144,11 @@ public class ArangoMain {
 		return options;
 	}
 
-	private static EmpleadoDTO register() throws InvalidException {
+	/**
+	 * Registra a un nuevo empleado.
+	 * @throws InvalidException si el username elegido ya esta en uso o el usuario logueado no es jefe.
+	 */
+	private static void register() throws InvalidException {
 		checkJefe();
 		EmpleadoDTO newEmpleado = new EmpleadoDTO();
 		newEmpleado.setNombre(InputAsker.pedirString("Introduce el nombre del empleado: "));
@@ -130,9 +165,12 @@ public class ArangoMain {
 		}
 		controller.insertEmpleado(newEmpleado);
 		System.out.println("Empleado registrado correctamente.");
-		return newEmpleado;
 	}
 
+	/**
+	 * Menu para actualizar los datos del usuario logueado. 
+	 * Puede modificar nombre, apellidos y contrasenya.
+	 */
 	private static void updateEmpleado() {
 		EmpleadoDTO usuariologueado = controller.getUsuarioLogeado();
 		System.out.println("Editando tu perfil: ");
@@ -151,6 +189,11 @@ public class ArangoMain {
 		controller.updateEmpleado(usuariologueado);
 	}
 
+	/**
+	 * Menu para actualizar cualquier departamento.
+	 * Hay tres opciones: Anyadir empleado, quitar empleado y cambiar de jefe.
+	 * @throws InvalidException el usuario no es jefe de un departamento.
+	 */
 	private static void updateDepartamento() throws InvalidException {
 		checkJefe();
 		List<DepartamentoDTO> deps = controller.getDepartamentos();
@@ -172,6 +215,10 @@ public class ArangoMain {
 		} while (opt != 0);
 	}
 
+	/**
+	 * Quita un empleado de un departamento.
+	 * @param dep al que quitarle el empleado.
+	 */
 	private static void removeEmpleadDeDepartamento(DepartamentoDTO dep) {
 		List<EmpleadoDTO> emps = controller.getEmpleados(dep, true);
 		if (emps.isEmpty()) {
@@ -183,6 +230,10 @@ public class ArangoMain {
 		controller.updateEmpleado(empleado);
 	}
 
+	/**
+	 * Anyade un empleado a un departamento.
+	 * @param dep al que anyadirle el empleado.
+	 */
 	private static void addEmpleadoADepartamento(DepartamentoDTO dep) {
 		List<EmpleadoDTO> emps = controller.getEmpleados(dep, false);
 		EmpleadoDTO empleado = emps.get(InputAsker.pedirIndice("Introduce el empleado a anadir", emps, false) - 1);
@@ -190,6 +241,10 @@ public class ArangoMain {
 		controller.updateEmpleado(empleado);
 	}
 
+	/**
+	 * Cambia el jefe de un departamento.
+	 * @param dep al que cambiarle el departamento.
+	 */
 	private static void cambiarJefe(DepartamentoDTO dep) {
 		List<EmpleadoDTO> emps = controller.getEmpleados(dep, true);
 		if (emps.isEmpty()) {
@@ -210,6 +265,10 @@ public class ArangoMain {
 		controller.updateDepartamento(dep);
 	}
 
+	/**
+	 * Borra un empleado.
+	 * @throws InvalidException el usuario logueado no es jefe.
+	 */
 	private static void deleteEmpleado() throws InvalidException {
 		checkJefe();
 		List<EmpleadoDTO> empleados = controller
@@ -231,7 +290,10 @@ public class ArangoMain {
 		controller.deleteEmpleado(empleado);
 	}
 
-	private static void solucionarIncidencia() throws InvalidException {
+	/**
+	 * Pide al usuario logueado que escoja una incidencia a solucionar y la marca como solucionada.
+	 */
+	private static void solucionarIncidencia()  {
 		List<IncidenciaDTO> incidencias = controller.getIncidenciasPendientesUsuarioLogueado();
 		if (!incidencias.isEmpty()) {
 			int index = InputAsker.pedirIndice("QuÃ© incidencia quieres marcar como solucionada?", incidencias, false) - 1;
@@ -242,6 +304,11 @@ public class ArangoMain {
 			System.out.println("No hay incidencias por solucionar.");
 	}
 
+	/**
+	 * Muestra el ranking de los empleados del departamento del usuario logueado.
+	 * Los puntos representan el numero de incidencias urgentes solucionadas.
+	 * @throws InvalidException el usuario logueado no es jefe.
+	 */
 	private static void mostrarRanking() throws InvalidException {
 		checkJefe();
 		List<RankingEntryDTO> ranking = controller.getRanking();
@@ -252,6 +319,10 @@ public class ArangoMain {
 		System.out.println("-----------------------");
 	}
 
+	/**
+	 * Pide los datos necesarios para crear una incidencia y la crea.
+	 * @throws InvalidException el usuario logueado no es jefe.
+	 */
 	private static void crearIncidencia() throws InvalidException {
 		checkJefe();
 		EmpleadoDTO usuarioLogueado = controller.getUsuarioLogeado();
@@ -269,6 +340,9 @@ public class ArangoMain {
 		controller.insertIncidencia(incidenciaDTO);
 	}
 
+	/**
+	 * Autentifica a un usuario y, llama al menu principal.
+	 */
 	private static void login() {
 		try {
 			String username = InputAsker.pedirString("Introduce tu username");
@@ -281,7 +355,11 @@ public class ArangoMain {
 		}
 	}
 
-	private static DepartamentoDTO crearDepartamento() throws InvalidException {
+	/**
+	 * Pide al usuario los datos para crear un nuevo departamento.
+	 * @throws InvalidException el usuario logueado no es jefe o ya existe un departamento con ese nombre.
+	 */
+	private static void crearDepartamento() throws InvalidException {
 		checkJefe();
 		DepartamentoDTO newDepartamento = new DepartamentoDTO();
 		newDepartamento
@@ -290,9 +368,12 @@ public class ArangoMain {
 		int eleccion = InputAsker.pedirIndice("Escoje al jefe", empleados, true);
 		newDepartamento.setJefe(eleccion == 0 ? null : empleados.get(eleccion - 1).getUsername());
 		controller.insertDepartamento(newDepartamento);
-		return newDepartamento;
 	}
 
+	/**
+	 * Comprueba que el usuario sea jefe de un departamento.
+	 * @throws InvalidException si el usuario no es jefe.
+	 */
 	private static void checkJefe() throws InvalidException {
 		if (!controller.getUsuarioLogeado().isJefe())
 			throw new InvalidException(Tipo.UNAUTHORIZED);

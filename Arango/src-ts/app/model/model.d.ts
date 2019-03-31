@@ -1,12 +1,12 @@
 /* tslint:disable */
-// Generated using typescript-generator version 2.12.476 on 2019-03-31 13:08:36.
+// Generated using typescript-generator version 2.12.476 on 2019-03-31 19:05:13.
 
-export interface DepartamentoDTO extends IKeyable {
+export interface DepartamentoDTO extends ArangoDocument {
     nombre: string;
     jefe: string;
 }
 
-export interface EmpleadoDTO extends IKeyable {
+export interface EmpleadoDTO extends ArangoDocument {
     nombre: string;
     apellidos: string;
     username: string;
@@ -16,13 +16,13 @@ export interface EmpleadoDTO extends IKeyable {
     nombreCompleto: string;
 }
 
-export interface EventoDTO extends IKeyable, Comparable<EventoDTO> {
+export interface EventoDTO extends ArangoDocument, Comparable<EventoDTO> {
     tipo: Tipo;
     fecha: Date;
     empleado: string;
 }
 
-export interface IncidenciaDTO extends IKeyable {
+export interface IncidenciaDTO extends ArangoDocument {
     id: string;
     origen: string;
     destino: string;
@@ -31,14 +31,15 @@ export interface IncidenciaDTO extends IKeyable {
     fechaInicio: Date;
     fechaFin: Date;
     urgente: boolean;
+    solucionada: boolean;
 }
 
-export interface RankingDTO extends Comparable<RankingDTO> {
+export interface RankingEntryDTO extends Comparable<RankingEntryDTO> {
     nombre: string;
     incidenciasResueltas: number;
 }
 
-export interface IKeyable {
+export interface ArangoDocument {
     key: string;
     collection: string;
 }
@@ -46,4 +47,4 @@ export interface IKeyable {
 export interface Comparable<T> {
 }
 
-export type Tipo = "LOGIN" | "CREACION_INCIDENCIA" | "CONSULTA_INCIDENCIA" | "SOLUCION_INCIDENCIA";
+export type Tipo = "LOGIN" | "CREACION_INCIDENCIA" | "SOLUCION_INCIDENCIA";

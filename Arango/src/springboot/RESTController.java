@@ -19,8 +19,10 @@ import model.IncidenciaDTO;
 import model.RankingEntryDTO;
 import persistence.DAO;
 import persistence.DAOImpl;
+
 /**
- * Esta clase se encarga de responder a las request del web service de la apicacion.
+ * Esta clase se encarga de responder a las request del web service de la
+ * apicacion.
  * 
  * @author razz97
  * @author acuevas
@@ -52,6 +54,8 @@ public class RESTController {
 	@RequestMapping(value = "/empleado/create", method = RequestMethod.POST)
 	public ResponseEntity<Object> crearEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
 		controller.setUsuarioLogeado(users.get(0));
+		if (users.get(1).getDepartamento().isEmpty())
+			users.get(1).setDepartamento(null);
 		try {
 			controller.insertEmpleado(users.get(1));
 		} catch (InvalidException e) {
@@ -66,19 +70,20 @@ public class RESTController {
 		controller.deleteEmpleado(users.get(1));
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/empleado/update", method = RequestMethod.POST)
 	public ResponseEntity<Object> updateEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
 		controller.setUsuarioLogeado(users.get(0));
 		// TODO HAY UN GET ALLDEPARTMENTS?¿
-		DepartamentoDTO departmnt = controller.getDepartamentos().stream().filter(dept -> users.get(1).getDepartamento().equalsIgnoreCase(dept.getNombre() )).findFirst().orElse(null);
+		DepartamentoDTO departmnt = controller.getDepartamentos().stream()
+				.filter(dept -> users.get(1).getDepartamento().equalsIgnoreCase(dept.getNombre())).findFirst()
+				.orElse(null);
 		if (departmnt != null) {
-		controller.updateEmpleado(users.get(1));
-		return new ResponseEntity<Object>(HttpStatus.OK);
+			controller.updateEmpleado(users.get(1));
+			return new ResponseEntity<Object>(HttpStatus.OK);
 		}
 		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
-
 
 	@RequestMapping(value = "/incidencia", method = RequestMethod.POST)
 	public List<IncidenciaDTO> incidencias(@RequestBody(required = true) EmpleadoDTO user) {
@@ -94,35 +99,44 @@ public class RESTController {
 		controller.insertIncidencia(query.incidencia);
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/incidencia/update", method = RequestMethod.POST)
 	public ResponseEntity<Object> finishIncidencia(@RequestBody(required = true) IncidenciaDTO incidenciaDTO) {
 		controller.updateIncidencia(incidenciaDTO);
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 
-	/*
-	 * Debería hacerlo el back-end
-	 * 
-	 * @RequestMapping(value = "/evento", method = RequestMethod.POST) public
-	 * List<EventoDTO> eventos(@RequestBody(required = true) EmpleadoDTO user) {
-	 * controller.setUsuarioLogeado(user); // TODO RETURN EVENTOS, NO HAY UN
-	 * GETEVENTOS? return null; }
-	 * 
-	 * @RequestMapping(value = "/evento", method = RequestMethod.DELETE) public
-	 * List<EventoDTO> deleteEvento(@RequestBody(required = true) EmpleadoDTO user,
-	 * 
-	 * @RequestBody(required = true) EventoDTO evento) {
-	 * controller.setUsuarioLogeado(user); // TODO BORRAR EVENTOS, NO HAY UN
-	 * BORRAEVENTO? return null; }
-	 * 
-	 * @RequestMapping(value = "/evento/create", method = RequestMethod.POST) public
-	 * ResponseEntity crearEvento(@RequestBody(required = true) EmpleadoDTO user,
-	 * 
-	 * @RequestBody(required = true) EventoDTO evento) {
-	 * controller.setUsuarioLogeado(user); controller.crearEvento(evento.getTipo(),
-	 * evento.getEmpleado()); return new ResponseEntity(HttpStatus.OK); }
-	 */
+	@RequestMapping(value = "/departamento", method = RequestMethod.POST)
+	public List<DepartamentoDTO> departamentos(@RequestBody(required = true) EmpleadoDTO user) {
+		controller.setUsuarioLogeado(user);
+		return controller.getDepartamentos();
+	}
+
+	@RequestMapping(value = "/departamento/create", method = RequestMethod.POST)
+	public ResponseEntity<Object> crearDepartamento(@RequestBody(required = true) Query query) {
+		controller.setUsuarioLogeado(query.getLoggedUser());
+		if (query.departamento.getJefe().isEmpty())
+			query.departamento.setJefe(null);
+		try {
+			controller.insertDepartamento(query.departamento);
+		} catch (InvalidException e) {
+			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<Object>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/departamento/update", method = RequestMethod.POST)
+	public ResponseEntity<Object> updateDepartamento(@RequestBody(required = true) DepartamentoDTO departamento) {
+		controller.updateDepartamento(departamento);
+		return new ResponseEntity<Object>(HttpStatus.OK);
+	}
+
+//	@RequestMapping(value = "/departamento/delete", method = RequestMethod.POST)
+//	public ResponseEntity<Object> deleteDepartamento(@RequestBody(required = true) Query query) {
+//		controller.setUsuarioLogeado(query.getLoggedUser());
+//		controller.deleteDepartamento(query.getDepartamento());
+//		return new ResponseEntity<Object>(HttpStatus.OK);
+//	}
 
 	@RequestMapping(value = "/ranking", method = RequestMethod.POST)
 	public List<RankingEntryDTO> ranking(@RequestBody(required = true) EmpleadoDTO user) {

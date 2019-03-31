@@ -19,7 +19,13 @@ import model.IncidenciaDTO;
 import model.RankingEntryDTO;
 import persistence.DAO;
 import persistence.DAOImpl;
-
+/**
+ * Esta clase se encarga de responder a las request del web service de la apicacion.
+ * 
+ * @author razz97
+ * @author acuevas
+ * @author movip88
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/rest")

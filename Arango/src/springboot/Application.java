@@ -13,6 +13,13 @@ import com.arangodb.ArangoDBException;
 import arango.ArangoMain;
 import controller.Controller;
 
+/**
+ * Esta clase se encarga del bootstrap de la aplicacion springboot.
+ * 
+ * @author razz97
+ * @author acuevas
+ * @author movip88
+ */
 @SpringBootApplication
 public class Application {
 

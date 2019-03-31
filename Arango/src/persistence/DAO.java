@@ -7,7 +7,7 @@ import model.DepartamentoDTO;
 import model.EmpleadoDTO;
 import model.EventoDTO;
 import model.IncidenciaDTO;
-import model.RankingDTO;
+import model.RankingEntryDTO;
 
 /**
  * Define los metodos necesarios para acceder, modificar y eliminar datos.
@@ -20,7 +20,7 @@ import model.RankingDTO;
 public interface DAO {
 
 	/**
-	 * Metodo para cerrar la conexión a la base de datos.
+	 * Metodo para cerrar la conexiï¿½n a la base de datos.
 	 */
 	public void close();
 	
@@ -129,6 +129,6 @@ public interface DAO {
 	 *  Obtener el ranking de los empleados por cantidad de incidencias
 	 *  urgentes solucionadas (mÃ¡s incidencias urgentes primero).
 	 */
-	public List<RankingDTO> getRanking(DepartamentoDTO dep);
+	public List<RankingEntryDTO> getRanking(DepartamentoDTO dep);
 	
 }

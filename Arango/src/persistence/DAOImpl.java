@@ -9,7 +9,7 @@ import model.DepartamentoDTO;
 import model.EmpleadoDTO;
 import model.EventoDTO;
 import model.IncidenciaDTO;
-import model.RankingDTO;
+import model.RankingEntryDTO;
 
 /**
  * Implementaci�n de la clase DAO, encargada de acceder, modificar y eliminar datos.
@@ -149,9 +149,9 @@ public class DAOImpl extends ArangoUtils implements DAO {
 
 	
 	@Override
-	public List<RankingDTO> getRanking(DepartamentoDTO dep) {
+	public List<RankingEntryDTO> getRanking(DepartamentoDTO dep) {
 		if (!isCollection("incidenciadto") || !isCollection("departamentodto") || !isCollection("eventodto"))
-			return new ArrayList<RankingDTO>();
+			return new ArrayList<RankingEntryDTO>();
 		return query(
 			"for e in empleadodto "
 			+ "filter e.departamento == '" + dep.getKey() + "' "
@@ -159,7 +159,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 					+ "filter i.empleado == e._key && i.tipo == 'SOLUCION_INCIDENCIA' "
 							+ "collect user = e._key with count into resueltas "
 			+ "return {'nombre' : user, 'incidenciasResueltas' : resueltas}",
-			RankingDTO.class
+			RankingEntryDTO.class
 		);
 	}
 

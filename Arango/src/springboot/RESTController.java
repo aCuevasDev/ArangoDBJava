@@ -16,7 +16,7 @@ import model.DepartamentoDTO;
 import model.EmpleadoDTO;
 import model.EventoDTO;
 import model.IncidenciaDTO;
-import model.RankingDTO;
+import model.RankingEntryDTO;
 import persistence.DAO;
 import persistence.DAOImpl;
 
@@ -40,14 +40,14 @@ public class RESTController {
 
 	@RequestMapping(value = "/empleado", method = RequestMethod.POST)
 	public List<EmpleadoDTO> empleados(@RequestBody(required = true) EmpleadoDTO user) {
-		return controller.getAllUsers();
+		return controller.getEmpleados();
 	}
 
 	@RequestMapping(value = "/empleado/create", method = RequestMethod.POST)
 	public ResponseEntity<Object> crearEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
 		controller.setUsuarioLogeado(users.get(0));
 		try {
-			controller.crearEmpleado(users.get(1));
+			controller.insertEmpleado(users.get(1));
 		} catch (InvalidException e) {
 			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
@@ -57,7 +57,7 @@ public class RESTController {
 	@RequestMapping(value = "/empleado/delete", method = RequestMethod.POST)
 	public ResponseEntity<Object> deleteEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
 		controller.setUsuarioLogeado(users.get(0));
-		controller.eliminarEmpleado(users.get(1));
+		controller.deleteEmpleado(users.get(1));
 		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 	
@@ -65,7 +65,7 @@ public class RESTController {
 	public ResponseEntity<Object> updateEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
 		controller.setUsuarioLogeado(users.get(0));
 		// TODO HAY UN GET ALLDEPARTMENTS?¿
-		DepartamentoDTO departmnt = controller.getAllDepartamentos().stream().filter(dept -> users.get(1).getDepartamento().equalsIgnoreCase(dept.getNombre() )).findFirst().orElse(null);
+		DepartamentoDTO departmnt = controller.getDepartamentos().stream().filter(dept -> users.get(1).getDepartamento().equalsIgnoreCase(dept.getNombre() )).findFirst().orElse(null);
 		if (departmnt != null) {
 		controller.updateEmpleado(users.get(1));
 		return new ResponseEntity<Object>(HttpStatus.OK);
@@ -77,7 +77,7 @@ public class RESTController {
 	@RequestMapping(value = "/incidencia", method = RequestMethod.POST)
 	public List<IncidenciaDTO> incidencias(@RequestBody(required = true) EmpleadoDTO user) {
 		controller.setUsuarioLogeado(user);
-		return controller.getUserIncidencias();
+		return controller.getIncidenciasUsuarioLogueado();
 	}
 
 	@RequestMapping(value = "/incidencia/create", method = RequestMethod.POST)
@@ -120,7 +120,7 @@ public class RESTController {
 */
 	
 	@RequestMapping(value = "/ranking", method = RequestMethod.POST)
-	public List<RankingDTO> ranking(@RequestBody(required = true) EmpleadoDTO user) {
+	public List<RankingEntryDTO> ranking(@RequestBody(required = true) EmpleadoDTO user) {
 		controller.setUsuarioLogeado(user);
 		return controller.getRanking();
 	}

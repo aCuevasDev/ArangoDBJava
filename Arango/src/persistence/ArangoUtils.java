@@ -23,7 +23,7 @@ public abstract class ArangoUtils {
 	 * @author acuevas
 	 * @author movip88
 	 */
-	public interface IKeyable {
+	public interface ArangoDocument {
 		
 		/**
 		 * La clave de negocio.
@@ -58,7 +58,7 @@ public abstract class ArangoUtils {
 	/**
 	 * Lee un objeto de la base de datos a partir de un IKeyable y su clase.
 	 */
-	protected <T> T getByKey(IKeyable object, Class<T> tClass) {
+	protected <T> T getByKey(ArangoDocument object, Class<T> tClass) {
 		return db.query("RETURN DOCUMENT('" + object.getCollection() + "/" + object.getKey() + "')", tClass).first();
 	}
 
@@ -96,7 +96,7 @@ public abstract class ArangoUtils {
 	/**
 	 * Comprueba si un IKeyable existe en la base de datos.
 	 */
-	protected boolean exists(IKeyable object) {
+	protected boolean exists(ArangoDocument object) {
 		ArangoCollection col = db.collection(object.getCollection());		
 		if (!col.exists()) return false;
 		return col.documentExists(object.getKey());
@@ -112,7 +112,7 @@ public abstract class ArangoUtils {
 	/**
 	 * Guarda un IKeyable en la base de datos si no existe, si existe lo actualiza. 
 	 */
-	protected void store(IKeyable object) {
+	protected void store(ArangoDocument object) {
 		if (!db.collection(object.getCollection()).exists())
 			db.createCollection(object.getCollection());
 		if (!exists(object))
@@ -124,7 +124,7 @@ public abstract class ArangoUtils {
 	/**
 	 * Fuerza la insercion de un IKeyable en la base de datos.
 	 */
-	protected void forceStore(IKeyable object) {
+	protected void forceStore(ArangoDocument object) {
 		if (!db.collection(object.getCollection()).exists())
 			db.createCollection(object.getCollection());
 		db.collection(object.getCollection()).insertDocument(object);
@@ -133,14 +133,14 @@ public abstract class ArangoUtils {
 	/**
 	 * Actualiza un documento a partir de su IKeyable.
 	 */
-	private void update(IKeyable object) {
+	private void update(ArangoDocument object) {
 		db.collection(object.getCollection()).updateDocument(object.getKey(), object);
 	}
 
 	/**
 	 * Borra un elemento a partir de su IKeyable.
 	 */
-	protected void delete(IKeyable object) {
+	protected void delete(ArangoDocument object) {
 		db.collection(object.getCollection()).deleteDocument(object.getKey());
 	}
 

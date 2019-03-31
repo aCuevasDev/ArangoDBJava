@@ -43,7 +43,7 @@ public abstract class ArangoUtils {
 	private ArangoDB connection;
 
 	protected ArangoUtils() {
-		connection = new ArangoDB.Builder().host("alexraspberry.ddns.net", 8531).password("stucom").build();
+		connection = new ArangoDB.Builder().host("localhost", 8529).password("stucom").build();
 		db = connection.db("GuacamoleDB");
 	}
 
@@ -51,7 +51,8 @@ public abstract class ArangoUtils {
 	 * Cierra la conexion con la base de datos.
 	 */
 	protected void close() {
-		connection.shutdown();
+		if (connection != null)
+			connection.shutdown();
 	}
 
 	/**

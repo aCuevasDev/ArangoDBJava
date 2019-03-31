@@ -110,4 +110,18 @@ public class IncidenciaDTO implements IKeyable {
 		this.urgente = urgente;
 	}
 
+	/**
+	 * @return the id
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
 }

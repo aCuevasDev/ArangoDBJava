@@ -46,10 +46,10 @@ public class RESTController {
 	}
 
 	@RequestMapping(value = "/empleado/create", method = RequestMethod.POST)
-	public ResponseEntity crearEmpleado(@RequestBody(required = true) EmpleadoDTO loggedUser,@RequestBody(required = true) EmpleadoDTO user) {
-		controller.setUsuarioLogeado(loggedUser);
+	public ResponseEntity crearEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
+		controller.setUsuarioLogeado(users.get(0));
 		try {
-			controller.crearEmpleado(user);
+			controller.crearEmpleado(users.get(1));
 		} catch (InvalidException e) {
 			return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		}

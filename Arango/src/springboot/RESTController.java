@@ -62,19 +62,20 @@ public class RESTController {
 		controller.eliminarEmpleado(users.get(1));
 		return new ResponseEntity(HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/empleado/update", method = RequestMethod.POST)
 	public ResponseEntity updateEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
 		controller.setUsuarioLogeado(users.get(0));
 		// TODO HAY UN GET ALLDEPARTMENTS?¿
-		DepartamentoDTO departmnt = controller.getAllDepartamentos().stream().filter(dept -> users.get(1).getDepartamento().equalsIgnoreCase(dept.getNombre() )).findFirst().orElse(null);
+		DepartamentoDTO departmnt = controller.getAllDepartamentos().stream()
+				.filter(dept -> users.get(1).getDepartamento().equalsIgnoreCase(dept.getNombre())).findFirst()
+				.orElse(null);
 		if (departmnt != null) {
-		controller.updateEmpleado(users.get(1));
-		return new ResponseEntity(HttpStatus.OK);
+			controller.updateEmpleado(users.get(1));
+			return new ResponseEntity(HttpStatus.OK);
 		}
 		return new ResponseEntity(HttpStatus.BAD_REQUEST);
 	}
-
 
 	@RequestMapping(value = "/incidencia", method = RequestMethod.POST)
 	public List<IncidenciaDTO> incidencias(@RequestBody(required = true) EmpleadoDTO user) {
@@ -83,44 +84,43 @@ public class RESTController {
 	}
 
 	@RequestMapping(value = "/incidencia/create", method = RequestMethod.POST)
-	public ResponseEntity crearIncidencia(@RequestBody(required = true) EmpleadoDTO user,
-			@RequestBody(required = true) IncidenciaDTO incidencia) {
-		controller.setUsuarioLogeado(user);
-		controller.insertIncidencia(incidencia);
+	public ResponseEntity crearIncidencia(@RequestBody(required = true) Query query) {
+		controller.setUsuarioLogeado(query.getLoggedUser());
+		if (query.incidencia.getId() == "")
+			query.incidencia.setId(null);
+		controller.insertIncidencia(query.incidencia);
 		return new ResponseEntity(HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/incidencia/update", method = RequestMethod.POST)
 	public ResponseEntity finishIncidencia(@RequestBody(required = true) IncidenciaDTO incidenciaDTO) {
 		controller.updateIncidencia(incidenciaDTO);
 		return new ResponseEntity(HttpStatus.OK);
 	}
-	
-/*	Debería hacerlo el back-end
-	@RequestMapping(value = "/evento", method = RequestMethod.POST)
-	public List<EventoDTO> eventos(@RequestBody(required = true) EmpleadoDTO user) {
-		controller.setUsuarioLogeado(user);
-		// TODO RETURN EVENTOS, NO HAY UN GETEVENTOS?
-		return null;
-	}
 
-	@RequestMapping(value = "/evento", method = RequestMethod.DELETE)
-	public List<EventoDTO> deleteEvento(@RequestBody(required = true) EmpleadoDTO user,
-			@RequestBody(required = true) EventoDTO evento) {
-		controller.setUsuarioLogeado(user);
-		// TODO BORRAR EVENTOS, NO HAY UN BORRAEVENTO?
-		return null;
-	}
+	/*
+	 * Debería hacerlo el back-end
+	 * 
+	 * @RequestMapping(value = "/evento", method = RequestMethod.POST) public
+	 * List<EventoDTO> eventos(@RequestBody(required = true) EmpleadoDTO user) {
+	 * controller.setUsuarioLogeado(user); // TODO RETURN EVENTOS, NO HAY UN
+	 * GETEVENTOS? return null; }
+	 * 
+	 * @RequestMapping(value = "/evento", method = RequestMethod.DELETE) public
+	 * List<EventoDTO> deleteEvento(@RequestBody(required = true) EmpleadoDTO user,
+	 * 
+	 * @RequestBody(required = true) EventoDTO evento) {
+	 * controller.setUsuarioLogeado(user); // TODO BORRAR EVENTOS, NO HAY UN
+	 * BORRAEVENTO? return null; }
+	 * 
+	 * @RequestMapping(value = "/evento/create", method = RequestMethod.POST) public
+	 * ResponseEntity crearEvento(@RequestBody(required = true) EmpleadoDTO user,
+	 * 
+	 * @RequestBody(required = true) EventoDTO evento) {
+	 * controller.setUsuarioLogeado(user); controller.crearEvento(evento.getTipo(),
+	 * evento.getEmpleado()); return new ResponseEntity(HttpStatus.OK); }
+	 */
 
-	@RequestMapping(value = "/evento/create", method = RequestMethod.POST)
-	public ResponseEntity crearEvento(@RequestBody(required = true) EmpleadoDTO user,
-			@RequestBody(required = true) EventoDTO evento) {
-		controller.setUsuarioLogeado(user);
-		controller.crearEvento(evento.getTipo(), evento.getEmpleado());
-		return new ResponseEntity(HttpStatus.OK);
-	} 
-*/
-	
 	@RequestMapping(value = "/ranking", method = RequestMethod.POST)
 	public List<RankingDTO> ranking(@RequestBody(required = true) EmpleadoDTO user) {
 		controller.setUsuarioLogeado(user);

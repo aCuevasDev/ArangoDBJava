@@ -5,6 +5,7 @@ import model.EmpleadoDTO;
 import model.EventoDTO;
 import model.IncidenciaDTO;
 import model.RankingDTO;
+import model.RankingEntryDTO;
 
 public class Query {
 	
@@ -13,7 +14,7 @@ public class Query {
 	IncidenciaDTO incidencia;
 	DepartamentoDTO departamento;
 	EventoDTO evento;
-	RankingDTO ranking;
+	RankingEntryDTO ranking;
 	/**
 	 * @return the loggedUser
 	 */

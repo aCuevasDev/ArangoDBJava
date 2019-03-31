@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import controller.Controller;
@@ -32,7 +30,7 @@ public class RESTController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public EmpleadoDTO login(@RequestBody(required = true) EmpleadoDTO user) {
-		EmpleadoDTO loggedUser = dao.loginEmpleado(user.getUsername(), user.getContrasenya());
+		EmpleadoDTO loggedUser = dao.getEmpleado(user.getUsername(), user.getContrasenya());
 		if (loggedUser != null) {
 			controller.crearEvento(EventoDTO.Tipo.LOGIN, loggedUser.getUsername());
 			return loggedUser;
@@ -46,33 +44,33 @@ public class RESTController {
 	}
 
 	@RequestMapping(value = "/empleado/create", method = RequestMethod.POST)
-	public ResponseEntity crearEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
+	public ResponseEntity<Object> crearEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
 		controller.setUsuarioLogeado(users.get(0));
 		try {
 			controller.crearEmpleado(users.get(1));
 		} catch (InvalidException e) {
-			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/empleado/delete", method = RequestMethod.POST)
-	public ResponseEntity deleteEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
+	public ResponseEntity<Object> deleteEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
 		controller.setUsuarioLogeado(users.get(0));
 		controller.eliminarEmpleado(users.get(1));
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/empleado/update", method = RequestMethod.POST)
-	public ResponseEntity updateEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
+	public ResponseEntity<Object> updateEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
 		controller.setUsuarioLogeado(users.get(0));
 		// TODO HAY UN GET ALLDEPARTMENTS?¿
 		DepartamentoDTO departmnt = controller.getAllDepartamentos().stream().filter(dept -> users.get(1).getDepartamento().equalsIgnoreCase(dept.getNombre() )).findFirst().orElse(null);
 		if (departmnt != null) {
 		controller.updateEmpleado(users.get(1));
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<Object>(HttpStatus.OK);
 		}
-		return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
 
 
@@ -83,17 +81,17 @@ public class RESTController {
 	}
 
 	@RequestMapping(value = "/incidencia/create", method = RequestMethod.POST)
-	public ResponseEntity crearIncidencia(@RequestBody(required = true) EmpleadoDTO user,
+	public ResponseEntity<Object> crearIncidencia(@RequestBody(required = true) EmpleadoDTO user,
 			@RequestBody(required = true) IncidenciaDTO incidencia) {
 		controller.setUsuarioLogeado(user);
 		controller.insertIncidencia(incidencia);
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/incidencia/update", method = RequestMethod.POST)
-	public ResponseEntity finishIncidencia(@RequestBody(required = true) IncidenciaDTO incidenciaDTO) {
+	public ResponseEntity<Object> finishIncidencia(@RequestBody(required = true) IncidenciaDTO incidenciaDTO) {
 		controller.updateIncidencia(incidenciaDTO);
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 	
 /*	Debería hacerlo el back-end

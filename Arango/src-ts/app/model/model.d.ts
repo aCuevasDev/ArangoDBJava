@@ -1,5 +1,5 @@
 /* tslint:disable */
-// Generated using typescript-generator version 2.12.476 on 2019-03-30 16:36:50.
+// Generated using typescript-generator version 2.12.476 on 2019-03-31 13:08:36.
 
 export interface DepartamentoDTO extends IKeyable {
     nombre: string;
@@ -16,13 +16,14 @@ export interface EmpleadoDTO extends IKeyable {
     nombreCompleto: string;
 }
 
-export interface EventoDTO extends IKeyable {
+export interface EventoDTO extends IKeyable, Comparable<EventoDTO> {
     tipo: Tipo;
     fecha: Date;
     empleado: string;
 }
 
 export interface IncidenciaDTO extends IKeyable {
+    id: string;
     origen: string;
     destino: string;
     titulo: string;
@@ -39,6 +40,7 @@ export interface RankingDTO extends Comparable<RankingDTO> {
 
 export interface IKeyable {
     key: string;
+    collection: string;
 }
 
 export interface Comparable<T> {

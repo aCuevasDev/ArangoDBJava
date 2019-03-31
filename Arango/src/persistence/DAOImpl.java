@@ -12,7 +12,7 @@ import model.IncidenciaDTO;
 import model.RankingDTO;
 
 /**
- * Implementación de la clase DAO, encargada de acceder, modificar y eliminar datos.
+ * Implementaciï¿½n de la clase DAO, encargada de acceder, modificar y eliminar datos.
  * 
  * @author razz97
  * @author acuevas
@@ -56,6 +56,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		return find(EmpleadoDTO.class);
 	}
 	
+	@Override
 	public List<EmpleadoDTO> getEmpleados(DepartamentoDTO dep, boolean inside) {
 		if (!isCollection("empleadodto"))
 			return new ArrayList<EmpleadoDTO>();
@@ -138,7 +139,7 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	@Override
 	public EventoDTO getUltimoInicioSesion(EmpleadoDTO emp) {
 		Map<String, Object> filters = new MapBuilder().put("empleado", emp.getUsername()).put("tipo", model.EventoDTO.Tipo.LOGIN).get();
-		return find(EventoDTO.class, filters).stream().sorted().findFirst().get();
+		return find(EventoDTO.class, filters).stream().sorted().findFirst().orElse(null);
 	}
 	
 	@Override

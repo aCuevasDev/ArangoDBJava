@@ -92,7 +92,7 @@ public class IncidenciaDTO implements IKeyable {
 
 	@Override
 	public String toString() {
-		return "Titulo: " + titulo + ", descripcion: " + descripcion + ", origen: " + origen + ", destino: " + destino +
+		return (urgente ? "URGENTE - " : "") + "Titulo: " + titulo + ", descripcion: " + descripcion + ", origen: " + origen + ", destino: " + destino +
 				", inicio: " + (fechaInicio != null ? formatter.format(fechaInicio) : "-") + ", fin: " + (fechaFin != null ? formatter.format(fechaFin) : "-");
 	}
 

@@ -15,7 +15,7 @@ public abstract class ArangoUtils {
 	protected ArangoDB connection;
 
 	protected ArangoUtils() {
-		connection = new ArangoDB.Builder().host("alexraspberry.ddns.net", 8531).password("stucom").build();
+		connection = new ArangoDB.Builder().host("localhost", 8529).password("stucom").build();
 		db = connection.db("GuacamoleDB");
 	}
 

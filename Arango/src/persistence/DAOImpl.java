@@ -1,29 +1,67 @@
 package persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.arangodb.util.MapBuilder;
-
 import exception.InvalidException;
 import model.DepartamentoDTO;
 import model.EmpleadoDTO;
 import model.EventoDTO;
 import model.IncidenciaDTO;
-import model.RankingDTO;
+import model.RankingEntryDTO;
 
+/**
+ * Implementaci�n de la clase DAO, encargada de acceder, modificar y eliminar datos.
+ * 
+ * @author razz97
+ * @author acuevas
+ * @author movip88
+ */
 public class DAOImpl extends ArangoUtils implements DAO {
 
 	private static DAOImpl instance;
 
+	/**
+	 * Gets the unique instance of this class.
+	 */
 	public static DAOImpl getInstance() {
 		if (instance == null)
 			instance = new DAOImpl();
 		return instance;
 	}
 
-	private DAOImpl() {
+	private DAOImpl() {}
+
+	
+	@Override
+	public void close() {
+		super.close();
+	}
+
+	
+	@Override
+	public EmpleadoDTO getEmpleado(String username) {
+		return getByKey(new EmpleadoDTO(username), EmpleadoDTO.class);
+	}
+
+	@Override
+	public EmpleadoDTO getEmpleado(String username, String pass) {
+		EmpleadoDTO emp = getByKey(new EmpleadoDTO(username), EmpleadoDTO.class);
+		return emp == null || !emp.getContrasenya().equals(pass) ? null : emp;
+	}
+
+	@Override
+	public List<EmpleadoDTO> getEmpleados() {
+		return find(EmpleadoDTO.class);
+	}
+	
+	@Override
+	public List<EmpleadoDTO> getEmpleados(DepartamentoDTO dep, boolean inside) {
+		if (!isCollection("empleadodto"))
+			return new ArrayList<EmpleadoDTO>();
+		String query = "for e in empleadodto filter e.departamento " + (inside ? "=" : "!") + "= \"" + dep.getKey() + "\" return e";
+		return query(query, EmpleadoDTO.class);
 	}
 
 	@Override
@@ -34,74 +72,21 @@ public class DAOImpl extends ArangoUtils implements DAO {
 	}
 
 	@Override
-	public EmpleadoDTO loginEmpleado(String username, String pass) {
-		EmpleadoDTO emp = getByKey(new EmpleadoDTO(username), EmpleadoDTO.class);
-		if (emp == null || !emp.getContrasenya().equals(pass))
-			return null;
-		return emp;
-	}
-	
-	@Override
-	public void crearEvento(EventoDTO evento) {
-		store(evento);
-	}
-
-	@Override
 	public void updateEmpleado(EmpleadoDTO e) {
 		store(e);
 	}
-
+	
 	@Override
 	public void removeEmpleado(EmpleadoDTO e) {
 		delete(e);
 	}
 
+	
 	@Override
-	public IncidenciaDTO getIncidenciaById(int id) {
-		Map<String, Object> filters = new MapBuilder().put("id", id).get();
-		return find(IncidenciaDTO.class, filters).stream().findFirst().get();
+	public List<DepartamentoDTO> getDepartmentos() {
+		return find(DepartamentoDTO.class);
 	}
-
-	@Override
-	public List<IncidenciaDTO> selectAllIncidencias() {
-		return find(IncidenciaDTO.class);
-	}
-
-	@Override
-	public void insertIncidencia(IncidenciaDTO i) {
-		forceStore(i);
-	}
-
-	@Override
-	public List<IncidenciaDTO> getIncidenciaByDestino(EmpleadoDTO e) {
-		Map<String, Object> filters = new MapBuilder().put("destino", e.getUsername()).get();
-		return find(IncidenciaDTO.class, filters);
-	}
-
-	@Override
-	public List<IncidenciaDTO> getIncidenciaByOrigen(EmpleadoDTO e) {
-		Map<String, Object> filters = new MapBuilder().put("origen", e.getUsername()).get();
-		return find(IncidenciaDTO.class, filters);
-	}
-
-	@Override
-	public void insertarEvento(EventoDTO e) {
-		store(e);
-	}
-
-	@Override
-	public EventoDTO getUltimoInicioSesion(EmpleadoDTO emp) {
-		Map<String, Object> filters = new MapBuilder().put("empleado", emp.getUsername()).put("tipo", model.EventoDTO.Tipo.LOGIN).get();
-		return find(EventoDTO.class, filters).stream()
-				.sorted((event, other) -> event.getFecha().compareTo(other.getFecha())).collect(Collectors.toList())
-				.get(0);
-	}
-
-	@Override
-	public void close() {
-		super.close();
-	}
-
+	
 	@Override
 	public void insertDepartamento(DepartamentoDTO d) throws InvalidException {
 		if (exists(d))
@@ -114,37 +99,35 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		store(d);
 	}
 
-	@Override
-	public List<EmpleadoDTO> selectAllEmpleados() {
-		return find(EmpleadoDTO.class);
-	}
 	
-	public List<EmpleadoDTO> selectEmpleados(DepartamentoDTO dep, boolean inside) {
-		//Map<String, Object> filters = new MapBuilder().put("departamento", dep.getKey()).get();
-		String query = "for e in empleadodto filter e.departamento " + (inside ? "=" : "!") + "= \"" + dep.getKey() + "\" return e";
-		return query(query, EmpleadoDTO.class);
+	@Override
+	public IncidenciaDTO getIncidencia(int id) {
+		return getByKey(new IncidenciaDTO(id), IncidenciaDTO.class);
 	}
 
 	@Override
-	public EmpleadoDTO getEmpleado(String username, String pass) {
-		Map<String, Object> filters = new MapBuilder().put("username", username).put("contrasenya", pass).get();
-		List<EmpleadoDTO> empleados = find(EmpleadoDTO.class, filters);
-		if (empleados.isEmpty())
-			return null;
-		return empleados.get(0);
+	public List<IncidenciaDTO> getIncidencias() {
+		return find(IncidenciaDTO.class);
 	}
 
 	@Override
-	public List<DepartamentoDTO> selectAllDepartments() {
-		return find(DepartamentoDTO.class);
-	}
-
+	public List<IncidenciaDTO> getIncidencias(EmpleadoDTO e, boolean destino) {
+		return find(IncidenciaDTO.class, new MapBuilder().put(destino ? "destino" : "origen", e.getUsername()).get());
+	}	
+	
 	@Override
-	public List<IncidenciaDTO> getIncidenciasByDepartamento(DepartamentoDTO dep) {
+	public List<IncidenciaDTO> getIncidencias(DepartamentoDTO dep) {
+		if (!isCollection("incidenciadto") || !isCollection("empleadodto"))
+			return new ArrayList<IncidenciaDTO>();
 		return query(
-			"for e in empleadodto filter e.departamento == \""+ dep.getKey() + "\" for i in incidenciadto filter i.destino == e._key return i",
+			"for e in empleadodto filter e.departamento == '"+ dep.getKey() + "' for i in incidenciadto filter i.destino == e._key return i",
 			IncidenciaDTO.class
 		);
+	}
+	
+	@Override
+	public void insertIncidencia(IncidenciaDTO i) {
+		forceStore(i);
 	}
 
 	@Override
@@ -152,33 +135,31 @@ public class DAOImpl extends ArangoUtils implements DAO {
 		store(incidencia);
 	}
 
-	@Override
-	public EmpleadoDTO getEmpleado(String username) {
-		return getByKey(new EmpleadoDTO(username), EmpleadoDTO.class);
-	}
 
 	@Override
-	public List<EmpleadoDTO> selectBecarios() {
-		Map<String, Object> filters = new MapBuilder().put("jefe", false).get();
-		List<EmpleadoDTO> empleados = find(EmpleadoDTO.class, filters);
-		if (empleados.isEmpty())
-			return null;
-		return empleados;
+	public EventoDTO getUltimoInicioSesion(EmpleadoDTO emp) {
+		Map<String, Object> filters = new MapBuilder().put("empleado", emp.getUsername()).put("tipo", model.EventoDTO.Tipo.LOGIN).get();
+		return find(EventoDTO.class, filters).stream().sorted().findFirst().orElse(null);
+	}
+	
+	@Override
+	public void insertEvento(EventoDTO evento) {
+		store(evento);
 	}
 
+	
 	@Override
-	public List<RankingDTO> getRanking(DepartamentoDTO dep) {
+	public List<RankingEntryDTO> getRanking(DepartamentoDTO dep) {
+		if (!isCollection("incidenciadto") || !isCollection("departamentodto") || !isCollection("eventodto"))
+			return new ArrayList<RankingEntryDTO>();
 		return query(
-		"for e in empleadodto "
-		+ "filter e.departamento == '" + dep.getKey() + "' "
-				+ "for i in eventodto "
-				+ "filter i.empleado == e._key && i.tipo == 'FIN_INCIDENCIA' "
-						+ "collect user = e._key with count into incidenciasResueltas "
-						+ "return {"
-						+ "'nombre' : user,"
-						+ "'incidenciasResueltas' : incidenciasResueltas "
-						+ "}",
-			RankingDTO.class
+			"for e in empleadodto "
+			+ "filter e.departamento == '" + dep.getKey() + "' "
+					+ "for i in eventodto "
+					+ "filter i.empleado == e._key && i.tipo == 'SOLUCION_INCIDENCIA' "
+							+ "collect user = e._key with count into resueltas "
+			+ "return {'nombre' : user, 'incidenciasResueltas' : resueltas}",
+			RankingEntryDTO.class
 		);
 	}
 

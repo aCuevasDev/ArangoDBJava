@@ -9,10 +9,17 @@ import model.DepartamentoDTO;
 import model.EmpleadoDTO;
 import model.EventoDTO;
 import model.IncidenciaDTO;
-import model.RankingDTO;
+import model.RankingEntryDTO;
 import persistence.DAO;
 import persistence.DAOImpl;
 
+/**
+ * Clase que contiene la logica del programa.
+ * 
+ * @author razz97
+ * @author acuevas
+ * @author movip88
+ */
 public class Controller {
 
 	private static Controller instance;
@@ -21,10 +28,7 @@ public class Controller {
 	private DAO dao;
 
 	/**
-	 * Metodo que gestiona la unica instancia de la calse cuando se llama por
-	 * primera vez se crea la instgancia y si ya existe un la devuelve
-	 *
-	 * @return
+	 * Gets the unique instance of this class.
 	 */
 	public static Controller getInstance() {
 		if (instance == null) {
@@ -36,17 +40,122 @@ public class Controller {
 	private Controller() {
 		this.dao = DAOImpl.getInstance();
 	}
-
-	public String login(String username, String contrasenya) throws InvalidException {
-		usuarioLogeado = dao.loginEmpleado(username, contrasenya);
-		if (usuarioLogeado != null) {
-			crearEvento(EventoDTO.Tipo.LOGIN, usuarioLogeado.getUsername());
-			return "Usuario creado correctamente.";
-		}
-		throw new InvalidException(Tipo.INVALID_CREDENTIALS);
+	
+	
+	/**
+	 * Cierra la conexion con la base de datos.
+	 */
+	public void closeConexion() {
+		dao.close();
+	}
+	
+	
+	/**
+	 * @return el usuario logueado.
+	 */
+	public EmpleadoDTO getUsuarioLogeado() {
+		return usuarioLogeado;
 	}
 
-	public String crearDepartamento(DepartamentoDTO departamento) throws InvalidException {
+	/**
+	 * Reemplaza al usuario logueado
+	 * 
+	 * @param usuarioLogeado el nuevo usuario logueado.
+	 */
+	public void setUsuarioLogeado(EmpleadoDTO usuarioLogeado) {
+		this.usuarioLogeado = usuarioLogeado;
+	}
+	
+	/**
+	 * @return boolean indicando si el usuario esta logueado.
+	 */
+	public boolean isUsuaroLogueado() {
+		return usuarioLogeado != null;
+	}
+	
+	/**
+	 * Inicia la sesion de un usuario en la aplicacion.
+	 * @param username a validar.
+	 * @param contrasenya a validar.
+	 * @throws InvalidException credenciales incorrectas.
+	 */
+	public void login(String username, String contrasenya) throws InvalidException {
+		setUsuarioLogeado(dao.getEmpleado(username, contrasenya));
+		if (!isUsuaroLogueado())
+			throw new InvalidException(Tipo.INVALID_CREDENTIALS);
+		crearEvento(EventoDTO.Tipo.LOGIN, usuarioLogeado.getUsername());
+	}
+	
+	
+	/**
+	 * @param username del usuario a buscar
+	 * @return el usuario en question.
+	 */
+	public EmpleadoDTO getEmpleado(String username) {
+		return dao.getEmpleado(username);
+	}
+	
+	/**
+	 * @return lista con todos los empleados.
+	 */
+	public List<EmpleadoDTO> getEmpleados() {
+		return dao.getEmpleados();
+	}
+	
+	/**
+	 * Lista de empleados teniendo en cuenta el departamento al que pertenecen.
+	 * @param dep departamento por el que filtrar los empleados.
+	 * @param inside booleano indicando si se desean los empleados de dentro o fuera del departeamento especificado.
+	 * @return lista de empleados.
+	 */
+	public List<EmpleadoDTO> getEmpleados(DepartamentoDTO dep, boolean inside) {
+		return dao.getEmpleados(dep, inside);
+	}
+	
+	/**
+	 * Crea un empleado.
+	 * @param empleado a crear.
+	 * @throws InvalidException si el nombre de usuario ya esta en uso.
+	 */
+	public void insertEmpleado(EmpleadoDTO empleado) throws InvalidException {
+		dao.insertEmpleado(empleado);
+		if(empleado.isJefe()) 
+			dao.updateDepartamento(new DepartamentoDTO(empleado.getDepartamento(), empleado.getUsername()));
+	}
+
+	/**
+	 * Actualiza un empleado.
+	 * @param empleado a actualizar.
+	 */
+	public void updateEmpleado(EmpleadoDTO empleado) {
+		dao.updateEmpleado(empleado);
+	}
+
+	/**
+	 * Elimina un empleado teniento en cuenta si es jefe de un departamento.
+	 * @param emp empleado a eliminar.
+	 */
+	public void deleteEmpleado(EmpleadoDTO emp) {
+		dao.removeEmpleado(emp);
+		if (emp.isJefe())
+			dao.updateDepartamento(new DepartamentoDTO(emp.getDepartamento()));
+		if(emp.equals(usuarioLogeado))
+			usuarioLogeado = null;
+	}
+	
+	/**
+	 * @return lista con todos los departamentos.
+	 */
+	public List<DepartamentoDTO> getDepartamentos() {
+		return dao.getDepartmentos();
+	}
+
+	/**
+	 * Crea un departamento.
+	 * @param departamento a crear.
+	 * @throws InvalidException 
+	 */
+	public void insertDepartamento(DepartamentoDTO departamento) throws InvalidException {
 		if (departamento.getJefe() != null) {
 			EmpleadoDTO empleado = dao.getEmpleado(departamento.getJefe());
 			if (empleado.isJefe())
@@ -57,111 +166,78 @@ public class Controller {
 			dao.updateEmpleado(empleado);
 		}
 		dao.insertDepartamento(departamento);
-		return "Departamento guardado correctamente";
 	}
 
-	public String crearEmpleado(EmpleadoDTO empleado) throws InvalidException {
-		dao.insertEmpleado(empleado);
-		if(empleado.isJefe()) {
-			dao.updateDepartamento(new DepartamentoDTO(empleado.getDepartamento(), empleado.getUsername()));
-		}
-		return "Empleado guardado correctamente";
-	}
-
-	public List<EmpleadoDTO> getAllUsers() {
-		return dao.selectAllEmpleados();
-	}
-	
-	public List<EmpleadoDTO> getBecarios() {
-		return dao.selectBecarios();
-	}
-
-	public List<DepartamentoDTO> getAllDepartamentos() {
-		return dao.selectAllDepartments();
-	}
-
-	public void closeConexion() {
-		dao.close();
-	}
-
+	/**
+	 * Actualiza un departamento.
+	 * @param dep departamento a actualizar.
+	 */
 	public void updateDepartamento(DepartamentoDTO dep) {
 		dao.updateDepartamento(dep);
 	}
 
-	public void eliminarEmpleado(EmpleadoDTO emp) {
-		dao.removeEmpleado(emp);
-		if (emp.isJefe()) {
-			dao.updateDepartamento(new DepartamentoDTO(emp.getDepartamento()));
-		}
-		if(emp.equals(usuarioLogeado)) {
-			usuarioLogeado = null;
-		}
-	}
-
-	public List<DepartamentoDTO> getAllDepartments() {
-		return dao.selectAllDepartments();
+	
+	/**
+	 * Devuelve una lista de incidencias las cuales tienen como destino a un empleado en especifico.
+	 * @param emp empleado destino de las incidencias a devolver.
+	 * @return lista de incidencias.
+	 */
+	public List<IncidenciaDTO> getIncidencias(EmpleadoDTO emp) {
+		return dao.getIncidencias(emp, true);
 	}
 	
-	public List<IncidenciaDTO> getIncidenciasPorEmpleado(EmpleadoDTO emp){
-		return dao.getIncidenciaByDestino(emp);
-	}
-	
-	public EmpleadoDTO getUsuarioLogeado() {
-		return usuarioLogeado;
-	}
-
-	public List<EmpleadoDTO> getEmpleados(DepartamentoDTO dep, boolean inside) {
-		return dao.selectEmpleados(dep, inside);
-	}
-
-	public void updateEmpleado(EmpleadoDTO empleado) {
-		dao.updateEmpleado(empleado);
-	}
-
-	public void updateIncidencia(IncidenciaDTO incidencia) {
-		dao.updateIncidencia(incidencia);
-		if (incidencia.isUrgente())
-			crearEvento(EventoDTO.Tipo.SOLUCION_INCIDENCIA, incidencia.getDestino());
-	}
-	
-	public List<IncidenciaDTO> getUserIncidencias() {
+	/**
+	 * Si el usuario logueado es jefe, devuelve una lista de incidencias de todo el departamento,
+	 * sino, devuelve las incidencias cuyo destino sea el usuario logueado.
+	 * @return lista de incidencias.
+	 */
+	public List<IncidenciaDTO> getIncidenciasUsuarioLogueado() {
 		if (!usuarioLogeado.isJefe()) 
-			return dao.getIncidenciaByDestino(usuarioLogeado);
-		return dao.getIncidenciasByDepartamento(new DepartamentoDTO(usuarioLogeado.getDepartamento()));
+			return dao.getIncidencias(usuarioLogeado, true);
+		return dao.getIncidencias(new DepartamentoDTO(usuarioLogeado.getDepartamento()));
 	}
 
-	public List<IncidenciaDTO> getUserIncidenciasNotSolved() {
-		return getUserIncidencias().stream()
-				.filter((incidencia) -> incidencia.getFechaFin() == null)
+	/**
+	 * @return lista de incidencias pendientes del usuario logueado.
+	 */
+	public List<IncidenciaDTO> getIncidenciasPendientesUsuarioLogueado() {
+		return getIncidenciasUsuarioLogueado().stream()
+				.filter((incidencia) -> !incidencia.isSolucionada())
 				.collect(Collectors.toList());
 	}
-
+	
+	/**
+	 * Crea una incidencia.
+	 * @param incidenciaDTO a crear.
+	 */
 	public void insertIncidencia(IncidenciaDTO incidenciaDTO) {
 		dao.insertIncidencia(incidenciaDTO);
-		
 	}
 
-	public EmpleadoDTO getEmpleado(String username) {
-		return dao.getEmpleado(username);
+	/**
+	 * Actualiza una incidenca y, en el caso de que sea urgente, se crea un evento de tipo solucion incidencia.
+	 * @param incidencia
+	 */
+	public void updateIncidencia(IncidenciaDTO incidencia) {
+		dao.updateIncidencia(incidencia);
+		if (incidencia.isUrgente() && incidencia.isSolucionada())
+			crearEvento(EventoDTO.Tipo.SOLUCION_INCIDENCIA, incidencia.getDestino());
 	}
 
-	public boolean isUserLogged() {
-		return usuarioLogeado != null;
-	}
-
-	public void crearEvento(EventoDTO.Tipo tipo, String empleado) {
-		dao.crearEvento(new EventoDTO(tipo, empleado));
-	}
-
-	public List<RankingDTO> getRanking() {
+	/**
+	 * @return El ranking de los empleados de un departamento.
+	 */
+	public List<RankingEntryDTO> getRanking() {
 		return dao.getRanking(new DepartamentoDTO(usuarioLogeado.getDepartamento())).stream().sorted().collect(Collectors.toList());
 	}
 
 	/**
-	 * @param usuarioLogeado the usuarioLogeado to set
+	 * Crea de un evento.
+	 * @param tipo Tipo del evento
+	 * @param empleado empleado que lo esta creando.
 	 */
-	public void setUsuarioLogeado(EmpleadoDTO usuarioLogeado) {
-		this.usuarioLogeado = usuarioLogeado;
+	public void crearEvento(EventoDTO.Tipo tipo, String empleado) {
+		dao.insertEvento(new EventoDTO(tipo, empleado));
 	}
 
 }

@@ -1,13 +1,23 @@
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.arangodb.entity.DocumentField;
 import com.arangodb.entity.DocumentField.Type;
 
-import persistence.IKeyable;
+import persistence.ArangoUtils.ArangoDocument;
 
-public class IncidenciaDTO implements IKeyable {
+/**
+ * Representa una incidencia en la empresa, los empleados son los responsables de crearlas y solucionarlas.
+ * No tienen clave de negocio, pues no hay dos incidencias iguales, se usa el id generado por la base de datos.
+ * Es un ArangoDocument por lo que puede persistir en una base de datos ArangoDB.
+ * 
+ * @author razz97
+ * @author acuevas
+ * @author movip88
+ */
+public class IncidenciaDTO implements ArangoDocument {
 
 	@DocumentField(Type.KEY)
 	private String id;
@@ -18,10 +28,26 @@ public class IncidenciaDTO implements IKeyable {
 	private Date fechaInicio;
 	private Date fechaFin;
 	private boolean urgente;
+	private static SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yy");
 
-	public IncidenciaDTO() {
+	public IncidenciaDTO() {}
+	
+	/**
+	 * Crea una incidencia a partir de un id.
+	 * @param id
+	 */
+	public IncidenciaDTO(int id) {
+		this.id = String.valueOf(id);
 	}
 
+	/**
+	 * Crea una incidencia con todos sus propiedades.
+	 * @param origen - empleado creador de la incidencia.
+	 * @param destino - empleado que debe solucionarla.
+	 * @param titulo - titulo de la incidencia.
+	 * @param descripcion - descripcion del problema.
+	 * @param urgente - si es urgente (true) o no (fale).
+	 */
 	public IncidenciaDTO(String origen, String destino, String titulo, String descripcion, boolean urgente) {
 		this.origen = origen;
 		this.destino = destino;
@@ -86,36 +112,28 @@ public class IncidenciaDTO implements IKeyable {
 
 	@Override
 	public String toString() {
-		return "IncidenciaDTO [origen=" + origen + ", destino=" + destino + ", titulo=" + titulo + ", descripcion="
-				+ descripcion + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + "]";
+		return (urgente ? "URGENTE - " : "") + "Titulo: " + titulo + ", descripcion: " + descripcion + ", origen: " + origen + ", destino: " + destino +
+				", inicio: " + (fechaInicio != null ? formatter.format(fechaInicio) : "-") + ", fin: " + (fechaFin != null ? formatter.format(fechaFin) : "-");
 	}
-
-	/**
-	 * @return the urgente
-	 */
+	
 	public boolean isUrgente() {
 		return urgente;
 	}
-
-	/**
-	 * @param urgente the urgente to set
-	 */
+	
 	public void setUrgente(boolean urgente) {
 		this.urgente = urgente;
 	}
-
-	/**
-	 * @return the id
-	 */
+	
 	public String getId() {
 		return id;
 	}
 
-	/**
-	 * @param id the id to set
-	 */
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public boolean isSolucionada() {
+		return fechaFin != null;
 	}
 
 }

@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import controller.Controller;
@@ -18,10 +16,16 @@ import model.DepartamentoDTO;
 import model.EmpleadoDTO;
 import model.EventoDTO;
 import model.IncidenciaDTO;
-import model.RankingDTO;
+import model.RankingEntryDTO;
 import persistence.DAO;
 import persistence.DAOImpl;
-
+/**
+ * Esta clase se encarga de responder a las request del web service de la apicacion.
+ * 
+ * @author razz97
+ * @author acuevas
+ * @author movip88
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/rest")
@@ -32,7 +36,7 @@ public class RESTController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public EmpleadoDTO login(@RequestBody(required = true) EmpleadoDTO user) {
-		EmpleadoDTO loggedUser = dao.loginEmpleado(user.getUsername(), user.getContrasenya());
+		EmpleadoDTO loggedUser = dao.getEmpleado(user.getUsername(), user.getContrasenya());
 		if (loggedUser != null) {
 			controller.crearEvento(EventoDTO.Tipo.LOGIN, loggedUser.getUsername());
 			return loggedUser;
@@ -42,60 +46,59 @@ public class RESTController {
 
 	@RequestMapping(value = "/empleado", method = RequestMethod.POST)
 	public List<EmpleadoDTO> empleados(@RequestBody(required = true) EmpleadoDTO user) {
-		return controller.getAllUsers();
+		return controller.getEmpleados();
 	}
 
 	@RequestMapping(value = "/empleado/create", method = RequestMethod.POST)
-	public ResponseEntity crearEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
+	public ResponseEntity<Object> crearEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
 		controller.setUsuarioLogeado(users.get(0));
 		try {
-			controller.crearEmpleado(users.get(1));
+			controller.insertEmpleado(users.get(1));
 		} catch (InvalidException e) {
-			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/empleado/delete", method = RequestMethod.POST)
-	public ResponseEntity deleteEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
+	public ResponseEntity<Object> deleteEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
 		controller.setUsuarioLogeado(users.get(0));
-		controller.eliminarEmpleado(users.get(1));
-		return new ResponseEntity(HttpStatus.OK);
+		controller.deleteEmpleado(users.get(1));
+		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
-
+	
 	@RequestMapping(value = "/empleado/update", method = RequestMethod.POST)
-	public ResponseEntity updateEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
+	public ResponseEntity<Object> updateEmpleado(@RequestBody(required = true) List<EmpleadoDTO> users) {
 		controller.setUsuarioLogeado(users.get(0));
 		// TODO HAY UN GET ALLDEPARTMENTS?¿
-		DepartamentoDTO departmnt = controller.getAllDepartamentos().stream()
-				.filter(dept -> users.get(1).getDepartamento().equalsIgnoreCase(dept.getNombre())).findFirst()
-				.orElse(null);
+		DepartamentoDTO departmnt = controller.getDepartamentos().stream().filter(dept -> users.get(1).getDepartamento().equalsIgnoreCase(dept.getNombre() )).findFirst().orElse(null);
 		if (departmnt != null) {
-			controller.updateEmpleado(users.get(1));
-			return new ResponseEntity(HttpStatus.OK);
+		controller.updateEmpleado(users.get(1));
+		return new ResponseEntity<Object>(HttpStatus.OK);
 		}
-		return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 	}
+
 
 	@RequestMapping(value = "/incidencia", method = RequestMethod.POST)
 	public List<IncidenciaDTO> incidencias(@RequestBody(required = true) EmpleadoDTO user) {
 		controller.setUsuarioLogeado(user);
-		return controller.getUserIncidencias();
+		return controller.getIncidenciasUsuarioLogueado();
 	}
 
 	@RequestMapping(value = "/incidencia/create", method = RequestMethod.POST)
-	public ResponseEntity crearIncidencia(@RequestBody(required = true) Query query) {
+	public ResponseEntity<Object> crearIncidencia(@RequestBody(required = true) Query query) {
 		controller.setUsuarioLogeado(query.getLoggedUser());
 		if (query.incidencia.getId() == "")
 			query.incidencia.setId(null);
 		controller.insertIncidencia(query.incidencia);
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
-
+	
 	@RequestMapping(value = "/incidencia/update", method = RequestMethod.POST)
-	public ResponseEntity finishIncidencia(@RequestBody(required = true) IncidenciaDTO incidenciaDTO) {
+	public ResponseEntity<Object> finishIncidencia(@RequestBody(required = true) IncidenciaDTO incidenciaDTO) {
 		controller.updateIncidencia(incidenciaDTO);
-		return new ResponseEntity(HttpStatus.OK);
+		return new ResponseEntity<Object>(HttpStatus.OK);
 	}
 
 	/*
@@ -122,7 +125,7 @@ public class RESTController {
 	 */
 
 	@RequestMapping(value = "/ranking", method = RequestMethod.POST)
-	public List<RankingDTO> ranking(@RequestBody(required = true) EmpleadoDTO user) {
+	public List<RankingEntryDTO> ranking(@RequestBody(required = true) EmpleadoDTO user) {
 		controller.setUsuarioLogeado(user);
 		return controller.getRanking();
 	}

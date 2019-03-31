@@ -2,9 +2,19 @@ package model;
 
 import com.arangodb.entity.DocumentField;
 import com.arangodb.entity.DocumentField.Type;
-import persistence.IKeyable;
 
-public class EmpleadoDTO implements IKeyable {
+import persistence.ArangoUtils.ArangoDocument;
+
+/**
+ * Representa un empleado de la empresa y se usa tambien como usuario en la aplicacion.
+ * Contiene: nombre, apellidos, username, contrasenya, si es jefe y el departamento al que pertenece.
+ * Es un ArangoDocument por lo que puede persistir en una base de datos ArangoDB.
+ * 
+ * @author razz97
+ * @author acuevas
+ * @author movip88
+ */
+public class EmpleadoDTO implements ArangoDocument {
 
 	private String nombre;
 	private String apellidos;
@@ -88,14 +98,12 @@ public class EmpleadoDTO implements IKeyable {
 	}
 
 	public String getNombreCompleto() {
-		return new StringBuilder(apellidos).append(" ,").append(nombre).toString();
+		return new StringBuilder(apellidos).append(", ").append(nombre).toString();
 	}
-	
-	
 	
 	@Override
 	public String toString() {
-		return getNombreCompleto();
+		return "Nombre: " + nombre + ", apellidos: " + apellidos + ", username: " + username + ", jefe: " + jefe + ", departamento: " + departamento;
 	}
 
 	@Override

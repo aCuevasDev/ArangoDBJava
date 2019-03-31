@@ -2,21 +2,38 @@ package model;
 
 import com.arangodb.entity.DocumentField;
 import com.arangodb.entity.DocumentField.Type;
-import persistence.IKeyable;
 
-public class DepartamentoDTO implements IKeyable {
+import persistence.ArangoUtils.ArangoDocument;
+
+/**
+ * Representa un departamento de la empresa, tiene un jefe y un nombre.
+ * Es un ArangoDocument por lo que puede persistir en una base de datos ArangoDB.
+ * 
+ * @author razz97
+ * @author acuevas
+ * @author movip88
+ */
+public class DepartamentoDTO implements ArangoDocument {
 
 	@DocumentField(Type.KEY)
 	private String nombre;
 	private String jefe;
+	
+	public DepartamentoDTO() {}
 
+	/**
+	 * Crea un departamento sin el jefe.
+	 * @param nombre
+	 */
 	public DepartamentoDTO(String nombre) {
 		this.nombre = nombre;
 	}
 	
-	public DepartamentoDTO() {
-	}
-
+	/**
+	 * Crea un departamento completo.
+	 * @param nombre
+	 * @param jefe
+	 */
 	public DepartamentoDTO(String nombre, String jefe) {
 		this.nombre = nombre;
 		this.jefe = jefe;

@@ -90,7 +90,7 @@ public class RESTController {
 		return new ResponseEntity(HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/incidencia/finish", method = RequestMethod.POST)
+	@RequestMapping(value = "/incidencia/update", method = RequestMethod.POST)
 	public ResponseEntity finishIncidencia(@RequestBody(required = true) IncidenciaDTO incidenciaDTO) {
 		controller.updateIncidencia(incidenciaDTO);
 		return new ResponseEntity(HttpStatus.OK);

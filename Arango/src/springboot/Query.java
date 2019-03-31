@@ -4,7 +4,6 @@ import model.DepartamentoDTO;
 import model.EmpleadoDTO;
 import model.EventoDTO;
 import model.IncidenciaDTO;
-import model.RankingDTO;
 import model.RankingEntryDTO;
 
 public class Query {
@@ -78,13 +77,13 @@ public class Query {
 	/**
 	 * @return the ranking
 	 */
-	public RankingDTO getRanking() {
+	public RankingEntryDTO getRanking() {
 		return ranking;
 	}
 	/**
 	 * @param ranking the ranking to set
 	 */
-	public void setRanking(RankingDTO ranking) {
+	public void setRanking(RankingEntryDTO ranking) {
 		this.ranking = ranking;
 	}
 	
